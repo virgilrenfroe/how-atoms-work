@@ -9,22 +9,21 @@ Repo: https://github.com/virgilrenfroe/how-atoms-work
 
 Static three.js lab. Open any element from hydrogen through oganesson and walk one ladder: Atom → Nucleus → Quark, then a door into a separate Standard Model atlas room. Shells and orbitals stay on the Atom readout. They are not extra zoom stages.
 
-Page chrome is one atom room, not a dashboard. The WebGL stage is the full viewport. The H–Og table floats over the left of that room. Oversized Bricolage Grotesque marks the atlas, then yields to the element symbol. Film grain stays on the WebGL field. Counts, family colors, B2 electrons, satin nucleons, and the ladder are unchanged.
+The page is a split: the periodic table is one panel, the atom stage is the other. The WebGL view never sits under the tiles. Inside the stage, a floor grid drops away in the nucleus and rises on the atlas. Type is Bricolage Grotesque, Instrument Sans, and Space Mono. Counts, family colors, B2 electrons, satin nucleons, and the ladder are unchanged.
 
 ## Demos
 
 - [`index.html`](index.html) — homepage. Full H–Og periodic table and the WebGL drill-down.
 - [`periodic-table-atoms.html`](periodic-table-atoms.html) — the same lesson at the source filename.
+- [`ethanol.html`](ethanol.html) — Intro chem · molecular structure / bonding. Satin ethanol, C₂H₆O, anti conformer.
 - [`periodic-table-data.js`](periodic-table-data.js) — Z 1–118 (symbol, name, category, atomic mass, neutrons, period, group).
-- [`NOTES.md`](NOTES.md) — chemistry rules, ladder, and craft notes.
+- [`NOTES.md`](NOTES.md) — chemistry rules, ladder, ethanol geometry, and craft notes.
 
 Query params (either HTML page):
 
 - `?el=C` / `?z=6` — open that element on the Atom stage
 - `?embed=1` — chrome-less stage (defaults to C if no el/z)
 - `?still=1` — static pose (also respects `prefers-reduced-motion`)
-
-Not on the source branch, so not in this repo: `molecule-satin.html` and any ethanol satin demo.
 
 ## Local
 
