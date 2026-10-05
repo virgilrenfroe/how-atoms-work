@@ -282,10 +282,10 @@
     }
     .list { border-right: 0; border-bottom: 1px solid var(--line); }
     .mast h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
-    .view.mode-model { grid-template-rows: minmax(0, 1fr) auto; }
+    .view.mode-model { grid-template-rows: minmax(200px, 1fr) minmax(0, 42%); }
     .view.mode-model h2 { font-size: 1.55rem; }
     .view.mode-card h2 { font-size: clamp(2.4rem, 12vw, 3.4rem); }
-    .readout { max-height: 42%; }
+    .view.mode-model .readout { max-height: none; }
     .view.mode-card .readout { max-height: none; padding-top: 18px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -528,7 +528,6 @@ function showModel(m) {
   errEl.style.display = "none";
   if (viewer) {
     viewer.setVisible(true);
-    viewer.resize();
     viewer.show(geo);
   }
   const els = Object.keys(got);
@@ -572,6 +571,7 @@ function showModel(m) {
     sw.append(span);
   }
   readout.append(sw);
+  if (viewer) viewer.resize();
 }
 
 function showCard(m) {

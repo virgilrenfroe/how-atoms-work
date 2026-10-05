@@ -56,14 +56,14 @@ export const CATEGORIES = [
 
 export const MOLECULES = [
   // History-changers & life-savers
-  { id: "penicillin-g", name: "Penicillin G", formula: "C16H18N2O4S", category: "history", structureMode: "card-only", teach: "Penicillin G is an antibiotic. Its use opened the antibiotic age." },
+  { id: "penicillin-g", name: "Penicillin G", formula: "C16H18N2O4S", category: "history", structureMode: "ballstick", teach: "Penicillin G is an antibiotic. Its use opened the antibiotic age.", note: "This is the natural shape. Double lines in the ring are one Kekulé drawing." },
   { id: "aspirin", name: "Acetylsalicylic acid", formula: "C9H8O4", category: "history", structureMode: "ballstick", teach: "Aspirin is a pain reliever and a fever reducer. This drawing is acetylsalicylic acid.", note: "Double lines in the ring are one Kekulé drawing of an aromatic ring." },
   { id: "dna", name: "DNA", formula: "", formulaLabel: "double helix", category: "history", structureMode: "card-only", teach: "DNA is the double helix that stores genetic instructions, a polymer of four bases, too long for one model here." },
   { id: "glucose", name: "Glucose", formula: "C6H12O6", category: "history", structureMode: "ballstick", teach: "Glucose is the sugar your cells use for fuel. This model is β-D-glucose in the chair shape." },
-  { id: "quinine", name: "Quinine", formula: "C20H24N2O2", category: "history", structureMode: "card-only", teach: "Quinine is a malaria medicine first taken from cinchona bark." },
+  { id: "quinine", name: "Quinine", formula: "C20H24N2O2", category: "history", structureMode: "ballstick", teach: "Quinine is a malaria medicine first taken from cinchona bark.", note: "This is quinine, not quinidine. Double lines in the ring are one Kekulé drawing." },
   { id: "morphine", name: "Morphine", formula: "C17H19NO3", category: "history", structureMode: "card-only", teach: "Morphine is a powerful pain medicine from the opium poppy. It is tightly controlled." },
   { id: "insulin", name: "Insulin", formula: "", formulaLabel: "protein", category: "history", structureMode: "card-only", teach: "Insulin is a protein hormone. People with type 1 diabetes take a medical form of it." },
-  { id: "ethinylestradiol", name: "Ethinylestradiol", formula: "C20H24O2", category: "history", structureMode: "card-only", teach: "Ethinylestradiol is a synthetic estrogen used in many birth-control pills." },
+  { id: "ethinylestradiol", name: "Ethinylestradiol", formula: "C20H24O2", category: "history", structureMode: "ballstick", teach: "Ethinylestradiol is a synthetic estrogen used in many birth-control pills.", note: "The ethynyl and the OH on the same carbon point opposite ways, the form used in the medicine. Double lines in the ring are one Kekulé drawing." },
   { id: "teflon", name: "Polytetrafluoroethylene", formula: "", formulaLabel: "(C2F4)n", category: "history", structureMode: "card-only", teach: "Teflon is polytetrafluoroethylene, a slippery plastic of repeating CF2 units." },
   { id: "paclitaxel", name: "Paclitaxel", formula: "C47H51NO14", category: "history", structureMode: "card-only", teach: "Paclitaxel, also called taxol, is a chemotherapy medicine first found in yew bark." },
 
@@ -83,12 +83,12 @@ export const MOLECULES = [
   { id: "capsaicin", name: "Capsaicin", formula: "C18H27NO3", category: "sensory", structureMode: "ballstick", teach: "Capsaicin is the molecule that makes a chili feel hot. It trips a heat sensor; it is not a flame.", note: "The chain has a trans double bond. Double lines in the ring are one Kekulé drawing." },
   { id: "miraculin", name: "Miraculin", formula: "", formulaLabel: "protein", category: "sensory", structureMode: "card-only", teach: "Miraculin is a protein in miracle fruit that makes sour foods taste sweet for a while." },
   { id: "thaumatin", name: "Thaumatin", formula: "", formulaLabel: "protein", category: "sensory", structureMode: "card-only", teach: "Thaumatin is a very sweet protein from a West African fruit." },
-  { id: "geosmin", name: "Geosmin", formula: "C12H22O", category: "sensory", structureMode: "card-only", teach: "Geosmin is the molecule that makes rain on dry soil smell the way it does." },
-  { id: "thioacetone", name: "Thioacetone", formula: "C3H6S", category: "sensory", structureMode: "card-only", teach: "Thioacetone is famous for a smell so strong that a little of it empties a room." },
+  { id: "geosmin", name: "Geosmin", formula: "C12H22O", category: "sensory", structureMode: "ballstick", teach: "Geosmin is the molecule that makes rain on dry soil smell the way it does.", note: "This is the form soil bacteria make." },
+  { id: "thioacetone", name: "Thioacetone", formula: "C3H6S", category: "sensory", structureMode: "ballstick", teach: "Thioacetone is famous for a smell so strong that a little of it empties a room." },
   { id: "vanillin", name: "Vanillin", formula: "C8H8O3", category: "sensory", structureMode: "ballstick", teach: "Vanillin is the main molecule in the smell of vanilla.", note: "Double lines in the ring are one Kekulé drawing of an aromatic ring." },
   { id: "menthol", name: "Menthol", formula: "C10H20O", category: "sensory", structureMode: "ballstick", teach: "Menthol is the cooling molecule in mint. This model is (−)-menthol in the chair shape." },
-  { id: "trimethylamine", name: "Trimethylamine", formula: "C3H9N", category: "sensory", structureMode: "card-only", teach: "Trimethylamine smells like old fish. Bodies make a little of it, and bacteria make more." },
-  { id: "cadaverine", name: "Cadaverine", formula: "C5H14N2", category: "sensory", structureMode: "card-only", teach: "Cadaverine is one of the molecules in the smell of decay. It is a five-carbon diamine." },
+  { id: "trimethylamine", name: "Trimethylamine", formula: "C3H9N", category: "sensory", structureMode: "ballstick", teach: "Trimethylamine smells like old fish. Bodies make a little of it, and bacteria make more.", note: "Nitrogen sits at the top of a shallow pyramid. Each carbon–nitrogen–carbon angle in this model is 110.5°." },
+  { id: "cadaverine", name: "Cadaverine", formula: "C5H14N2", category: "sensory", structureMode: "ballstick", teach: "Cadaverine is one of the molecules in the smell of decay. It is a five-carbon diamine." },
   { id: "isoamyl-acetate", name: "Isoamyl acetate", formula: "C7H14O2", category: "sensory", structureMode: "ballstick", teach: "Isoamyl acetate smells like banana. It is the ester in some candies and in a ripe banana." },
 
   // High energy & explosives — cards only
@@ -116,8 +116,8 @@ export const MOLECULES = [
   { id: "polonium-hexafluoride", name: "Polonium hexafluoride", formula: "F6Po", formulaLabel: "PoF6", category: "extremes", structureMode: "card-only", restraint: true, teach: "Polonium hexafluoride is written PoF6. Polonium is radioactive, and this is not a classroom chemical." },
 
   // Mind-alterers & neurotransmitters
-  { id: "dopamine", name: "Dopamine", formula: "C8H11NO2", category: "mind", structureMode: "card-only", teach: "Dopamine is a neurotransmitter tied to reward, movement, and attention." },
-  { id: "serotonin", name: "Serotonin", formula: "C10H12N2O", category: "mind", structureMode: "card-only", teach: "Serotonin is a neurotransmitter that lessons connect with mood, sleep, and digestion." },
+  { id: "dopamine", name: "Dopamine", formula: "C8H11NO2", category: "mind", structureMode: "ballstick", teach: "Dopamine is a neurotransmitter tied to reward, movement, and attention.", note: "This model is the neutral molecule. In the body the nitrogen is usually charged. Double lines in the ring are one Kekulé drawing." },
+  { id: "serotonin", name: "Serotonin", formula: "C10H12N2O", category: "mind", structureMode: "ballstick", teach: "Serotonin is a neurotransmitter that lessons connect with mood, sleep, and digestion.", note: "This model is the neutral molecule. In the body the side-chain nitrogen is usually charged. Double lines in the rings are one Kekulé drawing." },
   { id: "caffeine", name: "Caffeine", formula: "C8H10N4O2", category: "mind", structureMode: "ballstick", teach: "Caffeine is the molecule in coffee and tea that keeps you alert.", note: "Double lines in the rings are one Kekulé drawing. The rings are aromatic." },
   { id: "lsd", name: "LSD", formula: "C20H25N3O", category: "mind", structureMode: "card-only", restraint: true, teach: "LSD is a synthetic molecule that changes perception. Possessing it without authority is illegal." },
   { id: "psilocybin", name: "Psilocybin", formula: "C12H17N2O4P", category: "mind", structureMode: "card-only", restraint: true, teach: "Psilocybin is the molecule in some mushrooms that changes perception." },
@@ -125,14 +125,14 @@ export const MOLECULES = [
   { id: "nicotine", name: "Nicotine", formula: "C10H14N2", category: "mind", structureMode: "card-only", teach: "Nicotine is the addictive molecule in tobacco. It acts on nerve receptors." },
   { id: "oxytocin", name: "Oxytocin", formula: "C43H66N12O12S2", category: "mind", structureMode: "card-only", teach: "Oxytocin is a small peptide hormone tied to birth, bonding, and milk release." },
   { id: "endorphins", name: "Endorphins", formula: "", formulaLabel: "peptides", category: "mind", structureMode: "card-only", teach: "Endorphins are a family of peptides the body uses to dull pain." },
-  { id: "gaba", name: "GABA", formula: "C4H9NO2", category: "mind", structureMode: "card-only", teach: "GABA is the main calming neurotransmitter in the brain. The name is gamma-aminobutyric acid." },
+  { id: "gaba", name: "GABA", formula: "C4H9NO2", category: "mind", structureMode: "ballstick", teach: "GABA is the main calming neurotransmitter in the brain. The name is gamma-aminobutyric acid.", note: "This model is the neutral acid. In water the nitrogen is usually charged and the acid has given up its hydrogen." },
 
   // Materials
   { id: "graphene", name: "Graphene", formula: "", formulaLabel: "carbon sheet", category: "materials", structureMode: "card-only", teach: "Graphene is a sheet of carbon hexagons, one atom thick. It is not one small molecule." },
   { id: "kevlar", name: "Kevlar", formula: "", formulaLabel: "(C14H10N2O2)n", category: "materials", structureMode: "card-only", teach: "Kevlar is a strong fiber. The repeat is two benzene rings joined by amide links." },
   { id: "nylon-66", name: "Nylon 6,6", formula: "", formulaLabel: "(C12H22N2O2)n", category: "materials", structureMode: "card-only", teach: "Nylon 6,6 is a fiber. Each repeat has two stretches of six carbons and amide links." },
   { id: "spidroin", name: "Spider silk", formula: "", formulaLabel: "protein", category: "materials", structureMode: "card-only", teach: "Spider silk is a protein fiber. The strength is in how the chains pack." },
-  { id: "mbba", name: "MBBA", formula: "C18H21NO", category: "materials", structureMode: "card-only", teach: "MBBA is a liquid crystal: a rod-shaped molecule that lines up and still flows." },
+  { id: "mbba", name: "MBBA", formula: "C18H21NO", category: "materials", structureMode: "ballstick", teach: "MBBA is a liquid crystal: a rod-shaped molecule that lines up and still flows.", note: "The carbon–nitrogen double bond is trans, which makes the rod. Double lines in the rings are one Kekulé drawing." },
   { id: "barium-titanate", name: "Barium titanate", formula: "BaO3Ti", formulaLabel: "BaTiO3", category: "materials", structureMode: "card-only", teach: "Barium titanate, BaTiO3, is a ceramic that stores electric charge." },
   { id: "perovskite", name: "Perovskite", formula: "", formulaLabel: "CH3NH3PbX3", category: "materials", structureMode: "card-only", teach: "This perovskite is a solar-cell crystal: a methylammonium ion, lead, and a halide (the X)." },
   { id: "chitin", name: "Chitin", formula: "", formulaLabel: "(C8H13NO5)n", category: "materials", structureMode: "card-only", teach: "Chitin is the tough repeat in insect shells and in many mushroom walls." },
@@ -154,9 +154,9 @@ export const MOLECULES = [
   // Botanical & animal anomalies
   { id: "chlorophyll-a", name: "Chlorophyll a", formula: "C55H72MgN4O5", category: "bio", structureMode: "card-only", teach: "Chlorophyll a is the green pigment that catches light in plants. Magnesium sits in a large ring." },
   { id: "hemoglobin", name: "Hemoglobin", formula: "", formulaLabel: "protein", category: "bio", structureMode: "card-only", teach: "Hemoglobin is the protein in red blood cells that carries oxygen. Iron sits in each heme." },
-  { id: "resveratrol", name: "Resveratrol", formula: "C14H12O3", category: "bio", structureMode: "card-only", teach: "Resveratrol is a molecule in grape skins, studied for what it does in the body." },
-  { id: "curcumin", name: "Curcumin", formula: "C21H20O6", category: "bio", structureMode: "card-only", teach: "Curcumin is the yellow molecule in turmeric." },
-  { id: "luciferin", name: "Luciferin", formula: "C11H8N2O3S", category: "bio", structureMode: "card-only", teach: "Firefly luciferin is the molecule a firefly uses when it makes light." },
+  { id: "resveratrol", name: "Resveratrol", formula: "C14H12O3", category: "bio", structureMode: "ballstick", teach: "Resveratrol is a molecule in grape skins, studied for what it does in the body.", note: "The link between the rings is trans. Double lines in the rings are one Kekulé drawing." },
+  { id: "curcumin", name: "Curcumin", formula: "C21H20O6", category: "bio", structureMode: "ballstick", teach: "Curcumin is the yellow molecule in turmeric.", note: "Both links in the chain are trans. This drawing is the diketone. Double lines in the rings are one Kekulé drawing." },
+  { id: "luciferin", name: "Luciferin", formula: "C11H8N2O3S2", category: "bio", structureMode: "ballstick", teach: "Firefly luciferin is the molecule a firefly uses when it makes light.", note: "This is D-luciferin, the form a firefly uses. Double lines in the ring are one Kekulé drawing." },
   { id: "tetrodotoxin", name: "Tetrodotoxin", formula: "C11H17N3O8", category: "bio", structureMode: "card-only", restraint: true, teach: "Tetrodotoxin is the poison in pufferfish. It blocks channels that nerves need to fire." },
   { id: "cantharidin", name: "Cantharidin", formula: "C10H12O4", category: "bio", structureMode: "card-only", restraint: true, teach: "Cantharidin is a blistering molecule made by blister beetles." },
   { id: "charybdotoxin", name: "Charybdotoxin", formula: "", formulaLabel: "peptide", category: "bio", structureMode: "card-only", restraint: true, teach: "Charybdotoxin is a peptide in scorpion venom that blocks a potassium channel." },
