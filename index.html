@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>Periodic table · intro chemistry</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.52);
+    --accent: #ffb36b;
+    --line: rgba(239, 230, 242, 0.1);
+    --up: #ffd166;
+    --down: #a78bfa;
+    --door: #cfeaff;
+    --doorline: rgba(126, 200, 255, 0.55);
+    --boson: #7ec8ff;
+    --higgs: #ff8fab;
+    --meson: #c4a1ff;
+    --cat-alkali: #e86a5c;
+    --cat-alkaline-earth: #ffb36b;
+    --cat-transition: #b08cc8;
+    --cat-post-transition: #78a0be;
+    --cat-metalloid: #8cbe96;
+    --cat-nonmetal: #6eb4c8;
+    --cat-halogen: #64c8b4;
+    --cat-noble: #8296ff;
+    --cat-lanthanide: #dc96b4;
+    --cat-actinide: #c8788c;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px);
+    --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%;
+    background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans);
+  }
+  body { overflow: hidden; }
+
+  .app {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    min-height: 100dvh;
+    padding:
+      max(12px, var(--safe-t))
+      max(12px, var(--safe-r))
+      max(12px, var(--safe-b))
+      max(12px, var(--safe-l));
+    gap: 10px;
+  }
+
+  .top {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .top .tag {
+    margin: 0 0 4px;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(255, 179, 107, 0.78);
+  }
+  .top h1 {
+    margin: 0; font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.2rem, 3.5vw, 1.65rem); letter-spacing: -0.03em; line-height: 1.05;
+  }
+  .top h1 em { font-style: normal; font-weight: 300; color: var(--mute); }
+  .teach {
+    margin: 6px 0 0;
+    max-width: 40ch;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.01em;
+    line-height: 1.45; color: var(--mute); text-transform: none;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 10px; justify-content: flex-end;
+    font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--mute); max-width: 440px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .table-panel, .atom-panel {
+    min-height: 0; border: 1px solid var(--line);
+    border-radius: 14px; background: rgba(20, 8, 24, 0.65);
+    overflow: hidden;
+  }
+  .table-panel { display: flex; flex-direction: column; }
+  /* Stage row is minmax(0,1fr) so the WebGL canvas cannot collapse to 0×0. */
+  .atom-panel {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    position: relative;
+  }
+  .atom-panel.show-atlas {
+    grid-template-rows: minmax(0, 1fr) minmax(0, min(46%, 42dvh));
+  }
+  .stage-wrap {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .stage-wrap.atlas {
+    box-shadow: inset 0 0 0 1px rgba(126, 200, 255, 0.55);
+    background:
+      radial-gradient(120% 90% at 50% 40%, rgba(126, 200, 255, 0.12), rgba(20, 8, 24, 0) 62%),
+      #120a1f;
+  }
+
+  .table-scroll {
+    overflow: auto; -webkit-overflow-scrolling: touch;
+    padding: 10px; flex: 1; min-height: 0;
+  }
+
+  .ptable {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    grid-template-rows: repeat(7, auto) 10px repeat(2, auto);
+    gap: 3px;
+    width: 100%;
+    min-width: 640px;
+  }
+
+  .el {
+    aspect-ratio: 1;
+    border: 1px solid rgba(239, 230, 242, 0.08);
+    border-left: 3px solid transparent;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.03);
+    color: var(--pearl);
+    cursor: pointer;
+    padding: 3px 2px 3px 4px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: var(--font-sans);
+    transition: transform 0.12s, box-shadow 0.15s, filter 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 36px;
+  }
+  .el:hover, .el:focus-visible {
+    outline: none;
+    transform: translateY(-1px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  }
+  .el.active {
+    box-shadow: 0 0 0 2px var(--accent);
+    z-index: 1;
+  }
+  .el.active:hover, .el.active:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  }
+  .el .z {
+    font-family: var(--font-mono); font-size: clamp(7px, 0.9vw, 9px);
+    color: rgba(239, 230, 242, 0.82); line-height: 1; letter-spacing: 0.02em;
+  }
+  .el .sym {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(11px, 1.6vw, 15px);
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+
+  /* Family fills sit in the 0.35–0.55 range so they match the solid legend on the void. */
+  .cat-alkali { background: rgba(232, 106, 92, 0.48); border-left-color: var(--cat-alkali); }
+  .cat-alkaline-earth { background: rgba(255, 179, 107, 0.46); border-left-color: var(--cat-alkaline-earth); }
+  .cat-transition { background: rgba(176, 140, 200, 0.48); border-left-color: var(--cat-transition); }
+  .cat-post-transition { background: rgba(120, 160, 190, 0.48); border-left-color: var(--cat-post-transition); }
+  .cat-metalloid { background: rgba(140, 190, 150, 0.50); border-left-color: var(--cat-metalloid); }
+  .cat-nonmetal { background: rgba(110, 180, 200, 0.48); border-left-color: var(--cat-nonmetal); }
+  .cat-halogen { background: rgba(100, 200, 180, 0.48); border-left-color: var(--cat-halogen); }
+  .cat-noble { background: rgba(130, 150, 255, 0.46); border-left-color: var(--cat-noble); }
+  .cat-lanthanide { background: rgba(220, 150, 180, 0.46); border-left-color: var(--cat-lanthanide); }
+  .cat-actinide { background: rgba(200, 120, 140, 0.48); border-left-color: var(--cat-actinide); }
+
+  .atom-panel { min-height: 280px; }
+  .atom-chrome {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 12px 14px;
+  }
+  .atom-chrome .back {
+    pointer-events: auto; align-self: flex-start;
+    display: none;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent);
+    background: rgba(20, 8, 24, 0.72); border: 1px solid rgba(255,179,107,0.35);
+    border-radius: 999px; padding: 7px 12px; cursor: pointer;
+  }
+  .formula {
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(20,8,24,0.82), rgba(20,8,24,0.35) 70%, transparent);
+    margin: -12px -14px 0; padding: 12px 14px 28px;
+  }
+  .formula .name-row {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .formula .sym-big {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.04em; line-height: 1;
+  }
+  .formula .ename {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(1rem, 2.4vw, 1.25rem); color: var(--mute);
+  }
+  .counts {
+    margin-top: 8px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em;
+    text-transform: none; color: var(--mute);
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+  }
+  .counts b { color: var(--pearl); font-weight: 700; }
+  .counts .p { color: #ff6b3d; }
+  .counts .n { color: #6c84a8; }
+  .counts .e { color: #5fd6c6; }
+  .atom-bottom {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    pointer-events: none;
+  }
+  .ladder-ui {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 5px;
+    pointer-events: none;
+  }
+  .ladder-ui .row {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    pointer-events: none;
+  }
+  .chip {
+    pointer-events: auto;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--pearl);
+    background: rgba(20, 8, 24, 0.72); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 11px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .chip.on, .chip:hover {
+    border-color: rgba(255, 179, 107, 0.55);
+    background: rgba(255, 179, 107, 0.14);
+  }
+  .chip.locked, .chip:disabled {
+    opacity: 0.38; cursor: default;
+  }
+  .chip.locked:hover, .chip:disabled:hover {
+    border-color: var(--line);
+    background: rgba(20, 8, 24, 0.72);
+  }
+  .chip.door {
+    border-style: dashed; border-color: var(--doorline); color: var(--door);
+    text-transform: none; letter-spacing: 0.04em;
+  }
+  .chip.door.on, .chip.door:hover:not(:disabled):not(.locked) {
+    background: rgba(126, 200, 255, 0.16);
+    border-color: rgba(126, 200, 255, 0.85);
+  }
+  .doorsep {
+    display: inline-flex; align-items: center; height: 26px; padding: 0 7px;
+    border-left: 1px dashed var(--doorline); border-right: 1px dashed var(--doorline);
+    font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--door); pointer-events: none;
+  }
+  /* Particle symbols must NOT inherit text-transform:uppercase (γ→Γ, uud→UUD, 2p→2P). */
+  .teach, .counts, .pchip, .readout, .detail, .detail .big, .flowmini, .card, .card *, .badge, .badge b, #nucleonPick, #nucleonPick *, .empty-stage, .empty-stage * {
+    text-transform: none !important;
+  }
+  .pchip {
+    pointer-events: auto;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.02em;
+    color: var(--pearl); background: rgba(20, 8, 24, 0.72);
+    border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pchip.on, .pchip:hover {
+    border-color: rgba(255, 179, 107, 0.65);
+    background: rgba(255, 179, 107, 0.14);
+  }
+  .readout {
+    pointer-events: none;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.01em;
+    line-height: 1.45; color: var(--pearl);
+    background: rgba(20, 8, 24, 0.55); padding: 6px 8px; border-radius: 8px;
+    max-width: min(520px, 100%);
+  }
+  .readout .dim { color: var(--mute); }
+  .badge {
+    position: absolute; right: 12px; top: 12px; z-index: 3; pointer-events: none;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.04em; text-align: right;
+    padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line);
+    background: rgba(20, 8, 24, 0.72); color: var(--mute); max-width: min(240px, 42%);
+  }
+  .badge[hidden] { display: none !important; }
+  .badge.atlas { color: var(--door); border-color: var(--doorline); border-style: dashed; }
+  .handoff {
+    position: absolute; inset: 0; z-index: 12; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(20, 8, 24, 0.72);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  }
+  .handoff.show { display: flex; }
+  .card {
+    width: min(470px, calc(100% - 28px)); max-height: calc(100% - 28px); overflow: auto;
+    background: rgba(26, 11, 33, 0.97); border: 1px dashed rgba(126, 200, 255, 0.6);
+    border-radius: 16px; padding: 18px 18px 14px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card .kick { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--door); margin: 0 0 6px; }
+  .card h4 {
+    margin: 0 0 10px; font-family: var(--font-display); font-weight: 600;
+    font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.15;
+  }
+  .card p { margin: 0 0 10px; font-size: 0.9rem; line-height: 1.5; color: var(--mute); }
+  .card p strong { color: var(--pearl); font-weight: 600; }
+  .flowmini {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+    margin: 0 0 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.01em;
+  }
+  .flowmini span { padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--mute); }
+  .flowmini span.here { color: var(--pearl); border-color: rgba(255,179,107,0.55); }
+  .flowmini span.door { border-style: dashed; border-color: var(--doorline); color: var(--door); }
+  .flowmini i { font-style: normal; color: rgba(239,230,242,0.3); }
+  .cardrow { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn {
+    pointer-events: auto;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em;
+    color: var(--pearl); background: rgba(20, 8, 24, 0.72); border: 1px solid var(--line);
+    border-radius: 999px; padding: 7px 12px; cursor: pointer;
+  }
+  .btn.primary { border-color: rgba(255, 179, 107, 0.55); color: var(--accent); }
+  .btn.doorbtn { border-style: dashed; border-color: var(--doorline); color: var(--door); }
+  .atlas-dock {
+    min-height: 0; min-width: 0; overflow: auto; -webkit-overflow-scrolling: touch;
+    border-top: 1px dashed var(--doorline);
+    padding: 8px 10px 10px;
+    background: rgba(18, 10, 31, 0.92);
+  }
+  .atlas-dock[hidden] { display: none !important; }
+  .atlas-dock .kick { font-family: var(--font-mono); font-size: 11px; color: var(--door); margin: 0 0 4px; letter-spacing: 0.02em; }
+  .atlas-dock h3 {
+    margin: 0 0 6px; font-family: var(--font-display); font-weight: 600;
+    font-size: 1rem; letter-spacing: -0.02em;
+  }
+  .agroups { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+  .agroup { border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+  .agroup.meson { border-color: rgba(196, 161, 255, 0.4); }
+  .agroup.contrast { border-style: dashed; }
+  .agroup h4 {
+    margin: 0 0 6px; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.04em; color: var(--accent); font-weight: 700; text-transform: none;
+  }
+  .agroup h4 span { color: var(--mute); font-weight: 400; }
+  .agroup .sub {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--mute); margin: 4px 0 3px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .detail { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
+  .detail .big {
+    font-family: var(--font-display); font-size: 1.15rem; font-weight: 600;
+    margin-right: 8px; text-transform: none;
+  }
+  .detail p { margin: 6px 0 0; font-size: 0.86rem; line-height: 1.45; color: var(--mute); }
+  .frow {
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.01em; color: var(--mute);
+    text-transform: none;
+  }
+  .frow b { color: var(--pearl); font-weight: 700; }
+  .hint-atom {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.01em;
+    text-transform: none; color: var(--mute); line-height: 1.4;
+    align-self: flex-start; max-width: min(420px, 100%);
+    background: rgba(20,8,24,0.55); padding: 6px 8px; border-radius: 6px;
+  }
+  /* stage must own the 1fr row so the canvas isn't 0×0 */
+  #stage {
+    min-height: 0;
+    min-width: 0;
+    position: relative;
+  }
+  #stage canvas {
+    position: absolute; inset: 0;
+    display: block; width: 100%; height: 100%;
+    touch-action: none; cursor: grab;
+  }
+  #stage canvas:active { cursor: grabbing; }
+  .empty-stage {
+    position: absolute; inset: 0; display: grid; place-items: center; align-content: center;
+    gap: 8px; padding: 20px; text-align: center;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.02em;
+    line-height: 1.45; text-transform: none; color: var(--mute); pointer-events: none;
+    z-index: 1;
+  }
+  .empty-stage .path { display: block; max-width: 34ch; color: rgba(239, 230, 242, 0.78); }
+  .empty-stage.hidden { display: none; }
+  .vig {
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(ellipse at 50% 55%, transparent 40%, rgba(5,1,8,0.5) 100%);
+  }
+  #err {
+    position: absolute; right: 10px; bottom: 10px; z-index: 4; max-width: 280px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em;
+    color: #ffd6d6; background: rgba(58, 18, 18, 0.82); border-radius: 8px;
+    padding: 8px 10px; display: none;
+  }
+
+  html.embed, body.embed { background: transparent !important; }
+  body.embed .top, body.embed .vig { display: none !important; }
+  body.embed .app { padding: 0; }
+  body.embed .workspace { grid-template-columns: 1fr; height: 100%; }
+  body.embed .table-panel { display: none; }
+  body.embed .atom-panel { border: none; border-radius: 0; background: transparent; }
+
+  @media (max-width: 900px) {
+    .workspace {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr;
+    }
+    .atom-panel {
+      position: fixed; inset: 0; z-index: 20;
+      border-radius: 0; border: none;
+      transform: translateY(105%);
+      transition: transform 0.28s ease;
+      background: var(--void);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      min-height: 100dvh;
+      height: 100dvh;
+    }
+    .atom-panel.open {
+      transform: translateY(0);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      min-height: 100dvh;
+      height: 100dvh;
+    }
+    .atom-panel.open.show-atlas {
+      grid-template-rows: minmax(0, 1fr) minmax(120px, 42dvh);
+    }
+    .atom-panel.open #stage { min-height: 0; }
+    .atom-chrome .back { display: inline-flex; }
+    body.atom-open { overflow: hidden; }
+    .ptable { min-width: 560px; }
+    .legend { max-width: 100%; justify-content: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .el { transition: none; }
+    .atom-panel { transition: none; }
+  }
+</style>
+</head>
+<body>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  if (q.has('embed')) {
+    document.body.classList.add('embed');
+    document.documentElement.classList.add('embed');
+  }
+})();
+</script>
+
+<div class="app">
+  <header class="top">
+    <div>
+      <p class="tag">Intro chemistry</p>
+      <h1>Periodic table <em>H–Og</em></h1>
+      <p class="teach">Atom structure → nucleus → quarks → Standard Model atlas</p>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:var(--cat-alkali)"></i>alkali</span>
+      <span><i style="background:var(--cat-alkaline-earth)"></i>alk. earth</span>
+      <span><i style="background:var(--cat-transition)"></i>transition</span>
+      <span><i style="background:var(--cat-post-transition)"></i>post-trans.</span>
+      <span><i style="background:var(--cat-metalloid)"></i>metalloid</span>
+      <span><i style="background:var(--cat-nonmetal)"></i>nonmetal</span>
+      <span><i style="background:var(--cat-halogen)"></i>halogen</span>
+      <span><i style="background:var(--cat-noble)"></i>noble</span>
+      <span><i style="background:var(--cat-lanthanide)"></i>lanthanide</span>
+      <span><i style="background:var(--cat-actinide)"></i>actinide</span>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <section class="table-panel" aria-label="Periodic table">
+      <div class="table-scroll">
+        <div class="ptable" id="ptable" role="list"></div>
+      </div>
+    </section>
+
+    <section class="atom-panel" id="atomPanel" aria-label="Atom view">
+      <div class="stage-wrap" id="stageWrap">
+        <div class="empty-stage" id="emptyHint"><span>Tap any element, H–Og</span><span class="path">Intro chem · atom structure → nucleus → quarks → Standard Model atlas</span></div>
+        <div id="stage"></div>
+        <div class="vig" aria-hidden="true"></div>
+        <div class="badge" id="stageBadge" hidden>Bohr-ish · not to scale</div>
+        <div class="atom-chrome">
+          <div>
+            <button type="button" class="back" id="backBtn" aria-label="Back">← back</button>
+            <div class="formula" id="formula" hidden>
+              <div class="name-row">
+                <span class="sym-big" id="fSym">—</span>
+                <span class="ename" id="fName">—</span>
+              </div>
+              <div class="counts" id="fCounts"></div>
+              <div class="readout" id="stageReadout" hidden></div>
+            </div>
+          </div>
+          <div class="atom-bottom">
+            <div class="ladder-ui" id="ladderUi" hidden>
+              <div class="row" id="ladderChips" role="group" aria-label="Stage">
+                <button type="button" class="chip on" data-stage="atom">Atom</button>
+                <button type="button" class="chip" data-stage="nucleus">Nucleus</button>
+                <button type="button" class="chip locked" data-stage="quark" disabled>Quark</button>
+                <span class="doorsep" aria-hidden="true">door</span>
+                <button type="button" class="chip door locked" data-stage="atlas" disabled>Atlas</button>
+                <button type="button" class="chip" id="btnBack">← Back</button>
+                <button type="button" class="chip" id="btnNext">Next →</button>
+              </div>
+              <div class="row" id="nucleonPick" hidden role="group" aria-label="Nucleon"></div>
+            </div>
+            <div class="hint-atom" id="atomHint">Intro chem · atom structure → nucleus → quarks → Standard Model atlas</div>
+          </div>
+        </div>
+        <div class="handoff" id="handoff" role="dialog" aria-modal="true" aria-labelledby="handoffTitle">
+          <div class="card">
+            <p class="kick">Door · not a zoom</p>
+            <h4 id="handoffTitle">Leaving the atom · Standard Model atlas</h4>
+            <div class="flowmini" id="handoffFlow" aria-hidden="true"></div>
+            <div id="handoffBody"></div>
+            <div class="cardrow">
+              <button type="button" class="btn doorbtn" id="btnEnter">Enter atlas ⇥</button>
+              <button type="button" class="btn" id="btnStay">← Stay on quark (Esc)</button>
+            </div>
+          </div>
+        </div>
+        <div id="err" role="status"></div>
+      </div>
+      <div class="atlas-dock" id="atlasDock" hidden></div>
+    </section>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { ELEMENTS, MASS_SOURCE } from './periodic-table-data.js';
+
+const VOID = 0x140818;
+const PROTON_COLOR = 0xff6b3d;
+const NEUTRON_COLOR = 0x6c84a8;
+const ELECTRON_COLOR = 0x5fd6c6;
+const RING_COLOR = 0x5d4a6c;
+const UP_COLOR = 0xffd166;
+const DOWN_COLOR = 0xa78bfa;
+const BOSON_COLOR = 0x7ec8ff;
+const HIGGS_COLOR = 0xff8fab;
+const MESON_COLOR = 0xc4a1ff;
+const NU_COLOR = 0xb8c4d8;
+const SHELL_LETTERS = ['K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
+
+/** charge in units of e/3 — exact thirds, never floats */
+const Q3 = { u: 2, d: -1, c: 2, s: -1, t: 2, b: -1, ubar: -2, dbar: 1, sbar: 1 };
+const PROTON_Q = Object.freeze(['u', 'u', 'd']);
+const NEUTRON_Q = Object.freeze(['u', 'd', 'd']);
+const sumQ3 = (fl) => fl.reduce((s, f) => s + Q3[f], 0);
+function fmt3(v) {
+  if (v === 0) return '0';
+  const s = v > 0 ? '+' : '−';
+  const a = Math.abs(v);
+  return a % 3 === 0 ? `${s}${a / 3}` : `${s}${a}/3`;
+}
+(function assertCore() {
+  console.assert(PROTON_Q.join('') === 'uud' && sumQ3(PROTON_Q) === 3, 'proton = uud, +1');
+  console.assert(NEUTRON_Q.join('') === 'udd' && sumQ3(NEUTRON_Q) === 0, 'neutron = udd, 0');
+  console.assert(sumQ3(['u', 'dbar']) === 3, 'π⁺ = u d̄ → +1');
+  console.assert(sumQ3(['d', 'ubar']) === -3, 'π⁻ = d ū → −1');
+  console.assert(sumQ3(['u', 'sbar']) === 3, 'K⁺ = u s̄ → +1');
+  console.assert(Math.round(12.011) - 6 === 6, 'carbon neutrons');
+  console.assert(Math.round(1.008) - 1 === 0, 'hydrogen neutrons');
+})();
+
+const ATLAS = [
+  { id: 'u', grp: 'quark', sym: 'u', name: 'up quark', q3: 2, spin: '½', mass: '≈ 2.2 MeV', kind: 'quark', hue: 'up', note: 'Gen 1. Two of these sit in every proton (uud).' },
+  { id: 'd', grp: 'quark', sym: 'd', name: 'down quark', q3: -1, spin: '½', mass: '≈ 4.7 MeV', kind: 'quark', hue: 'down', note: 'Gen 1. One in the proton (uud), two in the neutron (udd).' },
+  { id: 'c', grp: 'quark', sym: 'c', name: 'charm quark', q3: 2, spin: '½', mass: '≈ 1.27 GeV', kind: 'quark', hue: 'up', note: 'Gen 2 up-type.' },
+  { id: 's', grp: 'quark', sym: 's', name: 'strange quark', q3: -1, spin: '½', mass: '≈ 93 MeV', kind: 'quark', hue: 'down', note: 'Gen 2 down-type.' },
+  { id: 't', grp: 'quark', sym: 't', name: 'top quark', q3: 2, spin: '½', mass: '≈ 173 GeV', kind: 'quark', hue: 'up', note: 'Gen 3 up-type · heaviest known elementary particle.' },
+  { id: 'b', grp: 'quark', sym: 'b', name: 'bottom quark', q3: -1, spin: '½', mass: '≈ 4.18 GeV', kind: 'quark', hue: 'down', note: 'Gen 3 down-type.' },
+  { id: 'e', grp: 'lepton', sym: 'e⁻', name: 'electron', q3: -3, spin: '½', mass: '0.511 MeV', kind: 'lepton', note: 'The discrete electron heads on the Atom Bohr orbits. Elementary.' },
+  { id: 've', grp: 'lepton', sym: 'νₑ', name: 'electron neutrino', q3: 0, spin: '½', mass: '< 1 eV (non-zero)', kind: 'nu', note: 'Neutral lepton. Its antiparticle shows up in β⁻ decay.' },
+  { id: 'mu', grp: 'lepton', sym: 'μ⁻', name: 'muon', q3: -3, spin: '½', mass: '105.7 MeV', kind: 'lepton', note: 'Gen 2 charged lepton.' },
+  { id: 'vmu', grp: 'lepton', sym: 'ν_μ', name: 'muon neutrino', q3: 0, spin: '½', mass: '< 1 eV (non-zero)', kind: 'nu', note: 'Made with the antimuon when π⁺ decays.' },
+  { id: 'tau', grp: 'lepton', sym: 'τ⁻', name: 'tau', q3: -3, spin: '½', mass: '1.777 GeV', kind: 'lepton', note: 'Gen 3 charged lepton.' },
+  { id: 'vtau', grp: 'lepton', sym: 'ν_τ', name: 'tau neutrino', q3: 0, spin: '½', mass: '< 1 eV (non-zero)', kind: 'nu', note: 'Gen 3 neutral lepton.' },
+  { id: 'gam', grp: 'gauge', sym: 'γ', name: 'photon', q3: 0, spin: '1', mass: '0', kind: 'gauge', note: 'Carries electromagnetism. Massless.' },
+  { id: 'g', grp: 'gauge', sym: 'g', name: 'gluon', q3: 0, spin: '1', mass: '0', kind: 'gauge', note: 'Carries the strong force; 8 colour states. Binds the quarks inside a nucleon.' },
+  { id: 'w', grp: 'gauge', sym: 'W±', name: 'W boson', q3: null, qtxt: '±1', spin: '1', mass: '80.4 GeV', kind: 'gauge', note: 'Charged weak boson. Not a nucleon and not inside the nucleus pack.' },
+  { id: 'z', grp: 'gauge', sym: 'Z⁰', name: 'Z boson', q3: 0, spin: '1', mass: '91.2 GeV', kind: 'gauge', note: 'Neutral weak boson.' },
+  { id: 'h', grp: 'higgs', sym: 'H⁰', name: 'Higgs boson', q3: 0, spin: '0', mass: '125.1 GeV', kind: 'higgs', note: 'The only elementary spin-0 particle.' },
+  { id: 'pip', grp: 'meson', sym: 'π⁺', name: 'pion plus', q3: 3, spin: '0', mass: '139.6 MeV', kind: 'meson', pair: ['u', 'dbar'], comp: 'u d̄', note: 'Quark + antiquark (+2/3 + 1/3 = +1). A meson — not a nucleon.' },
+  { id: 'pim', grp: 'meson', sym: 'π⁻', name: 'pion minus', q3: -3, spin: '0', mass: '139.6 MeV', kind: 'meson', pair: ['d', 'ubar'], comp: 'd ū', note: 'Antiparticle of π⁺ (−1/3 − 2/3 = −1).' },
+  { id: 'pi0', grp: 'meson', sym: 'π⁰', name: 'pion zero', q3: 0, spin: '0', mass: '135.0 MeV', kind: 'meson', pair: ['u', 'ubar'], comp: '(uū − dd̄)/√2', note: 'Quantum mix of uū and dd̄ (icon shows one uū pair). A meson — not a nucleon.' },
+  { id: 'kp', grp: 'meson', sym: 'K⁺', name: 'kaon plus', q3: 3, spin: '0', mass: '493.7 MeV', kind: 'meson', pair: ['u', 'sbar'], comp: 'u s̄', note: 'Strange meson (+2/3 + 1/3 = +1).' },
+  { id: 'bp', grp: 'baryon', sym: 'p', name: 'proton', q3: 3, spin: '½', mass: '938.3 MeV', kind: 'baryon', trio: ['u', 'u', 'd'], comp: 'uud', note: 'Three quarks — a baryon, where the Quark stage left you. Composite, not elementary, not a meson.' },
+  { id: 'bn', grp: 'baryon', sym: 'n', name: 'neutron', q3: 0, spin: '½', mass: '939.6 MeV', kind: 'baryon', trio: ['u', 'd', 'd'], comp: 'udd', note: 'Three quarks — a baryon. Composite, not elementary, not a meson.' },
+];
+ATLAS.forEach((p) => {
+  if (p.pair) console.assert(sumQ3(p.pair) === p.q3, `${p.id} charge`);
+  if (p.trio) console.assert(sumQ3(p.trio) === p.q3, `${p.id} charge`);
+  if (p.grp === 'meson') console.assert(p.pair.length === 2 && p.pair[1].endsWith('bar'), `${p.sym} is q q̄`);
+});
+console.assert(ATLAS.filter((p) => ['quark', 'lepton', 'gauge', 'higgs'].includes(p.grp)).length === 17, '17 elementary');
+const chargeTxt = (p) => (p.q3 === null ? p.qtxt : fmt3(p.q3));
+const qSym = { u: 'u', d: 'd', s: 's', ubar: 'ū', dbar: 'd̄', sbar: 's̄' };
+const qHueHex = (f) => (f[0] === 'u' || f[0] === 'c' || f[0] === 't' ? UP_COLOR : DOWN_COLOR);
+
+const params = new URLSearchParams(location.search);
+const embed = params.has('embed');
+const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+let still = motionQuery.matches || params.has('still');
+
+const ua = navigator.userAgent || '';
+const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isMobile = isIOS ||
+  matchMedia('(pointer: coarse)').matches ||
+  matchMedia('(max-width: 900px)').matches;
+
+const ptable = document.getElementById('ptable');
+const atomPanel = document.getElementById('atomPanel');
+const stage = document.getElementById('stage');
+const emptyHint = document.getElementById('emptyHint');
+const formula = document.getElementById('formula');
+const fSym = document.getElementById('fSym');
+const fName = document.getElementById('fName');
+const fCounts = document.getElementById('fCounts');
+const backBtn = document.getElementById('backBtn');
+const errEl = document.getElementById('err');
+const atomHint = document.getElementById('atomHint');
+const ladderUi = document.getElementById('ladderUi');
+const ladderChips = document.getElementById('ladderChips');
+const nucleonPickEl = document.getElementById('nucleonPick');
+const stageWrap = document.getElementById('stageWrap');
+const stageBadge = document.getElementById('stageBadge');
+const stageReadout = document.getElementById('stageReadout');
+const handoffEl = document.getElementById('handoff');
+const handoffFlow = document.getElementById('handoffFlow');
+const handoffBody = document.getElementById('handoffBody');
+const atlasDock = document.getElementById('atlasDock');
+const btnBack = document.getElementById('btnBack');
+const btnNext = document.getElementById('btnNext');
+const btnEnter = document.getElementById('btnEnter');
+const btnStay = document.getElementById('btnStay');
+
+function showErr(msg) {
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+}
+
+/** Virgil: neutrons from conventional mass via JS Math.round */
+function neutronsOf(el) {
+  return Math.round(el.atomicMass) - el.z;
+}
+
+/* Madelung Aufbau. ℓ from capacity: 2 s, 6 p, 10 d, 14 f. Same order the Bohr shells sum by n. */
+const LCHAR = ['s', 'p', 'd', 'f'];
+const AUFBAU = [
+  [1, 0, 2], [2, 0, 2], [2, 1, 6], [3, 0, 2], [3, 1, 6],
+  [4, 0, 2], [3, 2, 10], [4, 1, 6], [5, 0, 2], [4, 2, 10],
+  [5, 1, 6], [6, 0, 2], [4, 3, 14], [5, 2, 10], [6, 1, 6],
+  [7, 0, 2], [5, 3, 14], [6, 2, 10], [7, 1, 6],
+];
+
+function subshellFill(Z) {
+  const out = [];
+  let left = Z;
+  for (const [n, l, cap] of AUFBAU) {
+    if (left <= 0) break;
+    const e = Math.min(cap, left);
+    if (e <= 0) break;
+    out.push({ n, l, cap, e, id: `${n}${LCHAR[l]}`, label: `${n}${LCHAR[l]}` });
+    left -= e;
+  }
+  return out;
+}
+
+function shellPopulations(Z) {
+  const byN = new Map();
+  for (const s of subshellFill(Z)) byN.set(s.n, (byN.get(s.n) || 0) + s.e);
+  return [...byN.entries()].sort((a, b) => a[0] - b[0]);
+}
+
+function supCount(n) {
+  return String(n).replace(/[0-9]/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+}
+
+/** HUD only — not a zoom stage. Aufbau uses superscripts; shells are K/L/… counts. */
+function chemistryLabel(Z) {
+  const fills = subshellFill(Z);
+  const sum = fills.reduce((s, x) => s + x.e, 0);
+  const aufbau = fills.map((s) => s.label + supCount(s.e)).join(' ');
+  const shells = shellPopulations(Z)
+    .map(([n, count]) => `${SHELL_LETTERS[n - 1] || ('n' + n)}${count}`)
+    .join(' · ');
+  return { aufbau, shells, sum };
+}
+
+(function assertAufbau() {
+  const fmt = (Z) => subshellFill(Z).map((s) => s.label + s.e).join(' ');
+  console.assert(fmt(1) === '1s1', fmt(1));
+  console.assert(fmt(2) === '1s2', fmt(2));
+  console.assert(fmt(6) === '1s2 2s2 2p2', fmt(6));
+  console.assert(fmt(10) === '1s2 2s2 2p6', fmt(10));
+  console.assert(fmt(26) === '1s2 2s2 2p6 3s2 3p6 4s2 3d6', fmt(26));
+  console.assert(fmt(118) === '1s2 2s2 2p6 3s2 3p6 4s2 3d10 4p6 5s2 4d10 5p6 6s2 4f14 5d10 6p6 7s2 5f14 6d10 7p6', fmt(118));
+  const cHud = chemistryLabel(6);
+  console.assert(cHud.aufbau === '1s² 2s² 2p²' && cHud.shells === 'K2 · L4' && cHud.sum === 6, cHud);
+  const hHud = chemistryLabel(1);
+  console.assert(hHud.aufbau === '1s¹' && hHud.shells === 'K1' && hHud.sum === 1, hHud);
+  for (let z = 1; z <= 118; z++) {
+    const fill = subshellFill(z);
+    const sum = fill.reduce((s, x) => s + x.e, 0);
+    console.assert(sum === z, `Aufbau electrons ${sum} ≠ Z ${z}`);
+    console.assert(fill.every((x) => x.e > 0 && x.e <= x.cap), `cap ${z}`);
+  }
+})();
+
+function fibonacciSphere(i, n, radius) {
+  const phi = Math.acos(1 - 2 * (i + 0.5) / n);
+  const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+  return new THREE.Vector3(
+    radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.sin(phi) * Math.sin(theta),
+    radius * Math.cos(phi)
+  );
+}
+
+const chordCache = new Map();
+function unitChord(n) {
+  if (n <= 1) return Infinity;
+  const hit = chordCache.get(n);
+  if (hit) return hit;
+  const pts = [];
+  for (let i = 0; i < n; i++) pts.push(fibonacciSphere(i, n, 1));
+  let min = Infinity;
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) min = Math.min(min, pts[i].distanceTo(pts[j]));
+  }
+  chordCache.set(n, min);
+  return min;
+}
+
+/** One shell while it stays readable; then more shells, never a crushed core. */
+function planNucleonShells(count) {
+  if (count <= 24) return [count];
+  const shells = [];
+  let left = count;
+  let ring = 0;
+  while (left > 0) {
+    const cap = 12 + ring * 10;
+    let take = Math.min(left, cap);
+    if (left - take > 0 && left - take < 8) take = left;
+    shells.push(take);
+    left -= take;
+    ring++;
+  }
+  return shells;
+}
+
+/**
+ * Centers stay far enough apart that radii at 90% of half the nearest gap
+ * leave a small space between neighbors instead of a fused blob.
+ */
+function layoutNucleons(count) {
+  const nucleusR = Math.max(0.22, 0.12 + Math.cbrt(Math.max(1, count)) * 0.11);
+  if (count <= 1) {
+    return {
+      positions: [new THREE.Vector3()],
+      particleR: nucleusR * 0.62,
+      nucleusR,
+    };
+  }
+  const positions = [];
+  let prevR = 0;
+  const yAxis = new THREE.Vector3(0, 1, 0);
+  planNucleonShells(count).forEach((n, s) => {
+    const shellR = s === 0 ? 1 / unitChord(n) : Math.max(1 / unitChord(n), prevR + 1);
+    for (let i = 0; i < n; i++) {
+      const p = fibonacciSphere(i, n, shellR);
+      if (s) p.applyAxisAngle(yAxis, s * 0.9);
+      positions.push(p);
+    }
+    prevR = shellR;
+  });
+  let dMin = Infinity;
+  for (let i = 0; i < positions.length; i++) {
+    for (let j = i + 1; j < positions.length; j++) {
+      dMin = Math.min(dMin, positions[i].distanceTo(positions[j]));
+    }
+  }
+  const localR = (dMin * 0.90) / 2;
+  let maxAbs = 0;
+  for (const p of positions) maxAbs = Math.max(maxAbs, p.length());
+  const scale = nucleusR / (maxAbs + localR);
+  for (const p of positions) p.multiplyScalar(scale);
+  return { positions, particleR: localR * scale, nucleusR };
+}
+
+(function assertNucleonGaps() {
+  const check = (count, label) => {
+    const lay = layoutNucleons(count);
+    console.assert(lay.positions.length === count, `${label} seats`);
+    if (count <= 1) return;
+    let gap = Infinity;
+    const r = lay.particleR;
+    for (let i = 0; i < count; i++) {
+      for (let j = i + 1; j < count; j++) {
+        gap = Math.min(gap, lay.positions[i].distanceTo(lay.positions[j]) - 2 * r);
+      }
+    }
+    console.assert(gap > r * 0.12, `${label} nucleons overlap (gap/r ${gap / r})`);
+  };
+  check(1, 'H');
+  check(4, 'He');
+  check(12, 'C');
+  check(56, 'Fe');
+  check(238, 'U');
+  for (let z = 1; z <= 118; z++) {
+    const el = ELEMENTS.find((e) => e.z === z);
+    const n = Math.round(el.atomicMass) - z;
+    console.assert(n >= 0 && el.neutrons === n, `${el.symbol} neutrons`);
+    if (z === 6) console.assert(n === 6, 'carbon 6n');
+    if (z <= 20 || z === 26 || z === 79 || z === 92 || z === 118) check(z + n, el.symbol);
+  }
+})();
+
+/* ---------- table ---------- */
+const byZ = new Map(ELEMENTS.map((e) => [e.z, e]));
+const cellButtons = new Map();
+
+function gridRowFor(el) {
+  // data period 8/9 (f-block) → CSS rows 9/10 (row 8 = gap)
+  if (el.period >= 8) return el.period + 1;
+  return el.period;
+}
+
+function placeCell(el) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = `el cat-${el.category}`;
+  btn.style.gridColumn = String(el.group);
+  btn.style.gridRow = String(gridRowFor(el));
+  btn.dataset.z = String(el.z);
+  btn.setAttribute('role', 'listitem');
+  btn.setAttribute('aria-label', `${el.name}, atomic number ${el.z}`);
+  btn.innerHTML = `<span class="z">${el.z}</span><span class="sym">${el.symbol}</span>`;
+  btn.addEventListener('click', () => selectElement(el.z));
+  ptable.appendChild(btn);
+  cellButtons.set(el.z, btn);
+}
+
+for (const el of ELEMENTS) placeCell(el);
+
+/* ---------- WebGL ---------- */
+let renderer, scene, camera, controls, composer;
+let atomRoot = null;
+let electronRings = [];
+let sphereGeo = null;
+let electronGeo = null;
+let hitNucleus = null;
+let raf = 0;
+let t = 0;
+const clock = new THREE.Clock();
+let currentZ = null;
+const dummy = new THREE.Object3D();
+const raycaster = new THREE.Raycaster();
+const pointerNdc = new THREE.Vector2();
+
+/* Chemistry first, then one nucleon, then the atlas door */
+const stageState = { stage: 'atom' };
+const pickState = { kind: 'p', slot: 0 };
+let atlasSel = 'pip';
+let atlasRoot = null;
+let makeSatin = null;
+const LADDER = ['atom', 'nucleus', 'quark', 'atlas'];
+let eOpacity = 1;
+let nOpacity = 1;
+let camKey = 'atom';
+const CAM = {
+  atom: { dist: 5.4, elev: 1.1, min: 2.8, max: 14 },
+  nucleus: { dist: 1.45, elev: 0.35, min: 0.85, max: 4.0 },
+};
+const camAnim = {
+  active: false, t0: 0, dur: 0.7,
+  fromPos: new THREE.Vector3(), toPos: new THREE.Vector3(),
+  fromTarget: new THREE.Vector3(), toTarget: new THREE.Vector3(),
+  fromE: 1, toE: 1, fromN: 1, toN: 1,
+  onDone: null,
+};
+
+function disposeAtomMaterials(obj) {
+  obj.traverse((o) => {
+    if (o.geometry && o.geometry !== sphereGeo && o.geometry !== electronGeo) o.geometry.dispose();
+    if (o.material) {
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      for (const m of mats) {
+        if (m.map) m.map.dispose();
+        m.dispose();
+      }
+    }
+  });
+}
+
+function clearAtom() {
+  if (!atomRoot || !scene) return;
+  scene.remove(atomRoot);
+  disposeAtomMaterials(atomRoot);
+  atomRoot = null;
+  electronRings = [];
+  hitNucleus = null;
+}
+
+function buildAtom(el) {
+  clearAtom();
+  const root = new THREE.Group();
+  const Z = el.z;
+  const N = neutronsOf(el);
+  const E = Z;
+
+  if (N !== el.neutrons) {
+    console.warn(`[periodic-table] stored neutrons ${el.neutrons} ≠ round(mass)-Z ${N} for ${el.symbol}`);
+  }
+
+  const nucleonCount = Z + N;
+  const packed = layoutNucleons(nucleonCount);
+  const nucleusR = packed.nucleusR;
+  const particleR = packed.particleR;
+  console.assert(packed.positions.length === nucleonCount, `${el.symbol} nucleon seats`);
+
+  // Satin nucleons stay locked. Atom electrons are B2: bright heads on faint rings.
+  const protonMat = makeSatin(PROTON_COLOR, 0.12);
+  const neutronMat = makeSatin(NEUTRON_COLOR, 0.06);
+  const electronMat = new THREE.MeshStandardMaterial({
+    color: 0x9af6ea,
+    emissive: ELECTRON_COLOR,
+    emissiveIntensity: 0.42,
+    metalness: 0,
+    roughness: 0.32,
+  });
+
+  const protons = new THREE.InstancedMesh(sphereGeo, protonMat, Math.max(1, Z));
+  const neutrons = N > 0 ? new THREE.InstancedMesh(sphereGeo, neutronMat, N) : null;
+
+  // Build type list: roughly alternate p/n by remaining ratio
+  const types = [];
+  let rp = Z, rn = N;
+  for (let i = 0; i < nucleonCount; i++) {
+    if (rp > 0 && (rn === 0 || rp / (rp + rn) >= rn / (rp + rn))) {
+      types.push('p'); rp--;
+    } else {
+      types.push('n'); rn--;
+    }
+  }
+
+  let pi = 0, ni = 0;
+  const nucleonRecs = [];
+  for (let i = 0; i < nucleonCount; i++) {
+    const pos = packed.positions[i];
+    dummy.position.copy(pos);
+    const isP = types[i] === 'p';
+    const baseScale = particleR * (isP ? 1 : 0.96);
+    dummy.scale.setScalar(baseScale);
+    dummy.rotation.set(0, 0, 0);
+    dummy.updateMatrix();
+    if (isP) {
+      protons.setMatrixAt(pi, dummy.matrix);
+      nucleonRecs.push({ kind: 'p', slot: pi, pos: pos.clone(), baseScale });
+      pi++;
+    } else {
+      neutrons.setMatrixAt(ni, dummy.matrix);
+      nucleonRecs.push({ kind: 'n', slot: ni, pos: pos.clone(), baseScale });
+      ni++;
+    }
+  }
+  const firstP = nucleonRecs.find((r) => r.kind === 'p');
+  pickState.kind = 'p';
+  pickState.slot = firstP ? firstP.slot : 0;
+  protons.instanceMatrix.needsUpdate = true;
+  if (neutrons) neutrons.instanceMatrix.needsUpdate = true;
+  root.add(protons);
+  if (neutrons) root.add(neutrons);
+
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: 0xffb36b,
+    transparent: true,
+    opacity: 0.07,
+    depthWrite: false,
+  });
+  const glow = new THREE.Mesh(sphereGeo, glowMat);
+  glow.scale.setScalar(nucleusR * 1.12);
+  root.add(glow);
+
+  const shells = shellPopulations(E);
+  if (el.symbol === 'C') console.assert(shells.map((s) => s[1]).join(',') === '2,4' && N === 6, 'carbon 6p/6n/2+4e');
+  if (el.symbol === 'H') console.assert(N === 0 && shells.length === 1 && shells[0][1] === 1, 'hydrogen 1p/0n/1e');
+  const maxN = shells.length ? shells[shells.length - 1][0] : 1;
+  const baseOrbit = nucleusR + 0.55;
+  const eSize = E > 54 ? 0.042 : E > 20 ? 0.055 : 0.07;
+  const mergeHeavy = E > 36;
+  electronRings = [];
+
+  const allElectrons = E > 0 ? new THREE.InstancedMesh(electronGeo, electronMat, E) : null;
+  let eIndex = 0;
+  const ringMeshes = [];
+
+  for (const [n, count] of shells) {
+    let radius = baseOrbit + (n - 1) * (mergeHeavy ? 0.42 : 0.55);
+    if (mergeHeavy && n >= 5) radius = baseOrbit + 3 * 0.42 + (n - 4) * 0.32;
+
+    const ringGeo = new THREE.TorusGeometry(radius, 0.008, 6, isMobile ? 48 : 96);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: RING_COLOR,
+      transparent: true,
+      opacity: 0.16,
+      depthWrite: false,
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 2;
+    const tilt = (n % 2 === 0 ? 0.12 : -0.08) + n * 0.03;
+    ring.rotation.z = tilt;
+    root.add(ring);
+    ringMeshes.push(ring);
+
+    const phase = n * 0.7;
+    const speed = 0.35 / Math.sqrt(n);
+    const start = eIndex;
+    for (let k = 0; k < count; k++) {
+      const angle = (k / count) * Math.PI * 2 + phase;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      const c = Math.cos(tilt), s = Math.sin(tilt);
+      dummy.position.set(x, z * s * 0.35, z * c);
+      dummy.scale.setScalar(eSize);
+      dummy.updateMatrix();
+      allElectrons.setMatrixAt(eIndex++, dummy.matrix);
+    }
+    const letter = SHELL_LETTERS[n - 1] || `n${n}`;
+    electronRings.push({ n, letter, radius, count, tilt, phase, speed, start, ring, ringMat });
+  }
+
+  if (allElectrons) {
+    allElectrons.instanceMatrix.needsUpdate = true;
+    root.add(allElectrons);
+    root.userData.electrons = allElectrons;
+    root.userData.eSize = eSize;
+  }
+
+  const hitR = Math.max(nucleusR * 1.35, 0.28);
+  const hitGeo = new THREE.SphereGeometry(hitR, 16, 12);
+  const localHitMat = new THREE.MeshBasicMaterial({ visible: false });
+  hitNucleus = new THREE.Mesh(hitGeo, localHitMat);
+  hitNucleus.name = 'hit-nucleus';
+  root.add(hitNucleus);
+
+  const outer = baseOrbit + (mergeHeavy
+    ? (maxN <= 4 ? (maxN - 1) * 0.42 : 3 * 0.42 + Math.max(0, maxN - 4) * 0.32)
+    : (maxN - 1) * 0.55);
+  const fit = 3.2 / (outer + 0.6);
+  root.scale.setScalar(Math.min(1.2, Math.max(0.5, fit)));
+
+  root.userData.protonMat = protonMat;
+  root.userData.neutronMat = neutronMat;
+  root.userData.electronMat = electronMat;
+  root.userData.glowMat = glowMat;
+  root.userData.protons = protons;
+  root.userData.neutrons = neutrons;
+  root.userData.nucleusR = nucleusR;
+  root.userData.outer = outer;
+  root.userData.ringMeshes = ringMeshes;
+  root.userData.eBaseEmissive = 0.42;
+  console.assert(eIndex === E, `${el.symbol} B2 heads = Z`);
+  console.assert(
+    !root.children.some((o) => o.isPoints),
+    `${el.symbol} B2: no decorative points between heads and nucleus`,
+  );
+  root.userData.pBaseEmissive = 0.12;
+  root.userData.nBaseEmissive = 0.06;
+  root.userData.nucleonRecs = nucleonRecs;
+  root.userData.quarkRoot = null;
+  console.assert(pi === Z, `${el.symbol} proton instances`);
+  console.assert(ni === N, `${el.symbol} neutron instances`);
+  console.assert(nucleonRecs.filter((r) => r.kind === 'p').length === Z, `${el.symbol} p recs`);
+  console.assert(nucleonRecs.filter((r) => r.kind === 'n').length === N, `${el.symbol} n recs`);
+
+  console.assert(!root.getObjectByName('orbitals'), `${el.symbol}: no orbital volume meshes`);
+  const hud = chemistryLabel(Z);
+  console.assert(hud.sum === Z, `${el.symbol} HUD Σ e⁻ = Z`);
+  if (stage) {
+    stage.dataset.aufbau = subshellFill(Z).map((s) => `${s.label}${s.e}`).join(' ');
+    stage.dataset.shells = hud.shells;
+  }
+
+  atomRoot = root;
+  scene.add(root);
+  applyVisibility();
+}
+
+function setControlsFor(key) {
+  const c = CAM[key] || CAM.atom;
+  if (!controls) return;
+  controls.minDistance = c.min;
+  controls.maxDistance = c.max;
+}
+
+function currentNucleonRec() {
+  const recs = atomRoot?.userData.nucleonRecs || [];
+  return recs.find((r) => r.kind === pickState.kind && r.slot === pickState.slot)
+    || recs.find((r) => r.kind === 'p')
+    || recs[0]
+    || null;
+}
+
+function camPreset(key) {
+  if (key === 'atlas') {
+    return { dist: 2.7, elev: 0.18, min: 1.35, max: 8, target: new THREE.Vector3(0, 0.42, 0) };
+  }
+  if (!atomRoot) return CAM[key] || CAM.atom;
+  const sc = atomRoot.scale.x;
+  const nr = (atomRoot.userData.nucleusR || 0.25) * sc;
+  if (key === 'quark') {
+    atomRoot.updateMatrixWorld(true);
+    const rec = currentNucleonRec();
+    const target = rec ? rec.pos.clone() : new THREE.Vector3();
+    if (rec) atomRoot.localToWorld(target);
+    const dist = Math.max(0.36, (rec ? rec.baseScale : 0.08) * sc * 8.2);
+    return {
+      dist,
+      elev: Math.max(0.08, dist * 0.2),
+      min: Math.max(0.2, dist * 0.4),
+      max: Math.max(2.4, dist * 5),
+      target,
+    };
+  }
+  if (key === 'nucleus') {
+    const dist = Math.max(1.05, Math.min(2.8, nr * 5.2 + 0.55));
+    return {
+      dist,
+      elev: Math.max(0.2, dist * 0.22),
+      min: Math.max(0.7, nr * 2.4),
+      max: Math.max(3.2, dist * 2.8),
+    };
+  }
+  const mobileBump = isMobile ? 0.8 : 0;
+  return {
+    dist: CAM.atom.dist + mobileBump,
+    elev: CAM.atom.elev,
+    min: CAM.atom.min,
+    max: CAM.atom.max,
+    target: new THREE.Vector3(),
+  };
+}
+
+function startCamAnim(key, nextE, nextN, onDone) {
+  if (!camera) return;
+  const c = camPreset(key);
+  const target = c.target ? c.target.clone() : new THREE.Vector3(0, 0, 0);
+  camKey = key;
+  camAnim.active = true;
+  camAnim.t0 = performance.now();
+  camAnim.dur = still ? 0.001 : (key === 'atlas' ? 0.001 : 0.7);
+  camAnim.fromPos.copy(camera.position);
+  const originDir = new THREE.Vector3(0.35, c.elev, 1);
+  let dir = camera.position.clone().sub(controls ? controls.target : new THREE.Vector3());
+  if (dir.lengthSq() < 1e-4) dir.copy(originDir);
+  dir.normalize();
+  const elevated = dir.clone();
+  elevated.y = elevated.y * 0.4 + (c.elev / Math.max(c.dist, 0.2)) * 0.6;
+  if (elevated.lengthSq() < 1e-6) elevated.copy(originDir);
+  elevated.normalize();
+  camAnim.toPos.copy(target).add(elevated.multiplyScalar(c.dist));
+  camAnim.fromTarget.copy(controls ? controls.target : new THREE.Vector3());
+  camAnim.toTarget.copy(target);
+  camAnim.fromE = eOpacity;
+  camAnim.toE = nextE;
+  camAnim.fromN = nOpacity;
+  camAnim.toN = nextN;
+  camAnim.onDone = onDone || null;
+  setControlsFor(key);
+  // stash dynamic min/max on controls from preset
+  if (controls) {
+    controls.minDistance = c.min;
+    controls.maxDistance = c.max;
+  }
+  if (still || key === 'atlas') {
+    camera.position.copy(camAnim.toPos);
+    if (controls) controls.target.copy(camAnim.toTarget);
+    eOpacity = nextE;
+    nOpacity = nextN;
+    applyVisibility();
+    camAnim.active = false;
+    if (onDone) onDone();
+    renderFrame();
+  }
+}
+
+function tickCamAnim(now) {
+  if (!camAnim.active || !camera) return;
+  const u = Math.min(1, (now - camAnim.t0) / (camAnim.dur * 1000));
+  const s = u * u * (3 - 2 * u);
+  camera.position.lerpVectors(camAnim.fromPos, camAnim.toPos, s);
+  if (controls) controls.target.lerpVectors(camAnim.fromTarget, camAnim.toTarget, s);
+  eOpacity = THREE.MathUtils.lerp(camAnim.fromE, camAnim.toE, s);
+  nOpacity = THREE.MathUtils.lerp(camAnim.fromN, camAnim.toN, s);
+  applyVisibility();
+  if (u >= 1) {
+    camAnim.active = false;
+    const cb = camAnim.onDone;
+    camAnim.onDone = null;
+    if (cb) cb();
+  }
+}
+
+function applyVisibility() {
+  if (!atomRoot) return;
+  const ud = atomRoot.userData;
+  const eMat = ud.electronMat;
+  if (eMat) {
+    eMat.opacity = eOpacity;
+    eMat.transparent = eOpacity < 0.99;
+    eMat.depthWrite = eOpacity > 0.5;
+    eMat.emissiveIntensity = (ud.eBaseEmissive || 0.42) * eOpacity;
+  }
+  const pMat = ud.protonMat;
+  const nMat = ud.neutronMat;
+  if (pMat) {
+    pMat.opacity = nOpacity;
+    pMat.transparent = nOpacity < 0.99;
+    pMat.depthWrite = nOpacity > 0.45;
+    pMat.emissiveIntensity = (ud.pBaseEmissive || 0.12) * Math.min(1, nOpacity + 0.15);
+  }
+  if (nMat) {
+    nMat.opacity = nOpacity;
+    nMat.transparent = nOpacity < 0.99;
+    nMat.depthWrite = nOpacity > 0.45;
+    nMat.emissiveIntensity = (ud.nBaseEmissive || 0.06) * Math.min(1, nOpacity + 0.15);
+  }
+  if (ud.glowMat) {
+    ud.glowMat.opacity = 0.07 * Math.min(1, nOpacity + 0.25);
+  }
+  if (ud.protons) ud.protons.visible = nOpacity > 0.04;
+  if (ud.neutrons) ud.neutrons.visible = nOpacity > 0.04;
+
+  const showElectrons = eOpacity > 0.05;
+  electronRings.forEach((ring) => {
+    if (!ring.ring) return;
+    ring.ring.visible = showElectrons;
+    // B2: faint orbit rings only. Never a filled band.
+    ring.ringMat.opacity = 0.16 * Math.min(1, eOpacity + 0.15);
+    ring.ringMat.color.setHex(RING_COLOR);
+  });
+
+  if (ud.electrons && still) poseElectrons(t);
+  if (ud.electrons) {
+    ud.electrons.visible = showElectrons
+      && stageState.stage !== 'quark'
+      && stageState.stage !== 'atlas';
+  }
+  applyNucleonPose();
+}
+
+function applyNucleonPose() {
+  if (!atomRoot) return;
+  const ud = atomRoot.userData;
+  const recs = ud.nucleonRecs;
+  if (!recs || !ud.protons) return;
+  const quark = stageState.stage === 'quark';
+  const sel = quark ? currentNucleonRec() : null;
+  for (const rec of recs) {
+    const mesh = rec.kind === 'p' ? ud.protons : ud.neutrons;
+    if (!mesh) continue;
+    const on = !!(sel && rec.kind === sel.kind && rec.slot === sel.slot);
+    const s = quark ? (on ? rec.baseScale * 2.55 : 0.0001) : rec.baseScale;
+    dummy.position.copy(rec.pos);
+    dummy.scale.setScalar(Math.max(s, 1e-6));
+    dummy.rotation.set(0, 0, 0);
+    dummy.updateMatrix();
+    mesh.setMatrixAt(rec.slot, dummy.matrix);
+  }
+  ud.protons.instanceMatrix.needsUpdate = true;
+  if (ud.neutrons) ud.neutrons.instanceMatrix.needsUpdate = true;
+  if (quark && sel) {
+    ud.protons.visible = sel.kind === 'p';
+    if (ud.neutrons) ud.neutrons.visible = sel.kind === 'n';
+    const mat = sel.kind === 'p' ? ud.protonMat : ud.neutronMat;
+    if (mat) {
+      mat.opacity = 0.18;
+      mat.transparent = true;
+      mat.depthWrite = false;
+      mat.emissiveIntensity = 0.05;
+    }
+    if (ud.quarkRoot) {
+      ud.quarkRoot.position.copy(sel.pos);
+      ud.quarkRoot.visible = true;
+    }
+    if (ud.glowMat) ud.glowMat.opacity = 0.015;
+  }
+}
+
+function handoffOpen() {
+  return handoffEl.classList.contains('show');
+}
+function closeHandoff(refocus) {
+  if (!handoffOpen()) return;
+  handoffEl.classList.remove('show');
+  if (refocus) btnNext.focus({ preventScroll: true });
+}
+
+function cssHex(h) {
+  return '#' + h.toString(16).padStart(6, '0');
+}
+
+function labelSprite(text, color, height = 0.12) {
+  const font = 32;
+  const padX = 16;
+  const c = document.createElement('canvas');
+  const x = c.getContext('2d');
+  x.font = `700 ${font}px "Space Mono", ui-monospace, monospace`;
+  const tw = Math.ceil(x.measureText(text).width);
+  c.width = Math.max(64, tw + padX * 2);
+  c.height = 64;
+  x.font = `700 ${font}px "Space Mono", ui-monospace, monospace`;
+  x.fillStyle = 'rgba(20, 8, 24, 0.78)';
+  x.beginPath();
+  if (x.roundRect) x.roundRect(2, 8, c.width - 4, 48, 14);
+  else x.rect(2, 8, c.width - 4, 48);
+  x.fill();
+  x.textAlign = 'center';
+  x.textBaseline = 'middle';
+  x.fillStyle = typeof color === 'number' ? cssHex(color) : color;
+  x.fillText(text, c.width / 2, 33);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: tex, transparent: true, depthTest: false, depthWrite: false,
+  }));
+  spr.scale.set(height * c.width / c.height, height, 1);
+  spr.renderOrder = 20;
+  return spr;
+}
+
+function disposeTree(obj) {
+  obj.traverse((o) => {
+    if (o.geometry && o.geometry !== sphereGeo && o.geometry !== electronGeo) o.geometry.dispose();
+    if (o.material) {
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      for (const m of mats) {
+        if (m.map) m.map.dispose();
+        m.dispose();
+      }
+    }
+  });
+}
+
+function flavorsFor(kind) {
+  return kind === 'n' ? NEUTRON_Q : PROTON_Q;
+}
+
+function makeQuarkGroup(kind, baseScale) {
+  const flavors = flavorsFor(kind);
+  const g = new THREE.Group();
+  g.name = 'quark-triad';
+  g.userData.kind = kind;
+  const triR = Math.max(0.05, baseScale * 1.65);
+  const qR = Math.max(0.028, baseScale * 0.62);
+  const pts = flavors.map((f, i) => {
+    const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+    return new THREE.Vector3(Math.cos(a) * triR, Math.sin(a) * triR, 0);
+  });
+  flavors.forEach((f, i) => {
+    const col = f === 'u' ? UP_COLOR : DOWN_COLOR;
+    const m = new THREE.Mesh(sphereGeo, makeSatin(col, 0.22));
+    m.scale.setScalar(qR);
+    m.position.copy(pts[i]);
+    m.renderOrder = 2;
+    g.add(m);
+    const lab = labelSprite(`${f}  ${fmt3(Q3[f])}`, col, Math.max(0.085, baseScale * 1.35));
+    lab.position.copy(pts[i]).multiplyScalar(1.72);
+    g.add(lab);
+  });
+  for (let i = 0; i < 3; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % 3];
+    const link = new THREE.Mesh(
+      new THREE.CylinderGeometry(Math.max(0.004, baseScale * 0.06), Math.max(0.004, baseScale * 0.06), a.distanceTo(b), 8),
+      new THREE.MeshBasicMaterial({ color: 0xefe6f2, transparent: true, opacity: 0.32, depthWrite: false })
+    );
+    link.position.copy(a).add(b).multiplyScalar(0.5);
+    link.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    g.add(link);
+  }
+  const tagText = kind === 'n' ? 'n = udd · 0 · baryon' : 'p = uud · +1e · baryon';
+  const tag = labelSprite(tagText, kind === 'n' ? NEUTRON_COLOR : PROTON_COLOR, Math.max(0.095, baseScale * 1.5));
+  tag.position.set(0, -triR * 2.25, 0);
+  g.add(tag);
+  return g;
+}
+
+function showQuark() {
+  if (!atomRoot || !makeSatin) return;
+  const rec = currentNucleonRec();
+  if (!rec) return;
+  pickState.kind = rec.kind;
+  pickState.slot = rec.slot;
+  let q = atomRoot.userData.quarkRoot;
+  if (!q || q.userData.kind !== rec.kind) {
+    if (q) {
+      atomRoot.remove(q);
+      disposeTree(q);
+    }
+    q = makeQuarkGroup(rec.kind, rec.baseScale);
+    atomRoot.add(q);
+    atomRoot.userData.quarkRoot = q;
+  }
+  q.position.copy(rec.pos);
+  q.visible = true;
+}
+
+function hideQuark() {
+  if (atomRoot?.userData.quarkRoot) atomRoot.userData.quarkRoot.visible = false;
+}
+
+function leaveAtlasVisual() {
+  stageWrap.classList.remove('atlas');
+  atomPanel.classList.remove('show-atlas');
+  atlasDock.hidden = true;
+  if (atlasRoot) atlasRoot.visible = false;
+  if (atomRoot) atomRoot.visible = true;
+  if (scene && !embed) scene.background = new THREE.Color(VOID);
+}
+
+function quarkBlurb(kind) {
+  if (kind === 'n') {
+    return 'neutron · udd · +2/3 −1/3 −1/3 = 0 · baryon · B = 1 · spin ½';
+  }
+  return 'proton · uud · +2/3 +2/3 −1/3 = +1 · baryon · B = 1 · spin ½';
+}
+
+function syncNucleonPick() {
+  const show = stageState.stage === 'nucleus' || stageState.stage === 'quark';
+  nucleonPickEl.hidden = !show || !atomRoot;
+  if (!show || !atomRoot) return;
+  const el = byZ.get(currentZ);
+  const N = el ? neutronsOf(el) : 0;
+  nucleonPickEl.innerHTML = '';
+  const add = (kind, label) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pchip' + (pickState.kind === kind ? ' on' : '');
+    b.dataset.kind = kind;
+    b.textContent = label;
+    nucleonPickEl.appendChild(b);
+  };
+  add('p', 'p = uud');
+  if (N > 0) add('n', 'n = udd');
+}
+
+function syncLadderUi() {
+  const st = stageState.stage;
+  const quarkLocked = st === 'atom';
+  const atlasLocked = st !== 'quark' && st !== 'atlas';
+  ladderChips.querySelectorAll('.chip[data-stage]').forEach((c) => {
+    const on = c.dataset.stage === st;
+    c.classList.toggle('on', on);
+    if (c.dataset.stage === 'quark') {
+      c.disabled = quarkLocked;
+      c.classList.toggle('locked', quarkLocked);
+    }
+    if (c.dataset.stage === 'atlas') {
+      c.disabled = atlasLocked;
+      c.classList.toggle('locked', atlasLocked);
+    }
+  });
+  syncNucleonPick();
+  const el = currentZ != null ? byZ.get(currentZ) : null;
+  stageReadout.hidden = !el;
+  if (el && st === 'atom') {
+    const hud = chemistryLabel(el.z);
+    stageReadout.textContent = `${hud.aufbau} · ${hud.shells} · Σ e⁻ ${hud.sum} = Z`;
+  } else if (el && st === 'nucleus') {
+    const N = neutronsOf(el);
+    stageReadout.textContent = `nucleus · ${el.z} p + ${N} n · no bosons in the pack · tap a nucleon or Next`;
+  } else if (el && st === 'quark') {
+    stageReadout.textContent = quarkBlurb(pickState.kind);
+  } else if (el && st === 'atlas') {
+    stageReadout.textContent = 'Standard Model atlas · separate room · not a deeper nucleus';
+  }
+  if (stageReadout && !stageReadout.hidden) {
+    console.assert(getComputedStyle(stageReadout).textTransform === 'none', 'readout must not uppercase symbols');
+    console.assert(getComputedStyle(fCounts).textTransform === 'none', 'counts must not uppercase p/n/e');
+  }
+  if (stageBadge) {
+    stageBadge.hidden = !el;
+    stageBadge.classList.toggle('atlas', st === 'atlas');
+    if (st === 'atlas') stageBadge.textContent = 'Standard Model atlas · separate room';
+    else if (st === 'quark') stageBadge.textContent = 'schematic quarks · gluon links · not to scale';
+    else if (st === 'nucleus') stageBadge.textContent = 'protons + neutrons · Bohr-ish · not to scale';
+    else stageBadge.textContent = 'Bohr-ish · not to scale';
+  }
+  if (btnBack) btnBack.disabled = st === 'atom' && !handoffOpen();
+  if (backBtn) backBtn.textContent = st === 'atom' ? '← table' : '← back';
+  if (btnNext) {
+    btnNext.disabled = st === 'atlas';
+    btnNext.textContent = st === 'quark' ? 'Open door ⇥' : st === 'atlas' ? 'End' : 'Next →';
+    btnNext.classList.toggle('door', st === 'quark');
+  }
+  if (!atomHint) return;
+  if (still && st === 'atom') atomHint.textContent = 'Intro chem · atom structure · still pose';
+  else if (st === 'atom') atomHint.textContent = 'Intro chem · atom structure · Next is the nucleus';
+  else if (st === 'nucleus') atomHint.textContent = 'Nucleus · protons and neutrons only · Next opens quarks';
+  else if (st === 'quark') atomHint.textContent = 'Quarks inside one nucleon · Next is the Standard Model door';
+  else atomHint.textContent = 'Standard Model atlas · separate room · Esc returns to the quark';
+}
+
+function hideElectronsNow() {
+  electronRings.forEach((r) => { if (r.ring) r.ring.visible = false; });
+  if (atomRoot?.userData.electrons) atomRoot.userData.electrons.visible = false;
+}
+
+function goStage(stageName) {
+  if (!atomRoot && stageName !== 'atom') return;
+  closeHandoff(false);
+  if (stageName !== 'atlas') leaveAtlasVisual();
+  stageState.stage = stageName;
+  if (stageName === 'atom') {
+    hideQuark();
+    startCamAnim('atom', 1, 1, () => syncLadderUi());
+  } else if (stageName === 'nucleus') {
+    hideQuark();
+    startCamAnim('nucleus', 0, 1, () => {
+      hideElectronsNow();
+      syncLadderUi();
+    });
+  } else if (stageName === 'quark') {
+    showQuark();
+    startCamAnim('quark', 0, 1, () => {
+      hideElectronsNow();
+      syncLadderUi();
+    });
+  } else if (stageName === 'atlas') {
+    openAtlasRoom();
+  }
+  syncLadderUi();
+  if (!raf && !still) start();
+  else if (still) renderFrame();
+}
+
+function openHandoff() {
+  if (stageState.stage !== 'quark') return;
+  const el = byZ.get(currentZ);
+  if (!el) return;
+  const kind = pickState.kind === 'n' ? 'n' : 'p';
+  const N = neutronsOf(el);
+  const flav = kind === 'n' ? 'u d d' : 'u u d';
+  const name = kind === 'n' ? 'neutron' : 'proton';
+  const sum = kind === 'n' ? '+2/3 −1/3 −1/3 = 0' : '+2/3 +2/3 −1/3 = +1';
+  handoffFlow.innerHTML =
+    '<span>Atom</span><i>→</i><span>Nucleus</span><i>→</i>' +
+    `<span class="here">Quark · ${kind === 'n' ? 'udd' : 'uud'}</span><i>┆</i><span class="door">Atlas room</span>`;
+  handoffBody.innerHTML =
+    `<p>You’ve reached the three quarks inside <strong>one ${name} (${flav})</strong> of ` +
+    `<strong>${el.name.toLowerCase()}</strong> (${el.z} p · ${N} n · ${el.z} e⁻). ` +
+    `Charge ${sum}. It is a <strong>baryon</strong> (B = 1), not a meson. ` +
+    `There is no deeper nucleus below this.</p>` +
+    `<p>The atlas is a <strong>separate room</strong>: quarks, leptons, gauge bosons, and the Higgs, ` +
+    `plus <strong>mesons</strong> — quark + antiquark pairs like π⁺ = u d̄. ` +
+    `Mesons are <strong>not</strong> nucleons. Nothing in that room is packed into this nucleus.</p>`;
+  handoffEl.classList.add('show');
+  btnEnter.focus({ preventScroll: true });
+  syncLadderUi();
+}
+
+function openAtlasRoom() {
+  stageState.stage = 'atlas';
+  closeHandoff(false);
+  hideQuark();
+  if (atomRoot) atomRoot.visible = false;
+  stageWrap.classList.add('atlas');
+  atomPanel.classList.add('show-atlas');
+  atlasDock.hidden = false;
+  if (scene && !embed) scene.background = new THREE.Color(0x120a1f);
+  atlasSel = pickState.kind === 'n' ? 'bn' : 'bp';
+  if (atlasRoot) {
+    atlasRoot.visible = true;
+    buildAtlasViz(ATLAS.find((p) => p.id === atlasSel) || ATLAS[0]);
+  }
+  renderAtlasDock();
+  startCamAnim('atlas', 0, 0, () => syncLadderUi());
+  requestAnimationFrame(() => resize());
+}
+
+function stepBack() {
+  if (handoffOpen()) {
+    closeHandoff(true);
+    syncLadderUi();
+    return;
+  }
+  const i = LADDER.indexOf(stageState.stage);
+  if (i > 0) goStage(LADDER[i - 1]);
+}
+
+function stepNext() {
+  if (handoffOpen()) {
+    goStage('atlas');
+    return;
+  }
+  if (stageState.stage === 'quark') {
+    openHandoff();
+    return;
+  }
+  if (stageState.stage === 'atlas') return;
+  const i = LADDER.indexOf(stageState.stage);
+  if (i >= 0 && i < LADDER.length - 1) goStage(LADDER[i + 1]);
+}
+
+function selectNucleon(kind) {
+  if (!atomRoot) return;
+  const recs = atomRoot.userData.nucleonRecs || [];
+  const rec = recs.find((r) => r.kind === kind);
+  if (!rec) return;
+  pickState.kind = rec.kind;
+  pickState.slot = rec.slot;
+  if (stageState.stage === 'nucleus' || stageState.stage === 'quark' || stageState.stage === 'atlas') {
+    goStage('quark');
+  } else {
+    syncLadderUi();
+  }
+}
+
+function buildAtlasViz(p) {
+  if (!atlasRoot || !makeSatin || !sphereGeo || !p) return;
+  disposeTree(atlasRoot);
+  atlasRoot.clear();
+  const spin = new THREE.Group();
+  atlasRoot.add(spin);
+  atlasRoot.userData.spin = spin;
+  const add = (o) => { spin.add(o); return o; };
+  const ball = (col, r, x = 0, y = 0, em = 0.16) => {
+    const m = add(new THREE.Mesh(sphereGeo, makeSatin(col, em)));
+    m.scale.setScalar(r);
+    m.position.set(x, y, 0);
+    return m;
+  };
+  const ringAt = (r, x, y, col = 0xefe6f2, op = 0.7) => {
+    const t = add(new THREE.Mesh(
+      new THREE.TorusGeometry(r, 0.012, 8, isMobile ? 32 : 64),
+      new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, depthWrite: false })
+    ));
+    t.position.set(x, y, 0);
+    return t;
+  };
+  if (p.kind === 'quark') ball(p.hue === 'up' ? UP_COLOR : DOWN_COLOR, 0.32);
+  else if (p.kind === 'lepton') ball(ELECTRON_COLOR, 0.28);
+  else if (p.kind === 'nu') ball(NU_COLOR, 0.2, 0, 0, 0.08);
+  else if (p.kind === 'gauge') {
+    ball(BOSON_COLOR, p.id === 'gam' || p.id === 'g' ? 0.2 : 0.3);
+    const r = ringAt(0.5, 0, 0, BOSON_COLOR, 0.6);
+    r.rotation.x = Math.PI / 2.4;
+  } else if (p.kind === 'higgs') {
+    ball(HIGGS_COLOR, 0.32, 0, 0, 0.22);
+    const sh = add(new THREE.Mesh(sphereGeo, makeSatin(HIGGS_COLOR, 0.05, { opacity: 0.14, depthWrite: false, transparent: true })));
+    sh.scale.setScalar(0.5);
+  } else if (p.kind === 'meson') {
+    const [q, qb] = p.pair;
+    ball(qHueHex(q), 0.2, -0.3, 0);
+    ball(qHueHex(qb), 0.2, 0.3, 0);
+    ringAt(0.27, 0.3, 0);
+    const bond = add(new THREE.Mesh(
+      new THREE.CylinderGeometry(0.014, 0.014, 0.22, 8),
+      new THREE.MeshBasicMaterial({ color: MESON_COLOR, transparent: true, opacity: 0.7, depthWrite: false })
+    ));
+    bond.rotation.z = Math.PI / 2;
+    const l1 = labelSprite(qSym[q] + ' quark', qHueHex(q), 0.16);
+    l1.position.set(-0.42, 0.42, 0);
+    add(l1);
+    const l2 = labelSprite(qSym[qb] + ' antiquark', qHueHex(qb), 0.16);
+    l2.position.set(0.42, 0.42, 0);
+    add(l2);
+  } else if (p.kind === 'baryon') {
+    p.trio.forEach((f, i) => {
+      const a = (i / 3) * Math.PI * 2 + Math.PI / 2;
+      ball(qHueHex(f), 0.14, Math.cos(a) * 0.24, Math.sin(a) * 0.24);
+    });
+    const sh = add(new THREE.Mesh(sphereGeo, makeSatin(p.id === 'bp' ? PROTON_COLOR : NEUTRON_COLOR, 0.04, {
+      opacity: 0.16, depthWrite: false, transparent: true,
+    })));
+    sh.scale.setScalar(0.46);
+  }
+  const tagCol = p.kind === 'meson' ? MESON_COLOR : p.kind === 'baryon' ? PROTON_COLOR : 0xffb36b;
+  const tag = labelSprite(
+    `${p.sym}${p.comp ? ' = ' + p.comp : ''} · ${chargeTxt(p)}e · spin ${p.spin}`,
+    tagCol,
+    0.18
+  );
+  tag.position.set(0, -0.72, 0);
+  atlasRoot.add(tag);
+}
+
+function renderAtlasDock() {
+  const sel = ATLAS.find((p) => p.id === atlasSel) || ATLAS[0];
+  const chip = (p) => `<button type="button" class="pchip${p.id === atlasSel ? ' on' : ''}" data-id="${p.id}">${p.sym}${p.comp && p.id !== 'pi0' ? ' = ' + p.comp : ''}</button>`;
+  const by = (g) => ATLAS.filter((p) => p.grp === g).map(chip).join('');
+  atlasDock.innerHTML = `
+    <p class="kick">Atlas room · separate from the atom</p>
+    <h3>Standard Model atlas</h3>
+    <div class="agroups">
+      <div class="agroup"><h4>Fermions <span>· spin ½</span></h4>
+        <div class="sub">Quarks</div><div class="chips">${by('quark')}</div>
+        <div class="sub">Leptons</div><div class="chips">${by('lepton')}</div></div>
+      <div class="agroup"><h4>Gauge bosons <span>· spin 1</span></h4><div class="chips">${by('gauge')}</div>
+        <h4 style="margin-top:10px">Higgs <span>· spin 0</span></h4><div class="chips">${by('higgs')}</div></div>
+      <div class="agroup meson"><h4>Mesons <span>· q q̄ · composite · spin 0</span></h4><div class="chips">${by('meson')}</div>
+        <div class="sub" style="margin-top:6px">quark + antiquark · not a nucleon</div></div>
+      <div class="agroup contrast"><h4>Contrast · baryons <span>· qqq</span></h4><div class="chips">${by('baryon')}</div>
+        <div class="sub" style="margin-top:6px">not mesons · not elementary</div></div>
+    </div>
+    <div class="detail"><span class="big">${sel.sym}</span>
+      <span class="frow" style="display:inline-flex">
+        <span><b>${sel.name}</b></span>
+        ${sel.comp ? `<span>= <b>${sel.comp}</b></span>` : ''}
+        <span>charge <b>${chargeTxt(sel)} e</b></span>
+        <span>spin <b>${sel.spin}</b></span>
+        <span>mass <b>${sel.mass}</b></span>
+      </span>
+      <p>${sel.note}</p>
+    </div>`;
+  atlasDock.querySelectorAll('.pchip').forEach((b) => {
+    b.addEventListener('click', () => {
+      atlasSel = b.dataset.id;
+      buildAtlasViz(ATLAS.find((p) => p.id === atlasSel));
+      renderAtlasDock();
+      if (still) renderFrame();
+    });
+  });
+  const probe = atlasDock.querySelector('.pchip');
+  if (probe) {
+    console.assert(getComputedStyle(probe).textTransform === 'none', 'pchip must not uppercase symbols');
+  }
+}
+
+function resetStageToAtom(instant) {
+  closeHandoff(false);
+  leaveAtlasVisual();
+  hideQuark();
+  stageState.stage = 'atom';
+  eOpacity = 1;
+  nOpacity = 1;
+  camKey = 'atom';
+  camAnim.active = false;
+  const c = camPreset('atom');
+  if (camera) {
+    if (instant || still) {
+      camera.position.set(0.4, c.elev, 1).normalize().multiplyScalar(c.dist);
+    } else {
+      camera.position.set(0.4, c.elev, 1).normalize().multiplyScalar(c.dist);
+    }
+  }
+  if (controls) {
+    controls.target.set(0, 0, 0);
+    controls.minDistance = c.min;
+    controls.maxDistance = c.max;
+    controls.update();
+  }
+  applyVisibility();
+  syncLadderUi();
+}
+
+function updateFormula(el) {
+  formula.hidden = false;
+  emptyHint.classList.add('hidden');
+  ladderUi.hidden = false;
+  fSym.textContent = el.symbol;
+  fName.textContent = el.name;
+  const N = neutronsOf(el);
+  const massStr = String(el.atomicMass);
+  /* HUD always shows correct p / n / e (neutral: e = Z) */
+  fCounts.innerHTML =
+    `<span>Z <b>${el.z}</b></span>` +
+    `<span>mass <b>${massStr}</b></span>` +
+    `<span class="p">p <b>${el.z}</b></span>` +
+    `<span class="n">n <b>${N}</b></span>` +
+    `<span class="e">e <b>${el.z}</b></span>`;
+  syncLadderUi();
+}
+
+function selectElement(z) {
+  const el = byZ.get(z);
+  if (!el) return;
+  currentZ = z;
+  for (const [kz, btn] of cellButtons) {
+    btn.classList.toggle('active', kz === z);
+  }
+  updateFormula(el);
+  if (isMobile && !embed) {
+    atomPanel.classList.add('open');
+    document.body.classList.add('atom-open');
+  }
+  if (!renderer) return;
+  try {
+    /* reset ladder before rebuild so visibility matches Atom default */
+    closeHandoff(false);
+    leaveAtlasVisual();
+    stageState.stage = 'atom';
+    eOpacity = 1;
+    nOpacity = 1;
+    camAnim.active = false;
+    atlasSel = 'bp';
+    buildAtom(el);
+    resetStageToAtom(true);
+    if (still) holdStill();
+    else start();
+  } catch (e) {
+    console.error(e);
+    showErr(String(e.message || e));
+  }
+}
+
+function closeAtomPanel() {
+  atomPanel.classList.remove('open');
+  document.body.classList.remove('atom-open');
+}
+backBtn.addEventListener('click', () => {
+  /* Step back atlas → quark → nucleus → atom, then the table */
+  if (handoffOpen() || stageState.stage !== 'atom') {
+    stepBack();
+    return;
+  }
+  closeAtomPanel();
+});
+
+try {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: embed,
+    powerPreference: isIOS ? 'default' : 'high-performance',
+  });
+  if (!renderer.getContext()) throw new Error('WebGL context failed');
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setClearColor(VOID, embed ? 0 : 1);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  stage.appendChild(renderer.domElement);
+
+  const gl = renderer.getContext();
+  const isWebGL2 = typeof WebGL2RenderingContext !== 'undefined' && gl instanceof WebGL2RenderingContext;
+  const useAnisotropy = !isMobile && isWebGL2;
+  makeSatin = function makeSatin(color, emissiveIntensity, extra) {
+    const o = {
+      color,
+      metalness: 0.32,
+      roughness: 0.45,
+      clearcoat: 0.22,
+      clearcoatRoughness: 0.38,
+      emissive: emissiveIntensity ? color : 0x000000,
+      emissiveIntensity: emissiveIntensity || 0,
+      ...(extra || {}),
+    };
+    if (useAnisotropy) {
+      o.anisotropy = 0.55;
+      o.anisotropyRotation = Math.PI / 2;
+    } else {
+      o.anisotropy = 0;
+    }
+    return new THREE.MeshPhysicalMaterial(o);
+  };
+
+  /* Nucleons, quarks, glow, atlas balls. Electrons stay a step lower (Z copies). */
+  const sphereW = isMobile ? 24 : 32;
+  const sphereH = isMobile ? 20 : 28;
+  sphereGeo = new THREE.SphereGeometry(1, sphereW, sphereH);
+  electronGeo = new THREE.SphereGeometry(1, isMobile ? 16 : 24, isMobile ? 14 : 20);
+  console.assert(
+    sphereGeo.parameters.widthSegments === sphereW && sphereGeo.parameters.heightSegments === sphereH,
+    'particle sphere segments',
+  );
+
+  scene = new THREE.Scene();
+  if (!embed) scene.background = new THREE.Color(VOID);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environment = envTex;
+  scene.environmentIntensity = 0.45;
+  pmrem.dispose();
+
+  atlasRoot = new THREE.Group();
+  atlasRoot.visible = false;
+  atlasRoot.position.set(0, 0.72, 0);
+  scene.add(atlasRoot);
+
+  camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(0.4, 1.1, 5.4);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = 2.8;
+  controls.maxDistance = 14;
+  controls.rotateSpeed = 0.72;
+
+  scene.add(new THREE.HemisphereLight(0xc4b8e0, 0x2a1218, 0.55));
+  const key = new THREE.PointLight(0xffb36b, 1.35, 40, 2);
+  key.position.set(4, 5, 6);
+  scene.add(key);
+  const fill = new THREE.PointLight(0x6a8cff, 0.35, 30, 2);
+  fill.position.set(-5, -2, -4);
+  scene.add(fill);
+
+  if (!embed && !isMobile) {
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), 0.22, 0.4, 0.82));
+    composer.addPass(new OutputPass());
+  }
+} catch (e) {
+  showErr('WebGL unavailable — table still works.');
+  console.warn(e);
+}
+
+function resize() {
+  if (!renderer) return;
+  const w = stage.clientWidth || 1;
+  const h = stage.clientHeight || 1;
+  camera.aspect = w / Math.max(1, h);
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, isMobile);
+  if (composer) {
+    composer.setPixelRatio(renderer.getPixelRatio());
+    composer.setSize(w, h);
+  }
+  if (still) renderFrame();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+function renderFrame() {
+  if (!renderer) return;
+  if (composer) composer.render();
+  else renderer.render(scene, camera);
+}
+
+function poseElectrons(time) {
+  if (!atomRoot || !atomRoot.userData.electrons) return;
+  const mesh = atomRoot.userData.electrons;
+  const eSize = atomRoot.userData.eSize;
+  const eGone = eOpacity <= 0.05;
+  for (let si = 0; si < electronRings.length; si++) {
+    const ring = electronRings[si];
+    const scale = eGone ? 0 : eSize;
+    for (let k = 0; k < ring.count; k++) {
+      const angle = (k / ring.count) * Math.PI * 2 + ring.phase + time * ring.speed;
+      const x = Math.cos(angle) * ring.radius;
+      const z = Math.sin(angle) * ring.radius;
+      const c = Math.cos(ring.tilt), s = Math.sin(ring.tilt);
+      dummy.position.set(x, z * s * 0.35, z * c);
+      dummy.scale.setScalar(scale);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(ring.start + k, dummy.matrix);
+    }
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+}
+
+function pose(time) {
+  if (atomRoot && !still && stageState.stage !== 'quark' && stageState.stage !== 'atlas') {
+    atomRoot.rotation.y = time * 0.12;
+    poseElectrons(time);
+  } else if (atomRoot && !still && stageState.stage === 'quark') {
+    poseElectrons(time);
+  }
+  if (!still && atlasRoot?.visible && atlasRoot.userData.spin) {
+    atlasRoot.userData.spin.rotation.y = time * 0.4;
+  }
+}
+
+function frame() {
+  raf = requestAnimationFrame(frame);
+  const now = performance.now();
+  const dt = Math.min(clock.getDelta(), 0.05);
+  t += dt;
+  tickCamAnim(now);
+  pose(t);
+  controls.update();
+  renderFrame();
+}
+
+function holdStill() {
+  cancelAnimationFrame(raf);
+  raf = 0;
+  t = 1.6;
+  if (atomRoot) {
+    atomRoot.rotation.set(0.15, 0.85, 0.05);
+    applyVisibility();
+    poseElectrons(t);
+  }
+  if (controls) controls.update();
+  renderFrame();
+}
+
+function start() {
+  if (!renderer) return;
+  if (still) { holdStill(); return; }
+  if (raf) return;
+  clock.getDelta();
+  raf = requestAnimationFrame(frame);
+}
+
+if (controls) controls.addEventListener('change', () => { if (still) renderFrame(); });
+
+motionQuery.addEventListener('change', (e) => {
+  still = e.matches || params.has('still');
+  if (still) holdStill();
+  else start();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+  else if (currentZ != null) start();
+});
+
+/* Stage ladder chips — chemistry stages stay free; Quark/Atlas never skip ahead */
+ladderChips.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip || !chip.dataset.stage || chip.disabled) return;
+  e.stopPropagation();
+  const name = chip.dataset.stage;
+  if (name === 'atlas') {
+    if (stageState.stage === 'quark') openHandoff();
+    return;
+  }
+  if (name === 'quark' && stageState.stage === 'atom') return;
+  goStage(name);
+});
+btnBack.addEventListener('click', (e) => { e.stopPropagation(); stepBack(); });
+btnNext.addEventListener('click', (e) => { e.stopPropagation(); stepNext(); });
+btnEnter.addEventListener('click', () => goStage('atlas'));
+btnStay.addEventListener('click', () => { closeHandoff(true); syncLadderUi(); });
+handoffEl.addEventListener('click', (e) => { if (e.target === handoffEl) { closeHandoff(true); syncLadderUi(); } });
+nucleonPickEl.addEventListener('click', (e) => {
+  const b = e.target.closest('.pchip');
+  if (!b || !b.dataset.kind) return;
+  e.stopPropagation();
+  selectNucleon(b.dataset.kind);
+});
+
+/* Tap nucleus → jump to Nucleus step (chip-driven ladder otherwise) */
+let ptrDown = null;
+let lastTap = { t: 0, x: 0, y: 0 };
+function nucleusHitTest(clientX, clientY) {
+  if (!renderer || !camera || !hitNucleus) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return null;
+  pointerNdc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointerNdc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointerNdc, camera);
+  const hits = raycaster.intersectObject(hitNucleus, false);
+  return hits[0] || null;
+}
+if (renderer) {
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+    ptrDown = { x: e.clientX, y: e.clientY, t: performance.now() };
+  });
+  renderer.domElement.addEventListener('pointerup', (e) => {
+    if (!ptrDown || currentZ == null) { ptrDown = null; return; }
+    const moved = Math.hypot(e.clientX - ptrDown.x, e.clientY - ptrDown.y);
+    const dt = performance.now() - ptrDown.t;
+    ptrDown = null;
+    if (moved > 8 || dt > 450) return;
+    const now = performance.now();
+    const isDouble = now - lastTap.t < 380 &&
+      Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 28;
+    lastTap = { t: now, x: e.clientX, y: e.clientY };
+    if (isDouble && stageState.stage !== 'atom') {
+      goStage('atom');
+      return;
+    }
+    if (stageState.stage === 'nucleus') {
+      const nucleon = pickNucleon(e.clientX, e.clientY);
+      if (nucleon) {
+        pickState.kind = nucleon.kind;
+        pickState.slot = nucleon.slot;
+        goStage('quark');
+      }
+      return;
+    }
+    if (stageState.stage === 'quark') return;
+    const hit = nucleusHitTest(e.clientX, e.clientY) || pickNucleon(e.clientX, e.clientY);
+    if (hit && stageState.stage !== 'nucleus' && stageState.stage !== 'atlas') goStage('nucleus');
+  });
+}
+
+function pickNucleon(clientX, clientY) {
+  if (!renderer || !camera || !atomRoot) return null;
+  const ud = atomRoot.userData;
+  const targets = [ud.protons, ud.neutrons].filter(Boolean);
+  if (!targets.length) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return null;
+  pointerNdc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  pointerNdc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointerNdc, camera);
+  const hits = raycaster.intersectObjects(targets, false);
+  if (!hits.length || hits[0].instanceId == null) return null;
+  const obj = hits[0].object;
+  const kind = obj === ud.protons ? 'p' : 'n';
+  return { kind, slot: hits[0].instanceId };
+}
+
+addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (currentZ == null) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === 'Escape') {
+    if (handoffOpen() || stageState.stage !== 'atom') {
+      e.preventDefault();
+      stepBack();
+    }
+    return;
+  }
+  if (e.key === '0') {
+    goStage('atom');
+    return;
+  }
+  if (e.key === 'Enter' && handoffOpen()) {
+    e.preventDefault();
+    goStage('atlas');
+    return;
+  }
+  if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    stepNext();
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    stepBack();
+  }
+});
+
+const zParam = parseInt(params.get('z') || '', 10);
+const elParam = (params.get('el') || '').trim();
+let startZ = null;
+if (zParam >= 1 && zParam <= 118) startZ = zParam;
+else if (elParam) {
+  const found = ELEMENTS.find((e) => e.symbol.toLowerCase() === elParam.toLowerCase());
+  if (found) startZ = found.z;
+}
+if (embed && !startZ) startZ = 6;
+if (startZ) selectElement(startZ);
+else if (renderer) renderFrame();
+
+console.info('[periodic-table-atoms] mass source:', MASS_SOURCE, '· ladder: Atom → Nucleus → Quark → Atlas door');
+</script>
+</body>
+</html>
