@@ -2,7 +2,7 @@
 
 Intro chemistry · atom structure → nucleus → quarks → Standard Model atlas — by Virgil Renfroe.
 
-**Live preview:** pending Railway deploy (Caddy static, this Dockerfile).
+**Live preview:** https://how-atoms-work-production.up.railway.app/
 
 GitHub Pages (same source): https://virgilrenfroe.github.io/how-atoms-work/  
 Repo: https://github.com/virgilrenfroe/how-atoms-work
