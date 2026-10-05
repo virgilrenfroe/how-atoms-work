@@ -4,7 +4,6 @@ Intro chemistry · atom structure → nucleus → quarks → Standard Model atla
 
 **Live preview:** https://how-atoms-work-production.up.railway.app/
 
-GitHub Pages (same source): https://virgilrenfroe.github.io/how-atoms-work/  
 Repo: https://github.com/virgilrenfroe/how-atoms-work
 
 Static three.js lab. Open any element from hydrogen through oganesson and walk one ladder: Atom → Nucleus → Quark, then a door into a separate Standard Model atlas room. Shells and orbitals stay on the Atom readout. They are not extra zoom stages.
