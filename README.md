@@ -9,7 +9,7 @@ Repo: https://github.com/virgilrenfroe/how-atoms-work
 
 Static three.js lab. Open any element from hydrogen through oganesson and walk one ladder: Atom → Nucleus → Quark, then a door into a separate Standard Model atlas room. Shells and orbitals stay on the Atom readout. They are not extra zoom stages.
 
-Page chrome is a spatial atlas, not a dashboard: oversized Bricolage Grotesque, an offset legend, and film grain on the void. Counts, family colors, B2 electrons, satin nucleons, and the ladder are unchanged.
+Page chrome is one atom room, not a dashboard. The WebGL stage is the full viewport. The H–Og table floats over the left of that room. Oversized Bricolage Grotesque marks the atlas, then yields to the element symbol. Film grain stays on the WebGL field. Counts, family colors, B2 electrons, satin nucleons, and the ladder are unchanged.
 
 ## Demos
 
