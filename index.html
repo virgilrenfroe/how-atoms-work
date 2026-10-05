@@ -38,6 +38,8 @@
     --safe-b: env(safe-area-inset-bottom, 0px);
     --safe-l: env(safe-area-inset-left, 0px);
     --safe-r: env(safe-area-inset-right, 0px);
+    --px: 0;
+    --py: 0;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -48,55 +50,59 @@
   body { overflow: hidden; }
 
   .app {
-    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     height: 100%;
     min-height: 100dvh;
     overflow: hidden;
     padding: 0;
+    background: var(--void);
   }
 
   .top {
-    position: absolute;
-    z-index: 6;
-    inset:
-      max(8px, var(--safe-t))
-      max(18px, var(--safe-r))
-      max(10px, var(--safe-b))
-      max(18px, var(--safe-l));
+    position: relative;
+    z-index: 2;
     margin: 0;
+    width: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding:
+      max(12px, var(--safe-t))
+      max(18px, var(--safe-r))
+      8px
+      max(16px, var(--safe-l));
+    background: var(--void);
     pointer-events: none;
   }
-  .mast { pointer-events: none; }
   .top .tag {
     margin: 0 0 2px;
     font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
     text-transform: uppercase; color: rgba(255, 179, 107, 0.78);
   }
-  .top h1 {
+  .field h1 {
     margin: 0;
     display: flex; align-items: flex-end; gap: 0.35em; flex-wrap: wrap;
     font-family: var(--font-display); font-weight: 500;
     letter-spacing: -0.065em; line-height: 0.78;
   }
-  .top h1 .display {
+  .field h1 .display {
     display: inline-block;
-    font-size: clamp(5.6rem, 13vw, 10.5rem);
+    font-size: clamp(3.2rem, 28cqw, 6.6rem);
     font-weight: 520;
     transform-origin: left top;
-    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.45s ease;
   }
-  /* Once an element is open, the atlas name yields and the symbol becomes the type. */
-  body:has(#formula:not([hidden])) .top h1 .display,
-  body:has(#formula:not([hidden])) .top h1 em {
-    transform: translate3d(-8px, 0, 0);
-    opacity: 0;
-  }
-  .top h1 em {
+  .field h1 em {
     font-style: normal; font-weight: 360;
-    font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+    font-size: clamp(1.05rem, 2vw, 1.45rem);
     letter-spacing: -0.04em; line-height: 0.95;
-    color: var(--pearl); max-width: 7ch;
-    padding-bottom: 0.55rem;
+    color: var(--pearl); max-width: 8ch;
+    padding-bottom: 0.45rem;
+  }
+  body:has(#formula:not([hidden])) .field h1,
+  body:has(#formula:not([hidden])) .field .teach {
+    display: none;
   }
   .teach {
     margin: 10px 0 0;
@@ -105,70 +111,87 @@
     line-height: 1.45; color: var(--mute); text-transform: none;
   }
   .legend {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 12rem;
-    display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+    position: relative;
+    z-index: 1;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    top: auto;
+    width: auto;
+    flex: 0 0 auto;
+    display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+    margin: 0;
+    padding: 8px 8px max(8px, var(--safe-b)) 2px;
     font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--mute);
+    background: var(--void);
     pointer-events: none;
   }
   .legend span { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
   .legend i { width: 14px; height: 3px; border-radius: 0; display: inline-block; }
   body:has(#formula:not([hidden])) .legend {
-    top: auto;
+    left: auto;
     right: auto;
-    bottom: 0;
-    left: 0;
-    width: min(56vw, 920px);
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px 12px;
+    bottom: auto;
+    width: auto;
   }
 
+  /* Two panels. The canvas lives only in the atom column — never under the tiles. */
   .workspace {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    inset: auto;
     min-height: 0;
+    min-width: 0;
     z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.8fr);
+    background: var(--void);
   }
 
   .table-panel, .atom-panel {
-    min-height: 0; border: none;
-    border-radius: 0; background: transparent;
+    min-height: 0;
+    min-width: 0;
+    border: none;
+    border-radius: 0;
+    background: var(--void);
     overflow: hidden;
   }
   .table-panel {
     display: flex; flex-direction: column;
-    position: absolute;
-    z-index: 3;
-    left: max(12px, var(--safe-l));
-    top: 22vh;
-    bottom: max(12px, var(--safe-b));
-    width: min(58vw, 980px);
+    position: relative;
+    z-index: 1;
+    transform: none;
+    padding: 0 10px 0 max(12px, var(--safe-l));
   }
   /* Stage row is minmax(0,1fr) so the WebGL canvas cannot collapse to 0×0. */
   .atom-panel {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    height: 100%;
+    border-left: 1px solid rgba(239, 230, 242, 0.14);
+    background: #140818;
   }
-  .atom-panel::before,
-  .atom-panel::after {
-    content: "";
+  .corners {
+    position: absolute;
+    inset: 12px;
+    z-index: 3;
+    pointer-events: none;
+    transform: translate3d(calc(var(--px) * -8px), calc(var(--py) * -6px), 0);
+  }
+  .corners i {
     position: absolute;
     width: 22px;
     height: 22px;
-    pointer-events: none;
-    z-index: 4;
-    border-color: rgba(239, 230, 242, 0.38);
+    border-color: rgba(239, 230, 242, 0.42);
     border-style: solid;
   }
-  .atom-panel::before { top: 14px; left: 14px; border-width: 1px 0 0 1px; }
-  .atom-panel::after { right: 14px; bottom: 14px; border-width: 0 1px 1px 0; }
+  .corners i:nth-child(1) { top: 0; left: 0; border-width: 1px 0 0 1px; }
+  .corners i:nth-child(2) { top: 0; right: 0; border-width: 1px 1px 0 0; }
+  .corners i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+  .corners i:nth-child(4) { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
   .atom-panel.show-atlas {
     grid-template-rows: minmax(0, 1fr) minmax(0, min(46%, 42dvh));
   }
@@ -176,6 +199,8 @@
     position: relative;
     min-width: 0;
     min-height: 0;
+    height: 100%;
+    overflow: hidden;
     display: grid;
     grid-template-rows: minmax(0, 1fr);
   }
@@ -192,7 +217,7 @@
     inset: 0;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.28;
+    opacity: 0.16;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
   }
@@ -284,6 +309,7 @@
     margin: 0;
     padding: 0;
     background: none;
+    transform: translate3d(calc(var(--px) * -40px), calc(var(--py) * -18px), 0);
   }
   .formula[hidden] { display: none !important; }
   .formula .name-row {
@@ -317,6 +343,7 @@
     width: min(34vw, 460px);
     display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
     pointer-events: none;
+    transform: translate3d(calc(var(--px) * -14px), calc(var(--py) * -8px), 0);
   }
   .ladder-ui {
     display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
@@ -487,7 +514,9 @@
   #stage {
     min-height: 0;
     min-width: 0;
+    height: 100%;
     position: relative;
+    overflow: hidden;
   }
   #stage canvas {
     position: absolute; inset: 0;
@@ -523,6 +552,95 @@
     position: absolute; inset: 0; pointer-events: none; z-index: 1;
     background: radial-gradient(ellipse at 50% 55%, transparent 40%, rgba(5,1,8,0.5) 100%);
   }
+  /* Far layer: horizon tracks the 3D atlas floor as the ladder changes depth. */
+  .horizon {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    bottom: 22%;
+    height: 1px;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 0%, rgba(239, 230, 242, 0.38) 50%, transparent 100%);
+    transform: translate3d(calc(var(--px) * -12px), calc(var(--py) * 16px), 0);
+    transition: bottom 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.7s ease;
+  }
+  .horizon::before,
+  .horizon::after {
+    content: "";
+    position: absolute;
+    top: -16px;
+    width: 1px;
+    height: 16px;
+    background: rgba(239, 230, 242, 0.4);
+  }
+  .horizon::before { left: 22%; }
+  .horizon::after { right: 30%; height: 28px; top: -28px; }
+  body[data-room="nucleus"] .horizon,
+  body[data-room="quark"] .horizon { bottom: 7%; opacity: 0.28; }
+  body[data-room="atlas"] .horizon {
+    bottom: 36%;
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, rgba(126, 200, 255, 0.8), transparent);
+  }
+  .room-index {
+    position: absolute;
+    right: 3vw;
+    bottom: 1vh;
+    z-index: 1;
+    pointer-events: none;
+    text-align: right;
+    transform: translate3d(calc(var(--px) * -22px), calc(var(--py) * 26px), 0);
+  }
+  .room-index .lab {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(239, 230, 242, 0.66);
+  }
+  .room-index .num {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 520;
+    font-size: clamp(6.5rem, 16vw, 14rem);
+    letter-spacing: -0.08em;
+    line-height: 0.72;
+    color: rgba(239, 230, 242, 0.075);
+  }
+  body[data-room="atlas"] .room-index .num { color: rgba(126, 200, 255, 0.16); }
+  body[data-room="atlas"] .room-index .lab { color: var(--door); }
+  body[data-room="nucleus"] .room-index .lab,
+  body[data-room="quark"] .room-index .lab { color: var(--accent); }
+  body[data-travel="descend"] .room-index .num,
+  body[data-travel="rise"] .room-index .num {
+    animation: floor-num 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @keyframes floor-num {
+    from { transform: translate3d(0, 36px, 0); }
+    to { transform: none; }
+  }
+  .coord-read {
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(239, 230, 242, 0.48);
+  }
+  .lesson-door {
+    pointer-events: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    text-decoration: none;
+    color: var(--accent);
+    border-bottom: 1px solid rgba(255, 179, 107, 0.55);
+    white-space: nowrap;
+  }
+  .lesson-door:hover, .lesson-door:focus-visible { color: var(--pearl); }
   #err {
     position: absolute; right: 10px; bottom: 10px; z-index: 4; max-width: 280px;
     font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em;
@@ -531,7 +649,7 @@
   }
 
   html.embed, body.embed { background: transparent !important; }
-  body.embed .top, body.embed .vig { display: none !important; }
+  body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-door, body.embed .field, body.embed .legend { display: none !important; }
   body.embed .app { padding: 0; }
   body.embed .workspace { position: absolute; inset: 0; }
   body.embed .table-panel { display: none; }
@@ -544,8 +662,9 @@
 
   @media (max-width: 900px) {
     .app {
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
       padding:
         max(10px, var(--safe-t))
         max(12px, var(--safe-r))
@@ -555,22 +674,34 @@
     .top {
       position: relative;
       inset: auto;
-      display: block;
-    }
-    .top h1 .display { font-size: clamp(2.8rem, 16vw, 4rem); }
-    .top h1 em { max-width: none; padding-bottom: 0.35rem; }
-    body:has(#formula:not([hidden])) .top h1 .display,
-    body:has(#formula:not([hidden])) .top h1 em {
-      transform: none;
-      opacity: 1;
-    }
-    .legend {
-      position: static;
       width: auto;
+      display: flex;
+    }
+    .field {
+      position: relative;
+      inset: auto;
+      width: auto;
+      height: auto;
+      right: auto;
+      bottom: auto;
+      overflow: visible;
+      justify-content: flex-start;
+      gap: 6px;
+      transform: none !important;
+    }
+    .field h1 .display { font-size: clamp(2.4rem, 14vw, 3.4rem); }
+    .field .empty-stage { font-size: 1.2rem; }
+    .legend {
+      position: relative;
+      inset: auto;
+      width: auto;
+      right: auto;
+      left: auto;
+      bottom: auto;
       flex-direction: row;
       flex-wrap: wrap;
       gap: 4px 10px;
-      margin-top: 8px;
+      margin: 8px 0;
       max-width: 100%;
     }
     .table-scroll { padding-top: 8px; }
@@ -580,6 +711,7 @@
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: minmax(0, 1fr);
+      flex: 1;
       min-height: 0;
     }
     .table-panel {
@@ -589,7 +721,8 @@
       top: auto;
       bottom: auto;
       left: auto;
-      height: auto;
+      right: auto;
+      height: 100%;
     }
     .formula,
     .atom-bottom {
@@ -602,10 +735,29 @@
     #ladderChips { flex-direction: row; }
     .chip { font-size: 1.15rem; margin-right: 10px; }
     .empty-stage { padding: 8vh 7% 18%; }
-    .atom-panel::before, .atom-panel::after { display: none; }
+    .legend, .formula, .horizon, .corners, .table-panel, .field {
+      transform: none !important;
+    }
+    .horizon { bottom: 18%; }
+    body.atom-open .field {
+      position: fixed;
+      z-index: 30;
+      inset:
+        max(10px, var(--safe-t))
+        max(12px, var(--safe-r))
+        max(10px, var(--safe-b))
+        max(12px, var(--safe-l));
+      width: auto;
+      height: auto;
+      justify-content: space-between;
+      pointer-events: none;
+      overflow: auto;
+    }
+    body.atom-open .back { display: inline-flex; }
+    body.atom-open:has(.atom-panel.show-atlas) .field { bottom: 42dvh; }
     .atom-panel {
       position: fixed; inset: 0; z-index: 20;
-      border-radius: 0; border: none;
+      border-radius: 0; border: none; border-left: none;
       transform: translateY(105%);
       transition: transform 0.28s ease;
       background: var(--void);
@@ -631,11 +783,157 @@
     .legend { max-width: 100%; justify-content: flex-start; }
   }
 
+  /* Right-hand room column. One flow, so type, ladder, and captions cannot occupy the same pixels. */
+  .field {
+    container-type: inline-size;
+    position: absolute;
+    z-index: 5;
+    top: 14px;
+    right: 16px;
+    bottom: 14px;
+    left: 16px;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    pointer-events: none;
+    overflow: auto;
+    transform: none;
+  }
+  .field-top, .field-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+  .depth {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.8);
+  }
+  body[data-room="atlas"] .depth { color: var(--door); }
+  body[data-travel="descend"] .field-top,
+  body[data-travel="rise"] .field-top {
+    animation: floor-num 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .field .teach { margin: 0; max-width: 32ch; }
+  .field .formula,
+  .field .badge,
+  .field .empty-stage,
+  .field .atom-bottom {
+    position: static;
+    inset: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: none;
+  }
+  .field .formula .sym-big {
+    font-size: clamp(3.4rem, 32cqw, 7rem);
+  }
+  .field .empty-stage {
+    display: block;
+    place-items: start;
+    align-content: start;
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+    line-height: 0.92;
+  }
+  .field .empty-stage.hidden { display: none; }
+  .field .hint-atom { display: none; max-width: 36ch; }
+  body:has(#formula:not([hidden])) .field .hint-atom { display: block; }
+  .field .badge { text-align: left; }
+  .ladder-ui[hidden],
+  .formula[hidden],
+  .badge[hidden],
+  .atlas-dock[hidden],
+  #nucleonPick[hidden] {
+    display: none !important;
+  }
+  .field .chip, .field .back, .field .pchip { pointer-events: auto; }
+  .back { display: none; }
+  body:has(.handoff.show) .handoff { z-index: 12; }
+  body:has(.atom-panel.show-atlas) .field {
+    bottom: 14px;
+  }
+  .field-top, .field-bottom { flex-shrink: 0; }
+
+  @media (max-width: 900px) {
+    .field {
+      position: relative;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      justify-content: flex-start;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .el, .chip, .top h1 .display { transition: none; }
-    .atom-panel { transition: none; }
+    .atom-panel, .horizon { transition: none; }
     .empty-stage > span:first-child,
-    .formula .sym-big { animation: none; }
+    .formula .sym-big,
+    .room-index .num { animation: none; }
+    .legend, .formula, .horizon, .corners, .table-panel, .field {
+      transform: none !important;
+    }
+  }
+
+  /* Desktop lock: table and atom are columns. The canvas cannot cover the tiles. */
+  @media (min-width: 901px) {
+    body:not(.embed) .workspace {
+      position: relative !important;
+      inset: auto !important;
+      display: grid !important;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.8fr) !important;
+      grid-template-rows: minmax(0, 1fr) !important;
+    }
+    body:not(.embed) .table-panel,
+    body:not(.embed) .atom-panel,
+    body:not(.embed):has(.handoff.show) .atom-panel {
+      position: relative !important;
+      inset: auto !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      width: auto !important;
+      transform: none !important;
+    }
+    body:not(.embed) .atom-panel,
+    body:not(.embed):has(.handoff.show) .atom-panel {
+      height: 100% !important;
+      z-index: 1 !important;
+      overflow: hidden !important;
+    }
+    body:not(.embed) .table-panel {
+      height: auto !important;
+      overflow: hidden !important;
+      background: var(--void) !important;
+    }
+    body:not(.embed) .stage-wrap > .field,
+    body:not(.embed):has(.atom-panel.show-atlas) .field {
+      position: absolute !important;
+      left: 16px !important;
+      right: 16px !important;
+      top: 14px !important;
+      bottom: 14px !important;
+      width: auto !important;
+      height: auto !important;
+    }
   }
 </style>
 </head>
@@ -647,28 +945,17 @@
     document.body.classList.add('embed');
     document.documentElement.classList.add('embed');
   }
+  document.body.dataset.room = 'idle';
 })();
 </script>
 
 <div class="app">
   <header class="top">
-    <div class="mast">
+    <div class="mast-copy">
       <p class="tag">Intro chemistry</p>
-      <h1><span class="display">H–Og</span><em>periodic atlas</em></h1>
       <p class="teach">Atom structure → nucleus → quarks → Standard Model atlas</p>
     </div>
-    <div class="legend" aria-hidden="true">
-      <span><i style="background:var(--cat-alkali)"></i>alkali</span>
-      <span><i style="background:var(--cat-alkaline-earth)"></i>alk. earth</span>
-      <span><i style="background:var(--cat-transition)"></i>transition</span>
-      <span><i style="background:var(--cat-post-transition)"></i>post-trans.</span>
-      <span><i style="background:var(--cat-metalloid)"></i>metalloid</span>
-      <span><i style="background:var(--cat-nonmetal)"></i>nonmetal</span>
-      <span><i style="background:var(--cat-halogen)"></i>halogen</span>
-      <span><i style="background:var(--cat-noble)"></i>noble</span>
-      <span><i style="background:var(--cat-lanthanide)"></i>lanthanide</span>
-      <span><i style="background:var(--cat-actinide)"></i>actinide</span>
-    </div>
+    <a class="lesson-door" href="ethanol.html">Ethanol · C₂H₆O</a>
   </header>
 
   <div class="workspace">
@@ -676,16 +963,30 @@
       <div class="table-scroll">
         <div class="ptable" id="ptable" role="list"></div>
       </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--cat-alkali)"></i>alkali</span>
+        <span><i style="background:var(--cat-alkaline-earth)"></i>alk. earth</span>
+        <span><i style="background:var(--cat-transition)"></i>transition</span>
+        <span><i style="background:var(--cat-post-transition)"></i>post-trans.</span>
+        <span><i style="background:var(--cat-metalloid)"></i>metalloid</span>
+        <span><i style="background:var(--cat-nonmetal)"></i>nonmetal</span>
+        <span><i style="background:var(--cat-halogen)"></i>halogen</span>
+        <span><i style="background:var(--cat-noble)"></i>noble</span>
+        <span><i style="background:var(--cat-lanthanide)"></i>lanthanide</span>
+        <span><i style="background:var(--cat-actinide)"></i>actinide</span>
+      </div>
     </section>
 
     <section class="atom-panel" id="atomPanel" aria-label="Atom view">
       <div class="stage-wrap" id="stageWrap">
-        <div class="empty-stage" id="emptyHint"><span>Tap any element, H–Og</span><span class="path">Intro chem · atom structure → nucleus → quarks → Standard Model atlas</span></div>
         <div id="stage"></div>
+        <div class="horizon" aria-hidden="true"></div>
+        <div class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="vig" aria-hidden="true"></div>
-        <div class="badge" id="stageBadge" hidden>Bohr-ish · not to scale</div>
-        <div class="atom-chrome">
-          <div>
+        <aside class="field" id="field">
+          <div class="field-top">
+            <p class="depth" id="roomLab">00 · atom room</p>
+            <h1><span class="display">H–Og</span><em>periodic atlas</em></h1>
             <button type="button" class="back" id="backBtn" aria-label="Back">← back</button>
             <div class="formula" id="formula" hidden>
               <div class="name-row">
@@ -696,7 +997,8 @@
               <div class="readout" id="stageReadout" hidden></div>
             </div>
           </div>
-          <div class="atom-bottom">
+          <div class="field-bottom">
+            <div class="empty-stage" id="emptyHint"><span>Tap any element</span></div>
             <div class="ladder-ui" id="ladderUi" hidden>
               <div class="row" id="ladderChips" role="group" aria-label="Stage">
                 <button type="button" class="chip on" data-stage="atom">Atom</button>
@@ -709,9 +1011,10 @@
               </div>
               <div class="row" id="nucleonPick" hidden role="group" aria-label="Nucleon"></div>
             </div>
-            <div class="hint-atom" id="atomHint">Intro chem · atom structure → nucleus → quarks → Standard Model atlas</div>
+            <p class="hint-atom" id="atomHint">Intro chem · atom structure · Next is the nucleus</p>
+            <p class="badge" id="stageBadge" hidden>Bohr-ish · not to scale</p>
           </div>
-        </div>
+        </aside>
         <div class="handoff" id="handoff" role="dialog" aria-modal="true" aria-labelledby="handoffTitle">
           <div class="card">
             <p class="kick">Door · not a zoom</p>
@@ -1079,6 +1382,97 @@ let currentZ = null;
 const dummy = new THREE.Object3D();
 const raycaster = new THREE.Raycaster();
 const pointerNdc = new THREE.Vector2();
+const look = { x: 0, y: 0, tx: 0, ty: 0 };
+const camHold = new THREE.Vector3();
+const floorTint = new THREE.Color();
+const discTint = new THREE.Color();
+const ringTint = new THREE.Color();
+let roomFloor = null;
+let roomNow = 'idle';
+const roomNumEl = document.getElementById('roomNum');
+const roomLabEl = document.getElementById('roomLab');
+const coordReadEl = document.getElementById('coordRead');
+const ROOM_ORDER = { idle: 0, atom: 1, nucleus: 2, quark: 3, atlas: 4 };
+const ROOM_META = {
+  idle: ['00', 'atom room'],
+  atom: ['01', 'atom'],
+  nucleus: ['02', 'nucleus'],
+  quark: ['03', 'quark'],
+  atlas: ['04', 'atlas floor'],
+};
+const FLOOR_POSE = {
+  idle: { y: -1.82, op: 0.34, ring: 0.12, col: 0x5a3044, disc: 0x1a0c20, ringCol: 0xffb36b },
+  atom: { y: -1.42, op: 0.52, ring: 0.36, col: 0x7a4458, disc: 0x1c0e22, ringCol: 0xffb36b },
+  nucleus: { y: -2.45, op: 0.14, ring: 0, col: 0x3a2834, disc: 0x120814, ringCol: 0xff6b3d },
+  quark: { y: -2.7, op: 0.08, ring: 0, col: 0x322430, disc: 0x100610, ringCol: 0xffd166 },
+  atlas: { y: -0.42, op: 0.72, ring: 0.9, col: 0x7ec8ff, disc: 0x101828, ringCol: 0x7ec8ff },
+};
+
+function paintCoord(clientX, clientY) {
+  if (!coordReadEl) return;
+  const meta = ROOM_META[document.body.dataset.room] || ROOM_META.idle;
+  const x = clientX == null ? (coordReadEl.dataset.x || '0000') : String(Math.round(clientX)).padStart(4, '0');
+  const y = clientY == null ? (coordReadEl.dataset.y || '0000') : String(Math.round(clientY)).padStart(4, '0');
+  if (clientX != null) {
+    coordReadEl.dataset.x = x;
+    coordReadEl.dataset.y = y;
+  }
+  coordReadEl.textContent = `x ${x} · y ${y} · ${meta[0]} ${meta[1]}`;
+}
+
+function syncRoomChrome() {
+  const next = currentZ == null ? 'idle' : stageState.stage;
+  if (next !== roomNow) {
+    const dir = (ROOM_ORDER[next] || 0) > (ROOM_ORDER[roomNow] || 0) ? 'descend' : 'rise';
+    document.body.dataset.travel = still ? '' : dir;
+    clearTimeout(syncRoomChrome._t);
+    syncRoomChrome._t = setTimeout(() => {
+      if (document.body.dataset.travel === dir) document.body.dataset.travel = '';
+    }, 760);
+    roomNow = next;
+  }
+  document.body.dataset.room = next;
+  const meta = ROOM_META[next] || ROOM_META.idle;
+  if (roomLabEl) roomLabEl.textContent = `${meta[0]} · ${meta[1]}`;
+}
+
+function applyRoomMotion(dt) {
+  const pose = FLOOR_POSE[currentZ == null ? 'idle' : stageState.stage];
+  if (roomFloor && pose) {
+    const k = still ? 1 : Math.min(1, dt * 2.1);
+    roomFloor.position.y += (pose.y - roomFloor.position.y) * k;
+    const grid = roomFloor.userData.grid;
+    grid.material.opacity += (pose.op - grid.material.opacity) * k;
+    floorTint.setHex(pose.col);
+    grid.material.color.lerp(floorTint, k);
+    discTint.setHex(pose.disc);
+    roomFloor.userData.disc.material.color.lerp(discTint, k);
+    const ring = roomFloor.userData.ring;
+    ring.material.opacity += (pose.ring - ring.material.opacity) * k;
+    ringTint.setHex(pose.ringCol);
+    ring.material.color.lerp(ringTint, k);
+    if (!still) roomFloor.rotation.y = Math.sin(t * 0.18) * 0.045;
+  }
+  if (!still && !embed) {
+    const ease = Math.min(1, dt * (isMobile ? 3.2 : 4.8));
+    look.x += (look.tx - look.x) * ease;
+    look.y += (look.ty - look.y) * ease;
+    if (!isMobile) {
+      document.documentElement.style.setProperty('--px', look.x.toFixed(4));
+      document.documentElement.style.setProperty('--py', look.y.toFixed(4));
+    }
+  }
+}
+
+function nudgeCamera() {
+  if (embed || !camera || still || camAnim.active) return false;
+  camHold.copy(camera.position);
+  const amp = (stageState.stage === 'quark' ? 0.03 : stageState.stage === 'nucleus' ? 0.055 : 0.14) * (isMobile ? 0.45 : 1);
+  const idle = (currentZ == null ? 0.22 : 0.04) * Math.sin(t * 0.37);
+  camera.position.x += look.x * amp + idle;
+  camera.position.y += look.y * amp * 0.5;
+  return true;
+}
 
 /* Chemistry first, then one nucleon, then the atlas door */
 const stageState = { stage: 'atom' };
@@ -1717,8 +2111,9 @@ function syncLadderUi() {
     btnNext.textContent = st === 'quark' ? 'Open door ⇥' : st === 'atlas' ? 'End' : 'Next →';
     btnNext.classList.toggle('door', st === 'quark');
   }
+  syncRoomChrome();
   if (!atomHint) return;
-  if (still && st === 'atom') atomHint.textContent = 'Intro chem · atom structure · still pose';
+  if (st === 'atom' && still) atomHint.textContent = 'Motion is paused so you can read the atom.';
   else if (st === 'atom') atomHint.textContent = 'Intro chem · atom structure · Next is the nucleus';
   else if (st === 'nucleus') atomHint.textContent = 'Nucleus · protons and neutrons only · Next opens quarks';
   else if (st === 'quark') atomHint.textContent = 'Quarks inside one nucleon · Next is the Standard Model door';
@@ -2024,7 +2419,7 @@ function selectElement(z) {
     else start();
   } catch (e) {
     console.error(e);
-    showErr(String(e.message || e));
+    showErr('This browser can’t draw the 3D atom. Try another browser or update graphics.');
   }
 }
 
@@ -2047,7 +2442,7 @@ try {
     alpha: embed,
     powerPreference: isIOS ? 'default' : 'high-performance',
   });
-  if (!renderer.getContext()) throw new Error('WebGL context failed');
+  if (!renderer.getContext()) throw new Error('no-gl');
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setClearColor(VOID, embed ? 0 : 1);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -2120,6 +2515,46 @@ try {
   fill.position.set(-5, -2, -4);
   scene.add(fill);
 
+  if (!embed) {
+    roomFloor = new THREE.Group();
+    const grid = new THREE.GridHelper(32, 16, 0xffffff, 0xffffff);
+    grid.material.transparent = true;
+    grid.material.opacity = FLOOR_POSE.idle.op;
+    grid.material.depthWrite = false;
+    grid.material.toneMapped = true;
+    grid.material.color.setHex(FLOOR_POSE.idle.col);
+    const disc = new THREE.Mesh(
+      new THREE.CircleGeometry(15, isMobile ? 40 : 64),
+      new THREE.MeshBasicMaterial({
+        color: FLOOR_POSE.idle.disc,
+        transparent: true,
+        opacity: 0.22,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      })
+    );
+    disc.rotation.x = -Math.PI / 2;
+    disc.position.y = -0.015;
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(1.25, 1.34, isMobile ? 48 : 80),
+      new THREE.MeshBasicMaterial({
+        color: FLOOR_POSE.idle.ringCol,
+        transparent: true,
+        opacity: FLOOR_POSE.idle.ring,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      })
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = 0.02;
+    roomFloor.add(grid, disc, ring);
+    roomFloor.userData.grid = grid;
+    roomFloor.userData.disc = disc;
+    roomFloor.userData.ring = ring;
+    roomFloor.position.y = FLOOR_POSE.idle.y;
+    scene.add(roomFloor);
+  }
+
   if (!embed && !isMobile) {
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
@@ -2127,7 +2562,7 @@ try {
     composer.addPass(new OutputPass());
   }
 } catch (e) {
-  showErr('WebGL unavailable — table still works.');
+  showErr('This browser can’t draw the 3D atom. Try another browser or update graphics.');
   console.warn(e);
 }
 
@@ -2194,8 +2629,11 @@ function frame() {
   t += dt;
   tickCamAnim(now);
   pose(t);
-  controls.update();
+  applyRoomMotion(dt);
+  if (controls) controls.update();
+  const nudged = nudgeCamera();
   renderFrame();
+  if (nudged) camera.position.copy(camHold);
 }
 
 function holdStill() {
@@ -2208,6 +2646,7 @@ function holdStill() {
     poseElectrons(t);
   }
   if (controls) controls.update();
+  applyRoomMotion(1);
   renderFrame();
 }
 
@@ -2229,8 +2668,15 @@ motionQuery.addEventListener('change', (e) => {
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
-  else if (currentZ != null) start();
+  else if (!still) start();
 });
+
+addEventListener('pointermove', (e) => {
+  if (still || embed) return;
+  look.tx = (e.clientX / innerWidth) * 2 - 1;
+  look.ty = (e.clientY / innerHeight) * 2 - 1;
+  paintCoord(e.clientX, e.clientY);
+}, { passive: true });
 
 /* Stage ladder chips — chemistry stages stay free; Quark/Atlas never skip ahead */
 ladderChips.addEventListener('click', (e) => {
@@ -2360,7 +2806,13 @@ else if (elParam) {
 }
 if (embed && !startZ) startZ = 6;
 if (startZ) selectElement(startZ);
-else if (renderer) renderFrame();
+else if (renderer) {
+  syncRoomChrome();
+  if (still) {
+    applyRoomMotion(1);
+    renderFrame();
+  } else start();
+}
 
 console.info('[periodic-table-atoms] mass source:', MASS_SOURCE, '· ladder: Atom → Nucleus → Quark → Atlas door');
 </script>

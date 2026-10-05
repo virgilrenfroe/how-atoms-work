@@ -95,3 +95,23 @@ Family tiles use the legend hues at about half opacity, with a solid left edge i
 DPR ≤ 1.5. `setSize(w, h, true)` on mobile. The atom panel and stage use `minmax(0, 1fr)` so the canvas cannot collapse to 0×0. Touch-friendly cells. Mobile atom panel is full screen.
 
 Colours: p `#ff6b3d` · n `#6c84a8` · e `#5fd6c6` · u `#ffd166` · d `#a78bfa`.
+
+The page is a split. The periodic table is the left panel; the WebGL atom is the right panel. The canvas does not sit under the tiles, and the table is not a tilted plate. Inside the atom stage only, the room is a floor: a sparse grid, a low disc, and a center ring. Atom keeps the floor under the model. Nucleus and quark drop it away. Atlas raises a cooler floor under that same stage. Pointer parallax offsets the camera for one frame (then restores it) so the floor shears against the nucleons. Chemistry meshes, counts, and the ladder are not part of that motion. On a narrow screen the atom stage is its own opaque sheet, not a drawing over the tiles.
+
+## Ethanol · C₂H₆O
+
+`ethanol.html` — Intro chem · molecular structure / bonding. Ball-and-stick anti conformer, staggered.
+
+| Quantity | Value |
+|----------|--------|
+| Formula | C₂H₆O · 2 C, 6 H, 1 O · 8 single bonds |
+| C–C | 1.512 Å |
+| C–O | 1.431 Å |
+| C–H | 1.096 Å |
+| O–H | 0.971 Å |
+| Carbon angles | tetrahedral, arccos(−1/3) ≈ 109.47° |
+| ∠C–O–H | 108.5° |
+| Dihedral H–O–C–C | 180° (anti) |
+| Methyl vs O | one H anti (180°), two gauche (±60°) |
+
+CPK (Jmol): C `#909090` · H `#FFFFFF` · O `#FF0D0D`. Satin `MeshPhysicalMaterial` metalness 0.32, roughness 0.45, clearcoat 0.22, clearcoat roughness 0.38. Anisotropy 0.55 on desktop WebGL2 and off on mobile. Sphere display radii are not van der Waals radii, so the sticks stay visible. Oxygen’s two lone pairs are not drawn. Void `#140818`. DPR ≤ 1.5. Linked from the atom-room header.

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>Ethanol · C₂H₆O · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.58);
+    --accent: #ffb36b;
+    --px: 0;
+    --py: 0;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px);
+    --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%;
+    background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans);
+  }
+  body { overflow: hidden; }
+  .stage { position: absolute; inset: 0; }
+  #stage { position: absolute; inset: 0; }
+  #stage canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block; touch-action: none; cursor: grab;
+  }
+  #stage canvas:active { cursor: grabbing; }
+  .stage::after {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    opacity: 0.14; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
+  }
+  .horizon {
+    position: absolute; left: -8%; right: -8%; bottom: 30%;
+    height: 1px; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(239,230,242,0.4), transparent);
+    transform: translate3d(calc(var(--px) * -10px), calc(var(--py) * 14px), 0);
+  }
+  .horizon::before {
+    content: "";
+    position: absolute; left: 18%; top: -18px;
+    width: 1px; height: 18px; background: rgba(239,230,242,0.4);
+  }
+  .corners { position: absolute; inset: 12px; z-index: 3; pointer-events: none; }
+  .corners i { position: absolute; width: 20px; height: 20px; border: 0 solid rgba(239,230,242,0.42); }
+  .corners i:nth-child(1) { top: 0; left: 0; border-width: 1px 0 0 1px; }
+  .corners i:nth-child(2) { top: 0; right: 0; border-width: 1px 1px 0 0; }
+  .corners i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+  .corners i:nth-child(4) { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+  .top {
+    position: absolute; z-index: 4;
+    left: max(18px, var(--safe-l));
+    top: max(12px, var(--safe-t));
+    right: max(18px, var(--safe-r));
+    pointer-events: none;
+    transform: translate3d(calc(var(--px) * 26px), calc(var(--py) * 12px), 0);
+  }
+  .tag {
+    margin: 0 0 4px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255, 179, 107, 0.82);
+  }
+  h1 {
+    margin: 0;
+    display: flex; align-items: flex-end; gap: 0.4em; flex-wrap: wrap;
+    font-family: var(--font-display); font-weight: 520;
+    letter-spacing: -0.07em; line-height: 0.78;
+  }
+  h1 .display { font-size: clamp(4.4rem, 12vw, 9.4rem); }
+  h1 em {
+    font-style: normal; font-weight: 360;
+    font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+    letter-spacing: -0.04em; padding-bottom: 0.7rem; max-width: 8ch;
+  }
+  .back {
+    pointer-events: auto;
+    display: inline-block;
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,179,107,0.55);
+  }
+  .hud {
+    position: absolute; z-index: 4;
+    left: max(18px, var(--safe-l));
+    bottom: max(16px, var(--safe-b));
+    width: min(46ch, calc(100% - 36px));
+    pointer-events: none;
+    transform: translate3d(calc(var(--px) * 14px), calc(var(--py) * -16px), 0);
+  }
+  .hud h2 {
+    margin: 0 0 6px;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    letter-spacing: -0.05em; line-height: 0.9;
+  }
+  .bonds, .read {
+    margin: 0;
+    font-family: var(--font-mono); font-size: 12px; line-height: 1.5;
+    letter-spacing: 0.01em; color: var(--pearl);
+    text-transform: none;
+  }
+  .bonds { color: var(--mute); }
+  .swatch { display: inline-flex; gap: 12px; margin-top: 8px; }
+  .swatch span {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: none; color: var(--pearl);
+  }
+  .swatch i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+  .floor-lab {
+    position: absolute; z-index: 2; right: max(18px, var(--safe-r)); bottom: 8vh;
+    pointer-events: none; text-align: right;
+    transform: translate3d(calc(var(--px) * -24px), calc(var(--py) * 20px), 0);
+  }
+  .floor-lab b {
+    display: block;
+    font-family: var(--font-display); font-weight: 520;
+    font-size: clamp(4rem, 10vw, 8rem);
+    letter-spacing: -0.08em; line-height: 0.75;
+    color: rgba(239,230,242,0.08);
+  }
+  .floor-lab span {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(239,230,242,0.62);
+  }
+  #err {
+    position: absolute; left: 16px; bottom: 16px; z-index: 6;
+    font-family: var(--font-mono); font-size: 11px; color: #ffd6d6; display: none;
+  }
+  @media (max-width: 720px) {
+    .top, .hud, .floor-lab { transform: none !important; }
+    h1 .display { font-size: clamp(3.2rem, 18vw, 4.6rem); }
+    .floor-lab b { font-size: 22vw; }
+    .hud { max-height: 34vh; overflow: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .top, .hud, .floor-lab, .horizon { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="horizon" aria-hidden="true"></div>
+  <div class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</div>
+<header class="top">
+  <p class="tag">Intro chem · molecular structure / bonding</p>
+  <h1><span class="display">C₂H₆O</span><em>ethanol</em></h1>
+  <a class="back" href="index.html">← Atom room</a>
+</header>
+<div class="floor-lab" aria-hidden="true"><span>molecule floor</span><b>C₂H₆O</b></div>
+<div class="hud">
+  <h2 id="pickTitle">Anti · staggered</h2>
+  <p class="read" id="pickRead">Click an atom. Eight single bonds. Oxygen lone pairs are not drawn.</p>
+  <p class="bonds" id="bondList"></p>
+  <div class="swatch" aria-label="CPK colors">
+    <span><i style="background:#909090"></i>carbon</span>
+    <span><i style="background:#ffffff"></i>hydrogen</span>
+    <span><i style="background:#ff0d0d"></i>oxygen</span>
+  </div>
+</div>
+<div id="err" role="status"></div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const VOID = 0x140818;
+const CPK = { C: 0x909090, H: 0xffffff, O: 0xff0d0d };
+const SATIN = { metalness: 0.32, roughness: 0.45, clearcoat: 0.22, clearcoatRoughness: 0.38 };
+
+function fail(msg) { throw new Error(`[ethanol] ${msg}`); }
+function sub(a, b) { return a.map((x, i) => x - b[i]); }
+function add(a, b) { return a.map((x, i) => x + b[i]); }
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function len(v) { return Math.hypot(v[0], v[1], v[2]); }
+function norm(v) { const l = len(v); return [v[0] / l, v[1] / l, v[2] / l]; }
+function scale(v, s) { return [v[0] * s, v[1] * s, v[2] * s]; }
+function ang(a, b) {
+  return Math.acos(Math.min(1, Math.max(-1, dot(norm(a), norm(b))))) * 180 / Math.PI;
+}
+function rodrigues(v, k, theta) {
+  const c = Math.cos(theta);
+  const s = Math.sin(theta);
+  const d = dot(k, v);
+  const cr = cross(k, v);
+  return [
+    v[0] * c + cr[0] * s + k[0] * d * (1 - c),
+    v[1] * c + cr[1] * s + k[1] * d * (1 - c),
+    v[2] * c + cr[2] * s + k[2] * d * (1 - c),
+  ];
+}
+function dihedral(a, b, c, d) {
+  const b1 = sub(b, a);
+  const b2 = sub(c, b);
+  const b3 = sub(d, c);
+  const n1 = norm(cross(b1, b2));
+  const n2 = norm(cross(b2, b3));
+  const x = dot(n1, n2);
+  const y = dot(cross(n1, n2), norm(b2));
+  return Math.atan2(y, x) * 180 / Math.PI;
+}
+function near(v, target, tol, msg) {
+  if (Math.abs(v - target) > tol) fail(`${msg}: ${v} ≠ ${target}`);
+}
+
+/* Gas-phase teaching geometry, anti conformer.
+   C–C 1.512 Å, C–O 1.431 Å, C–H 1.096 Å, O–H 0.971 Å.
+   Carbon angles are tetrahedral arccos(−1/3). C–O–H is 108.5°. */
+function buildEthanol() {
+  const TET = Math.acos(-1 / 3);
+  const CC = 1.512, CO = 1.431, CH = 1.096, OH = 0.971;
+  const COH = 108.5 * Math.PI / 180;
+  const tet = [norm([1, 1, 1]), norm([1, -1, -1]), norm([-1, 1, -1]), norm([-1, -1, 1])];
+  const C1 = [0, 0, 0];
+  const C2 = scale(tet[0], CC);
+  const O = scale(tet[1], CO);
+  const Ha1 = scale(tet[2], CH);
+  const Ha2 = scale(tet[3], CH);
+  const axis = norm(sub(C2, C1));
+  const oDir = norm(O);
+  const oPerp = norm(sub(oDir, scale(axis, dot(oDir, axis))));
+  const back = scale(axis, -1);
+  const antiPerp = scale(oPerp, -1);
+  const hAntiDir = norm(add(scale(back, Math.cos(TET)), scale(antiPerp, Math.sin(TET))));
+  const methyl = [0, 1, 2].map((i) => add(C2, scale(norm(rodrigues(hAntiDir, back, i * 2 * Math.PI / 3)), CH)));
+  const oBack = norm(sub(C1, O));
+  const c1o = norm(sub(O, C1));
+  const cPerp = norm(sub(sub(C2, C1), scale(c1o, dot(sub(C2, C1), c1o))));
+  const Ho = add(O, scale(norm(add(scale(oBack, Math.cos(COH)), scale(scale(cPerp, -1), Math.sin(COH)))), OH));
+  const atoms = [
+    { id: 'Ca', el: 'C', role: 'Cα · methylene carbon', p: C1 },
+    { id: 'Cb', el: 'C', role: 'Cβ · methyl carbon', p: C2 },
+    { id: 'O', el: 'O', role: 'hydroxyl oxygen', p: O },
+    { id: 'Ha1', el: 'H', role: 'methylene hydrogen', p: Ha1 },
+    { id: 'Ha2', el: 'H', role: 'methylene hydrogen', p: Ha2 },
+    { id: 'Hm1', el: 'H', role: 'methyl hydrogen · anti to O', p: methyl[0] },
+    { id: 'Hm2', el: 'H', role: 'methyl hydrogen · gauche', p: methyl[1] },
+    { id: 'Hm3', el: 'H', role: 'methyl hydrogen · gauche', p: methyl[2] },
+    { id: 'Ho', el: 'H', role: 'hydroxyl hydrogen', p: Ho },
+  ];
+  const bonds = [
+    ['Ca', 'Cb'], ['Ca', 'O'], ['Ca', 'Ha1'], ['Ca', 'Ha2'],
+    ['Cb', 'Hm1'], ['Cb', 'Hm2'], ['Cb', 'Hm3'], ['O', 'Ho'],
+  ];
+  const byId = Object.fromEntries(atoms.map((a) => [a.id, a]));
+  const counts = atoms.reduce((m, a) => (m[a.el] = (m[a.el] || 0) + 1, m), {});
+  if (counts.C !== 2 || counts.H !== 6 || counts.O !== 1) fail(`formula C${counts.C}H${counts.H}O${counts.O}`);
+  if (bonds.length !== 8) fail('ethanol has 8 single bonds');
+  near(len(sub(C2, C1)), CC, 1e-6, 'C–C');
+  near(len(sub(O, C1)), CO, 1e-6, 'C–O');
+  near(len(sub(Ho, O)), OH, 1e-6, 'O–H');
+  for (const h of [Ha1, Ha2, ...methyl]) near(len(sub(h, h === Ha1 || h === Ha2 ? C1 : C2)), CH, 1e-3, 'C–H');
+  near(len(sub(Ha1, C1)), CH, 1e-6, 'Cα–H');
+  near(len(sub(methyl[0], C2)), CH, 1e-6, 'Cβ–H');
+  const tetDeg = TET * 180 / Math.PI;
+  for (const h of [Ha1, Ha2]) near(ang(sub(C2, C1), sub(h, C1)), tetDeg, 0.05, '∠C–C–H');
+  near(ang(sub(C2, C1), sub(O, C1)), tetDeg, 0.05, '∠C–C–O');
+  near(ang(sub(Ha1, C1), sub(Ha2, C1)), tetDeg, 0.05, '∠H–C–H methylene');
+  near(ang(sub(O, C1), sub(Ha1, C1)), tetDeg, 0.05, '∠O–C–H');
+  for (const h of methyl) near(ang(sub(C1, C2), sub(h, C2)), tetDeg, 0.05, '∠C–C–H methyl');
+  near(ang(sub(methyl[0], C2), sub(methyl[1], C2)), tetDeg, 0.05, '∠H–C–H methyl');
+  near(ang(sub(C1, O), sub(Ho, O)), 108.5, 0.05, '∠C–O–H');
+  near(Math.abs(dihedral(Ho, O, C1, C2)), 180, 0.2, 'dihedral H–O–C–C');
+  near(Math.abs(dihedral(O, C1, C2, methyl[0])), 180, 0.2, 'dihedral O–C–C–H anti');
+  near(Math.abs(Math.abs(dihedral(O, C1, C2, methyl[1])) - 60), 0, 0.3, 'dihedral gauche');
+  near(Math.abs(Math.abs(dihedral(O, C1, C2, methyl[2])) - 60), 0, 0.3, 'dihedral gauche');
+  if (CPK.C === CPK.H || CPK.C === CPK.O || CPK.H === CPK.O) fail('CPK colors must be distinct');
+  const measured = bonds.map(([a, b]) => ({
+    a, b, elA: byId[a].el, elB: byId[b].el, angstrom: len(sub(byId[a].p, byId[b].p)),
+  }));
+  return { atoms, bonds: measured, tetDeg, byId };
+}
+
+const model = buildEthanol();
+const heavy = model.atoms.filter((a) => a.el !== 'H');
+const centroid = heavy.reduce((s, a) => add(s, a.p), [0, 0, 0]).map((v) => v / heavy.length);
+const SHOW = 1.28;
+for (const a of model.atoms) a.world = sub(a.p, centroid).map((v) => v * SHOW);
+
+const bondList = document.getElementById('bondList');
+const groups = [
+  ['C–C', model.bonds.filter((b) => b.elA === 'C' && b.elB === 'C')],
+  ['C–O', model.bonds.filter((b) => (b.elA === 'C' && b.elB === 'O') || (b.elA === 'O' && b.elB === 'C'))],
+  ['C–H', model.bonds.filter((b) => (b.elA === 'C' && b.elB === 'H') || (b.elA === 'H' && b.elB === 'C'))],
+  ['O–H', model.bonds.filter((b) => (b.elA === 'O' && b.elB === 'H') || (b.elA === 'H' && b.elB === 'O'))],
+];
+bondList.textContent = groups.map(([name, rows]) => {
+  const L = rows[0].angstrom.toFixed(3);
+  return `${name} ${L} Å${rows.length > 1 ? ` ×${rows.length}` : ''}`;
+}).join(' · ') + ` · ∠C ${model.tetDeg.toFixed(2)}° · ∠C–O–H 108.50° · H–O–C–C 180°`;
+
+const params = new URLSearchParams(location.search);
+const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+let still = motionQuery.matches || params.has('still');
+const ua = navigator.userAgent || '';
+const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isMobile = isIOS || matchMedia('(pointer: coarse)').matches || matchMedia('(max-width: 720px)').matches;
+
+const stage = document.getElementById('stage');
+const pickTitle = document.getElementById('pickTitle');
+const pickRead = document.getElementById('pickRead');
+const errEl = document.getElementById('err');
+const look = { x: 0, y: 0, tx: 0, ty: 0 };
+const camHold = new THREE.Vector3();
+const UP = new THREE.Vector3(0, 1, 0);
+let renderer, scene, camera, controls, mol, floor, raf = 0;
+let dragging = false;
+const clock = new THREE.Clock();
+let t = 0;
+const atomMeshes = [];
+const baseScale = { C: 0.4, O: 0.36, H: 0.22 };
+
+try {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: isIOS ? 'default' : 'high-performance',
+  });
+  if (!renderer.getContext()) fail('no-gl');
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  renderer.setPixelRatio(dpr);
+  if (renderer.getPixelRatio() > 1.5) fail('DPR cap');
+  renderer.setClearColor(VOID, 1);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  stage.appendChild(renderer.domElement);
+
+  const gl = renderer.getContext();
+  const isWebGL2 = typeof WebGL2RenderingContext !== 'undefined' && gl instanceof WebGL2RenderingContext;
+  const useAnisotropy = !isMobile && isWebGL2;
+  function makeSatin(color, emissiveIntensity) {
+    const o = {
+      color,
+      metalness: SATIN.metalness,
+      roughness: SATIN.roughness,
+      clearcoat: SATIN.clearcoat,
+      clearcoatRoughness: SATIN.clearcoatRoughness,
+      emissive: color,
+      emissiveIntensity,
+    };
+    o.anisotropy = useAnisotropy ? 0.55 : 0;
+    if (useAnisotropy) o.anisotropyRotation = Math.PI / 2;
+    const mat = new THREE.MeshPhysicalMaterial(o);
+    if (mat.metalness !== 0.32 || mat.roughness !== 0.45 || mat.clearcoat !== 0.22) {
+      fail('satin params drifted');
+    }
+    if (isMobile && mat.anisotropy !== 0) fail('mobile anisotropy must be off');
+    return mat;
+  }
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(VOID);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.5;
+  pmrem.dispose();
+  scene.add(new THREE.HemisphereLight(0xc4b8e0, 0x2a1218, 0.55));
+  const key = new THREE.PointLight(0xffb36b, 1.45, 40, 2);
+  key.position.set(4.2, 5.2, 6);
+  scene.add(key);
+  const fill = new THREE.PointLight(0x6a8cff, 0.32, 30, 2);
+  fill.position.set(-5, -1.5, -3);
+  scene.add(fill);
+
+  floor = new THREE.Group();
+  const grid = new THREE.GridHelper(28, 14, 0xffffff, 0xffffff);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.42;
+  grid.material.depthWrite = false;
+  grid.material.toneMapped = true;
+  grid.material.color.setHex(0x7a4458);
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(7.5, isMobile ? 40 : 64),
+    new THREE.MeshBasicMaterial({ color: 0x1c0e22, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide })
+  );
+  disc.rotation.x = -Math.PI / 2;
+  disc.position.y = -0.02;
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(2.15, 2.24, isMobile ? 48 : 80),
+    new THREE.MeshBasicMaterial({ color: 0xffb36b, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide })
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.y = 0.02;
+  floor.add(grid, disc, ring);
+  floor.position.y = -1.85;
+  scene.add(floor);
+
+  const sphereW = isMobile ? 24 : 32;
+  const sphereH = isMobile ? 20 : 28;
+  const sphereGeo = new THREE.SphereGeometry(1, sphereW, sphereH);
+  const bondGeo = new THREE.CylinderGeometry(0.055, 0.055, 1, isMobile ? 6 : 10);
+  mol = new THREE.Group();
+  const satinFor = {
+    C: makeSatin(CPK.C, 0.05),
+    H: makeSatin(CPK.H, 0.08),
+    O: makeSatin(CPK.O, 0.1),
+  };
+  const bondSatin = {
+    C: makeSatin(CPK.C, 0.03),
+    H: makeSatin(CPK.H, 0.04),
+    O: makeSatin(CPK.O, 0.06),
+  };
+  for (const a of model.atoms) {
+    const mesh = new THREE.Mesh(sphereGeo, satinFor[a.el]);
+    mesh.scale.setScalar(baseScale[a.el]);
+    mesh.position.set(a.world[0], a.world[1], a.world[2]);
+    mesh.userData.atom = a;
+    mesh.userData.base = baseScale[a.el];
+    mol.add(mesh);
+    atomMeshes.push(mesh);
+  }
+  const pos = Object.fromEntries(model.atoms.map((a) => [a.id, new THREE.Vector3(...a.world)]));
+  for (const b of model.bonds) {
+    const from = pos[b.a];
+    const to = pos[b.b];
+    const mid = from.clone().lerp(to, 0.5);
+    addHalf(from, mid, bondSatin[b.elA]);
+    addHalf(mid, to, bondSatin[b.elB]);
+  }
+  function addHalf(from, to, material) {
+    const delta = new THREE.Vector3().subVectors(to, from);
+    const length = delta.length();
+    const dir = delta.multiplyScalar(1 / length);
+    const mesh = new THREE.Mesh(bondGeo, material);
+    mesh.scale.set(1, length, 1);
+    mesh.position.copy(from).addScaledVector(dir, length * 0.5);
+    mesh.quaternion.setFromUnitVectors(UP, dir);
+    mol.add(mesh);
+  }
+  scene.add(mol);
+
+  camera = new THREE.PerspectiveCamera(38, 1, 0.1, 80);
+  camera.position.set(0.4, 1.15, isMobile ? 8.2 : 6.6);
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = 3.2;
+  controls.maxDistance = 14;
+  controls.target.set(0, 0.05, 0);
+  controls.addEventListener('start', () => { dragging = true; });
+  controls.addEventListener('end', () => { dragging = false; });
+
+  const raycaster = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  let ptr = null;
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+    ptr = { x: e.clientX, y: e.clientY, t: performance.now() };
+  });
+  renderer.domElement.addEventListener('pointerup', (e) => {
+    if (!ptr) return;
+    const moved = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y);
+    ptr = null;
+    if (moved > 8) return;
+    const rect = renderer.domElement.getBoundingClientRect();
+    ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(ndc, camera);
+    const hit = raycaster.intersectObjects(atomMeshes, false)[0];
+    selectAtom(hit ? hit.object : null);
+    if (still) renderFrame();
+  });
+} catch (e) {
+  console.error(e);
+  if (errEl) {
+    errEl.style.display = 'block';
+    errEl.textContent = 'This browser can’t draw the 3D molecule. Try another browser or update graphics.';
+  }
+}
+
+function selectAtom(mesh) {
+  for (const m of atomMeshes) {
+    const on = m === mesh;
+    m.scale.setScalar(m.userData.base * (on ? 1.12 : 1));
+    m.material.emissiveIntensity = on ? 0.42 : (m.userData.atom.el === 'O' ? 0.1 : m.userData.atom.el === 'H' ? 0.08 : 0.05);
+  }
+  if (!mesh) {
+    pickTitle.textContent = 'Anti · staggered';
+    pickRead.textContent = 'Click an atom. Eight single bonds. Oxygen lone pairs are not drawn.';
+    return;
+  }
+  const a = mesh.userData.atom;
+  const touch = model.bonds.filter((b) => b.a === a.id || b.b === a.id);
+  pickTitle.textContent = a.role;
+  const bits = touch.map((b) => {
+    const other = b.a === a.id ? b.elB : b.elA;
+    return `${a.el}–${other} ${b.angstrom.toFixed(3)} Å`;
+  });
+  const extra = a.el === 'O'
+    ? ' Angle C–O–H is 108.50°. Two lone pairs are not drawn.'
+    : a.el === 'C'
+      ? ' Four single bonds, tetrahedral.'
+      : ' One single bond.';
+  pickRead.textContent = bits.join(' · ') + '.' + extra;
+}
+
+function resize() {
+  if (!renderer || !camera) return;
+  const w = stage.clientWidth || 1;
+  const h = stage.clientHeight || 1;
+  camera.aspect = w / Math.max(1, h);
+  camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setSize(w, h, isMobile);
+  if (still) renderFrame();
+}
+if (renderer) {
+  new ResizeObserver(resize).observe(stage);
+  resize();
+}
+
+function renderFrame() {
+  if (!renderer) return;
+  renderer.render(scene, camera);
+}
+
+function frame() {
+  raf = requestAnimationFrame(frame);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  t += dt;
+  if (mol && !still && !dragging) mol.rotation.y += dt * 0.28;
+  if (floor && !still) floor.rotation.y = Math.sin(t * 0.2) * 0.04;
+  if (!still) {
+    const ease = Math.min(1, dt * 4.5);
+    look.x += (look.tx - look.x) * ease;
+    look.y += (look.ty - look.y) * ease;
+    if (!isMobile) {
+      document.documentElement.style.setProperty('--px', look.x.toFixed(4));
+      document.documentElement.style.setProperty('--py', look.y.toFixed(4));
+    }
+  }
+  if (controls) controls.update();
+  let nudged = false;
+  if (camera && !still) {
+    camHold.copy(camera.position);
+    camera.position.x += look.x * 0.16;
+    camera.position.y += look.y * 0.08;
+    nudged = true;
+  }
+  renderFrame();
+  if (nudged) camera.position.copy(camHold);
+}
+
+function holdStill() {
+  cancelAnimationFrame(raf);
+  raf = 0;
+  if (mol) mol.rotation.set(0.35, 0.72, 0.08);
+  if (controls) controls.update();
+  renderFrame();
+}
+
+function start() {
+  if (!renderer) return;
+  if (still) { holdStill(); return; }
+  if (raf) return;
+  clock.getDelta();
+  raf = requestAnimationFrame(frame);
+}
+
+addEventListener('pointermove', (e) => {
+  if (still) return;
+  look.tx = (e.clientX / innerWidth) * 2 - 1;
+  look.ty = (e.clientY / innerHeight) * 2 - 1;
+}, { passive: true });
+
+motionQuery.addEventListener('change', (e) => {
+  still = e.matches || params.has('still');
+  if (still) holdStill();
+  else start();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+  else start();
+});
+
+if (renderer) start();
+</script>
+</body>
+</html>
