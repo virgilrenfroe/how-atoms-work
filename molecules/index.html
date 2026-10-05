@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>100 incredible molecules · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.58);
+    --accent: #ffb36b;
+    --line: rgba(239, 230, 242, 0.14);
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px);
+    --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%;
+    background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans);
+  }
+  body { overflow: hidden; }
+  .app {
+    height: 100%;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    background: var(--void);
+  }
+  .top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding:
+      max(12px, var(--safe-t))
+      max(18px, var(--safe-r))
+      8px
+      max(16px, var(--safe-l));
+    background: var(--void);
+  }
+  .tag {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.82);
+  }
+  .nav { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+  .nav a {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 179, 107, 0.55);
+  }
+  .nav a:hover, .nav a:focus-visible { color: var(--pearl); }
+  .workspace {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.25fr);
+    background: var(--void);
+  }
+  .list {
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+    padding: 4px 18px max(18px, var(--safe-b)) max(16px, var(--safe-l));
+    border-right: 1px solid var(--line);
+    background: var(--void);
+  }
+  .mast { padding: 6px 12px 16px 0; }
+  .mast h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 640;
+    font-size: clamp(2.6rem, 4.4vw, 4rem);
+    letter-spacing: -0.06em;
+    line-height: 0.86;
+  }
+  .mast .name {
+    display: block;
+    max-width: 12ch;
+    font-weight: 520;
+    font-size: 0.46em;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    color: var(--pearl);
+  }
+  .group { margin: 0 0 18px; }
+  .group h2 {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0;
+    padding: 10px 0 4px;
+    background: var(--void);
+    font-family: var(--font-display);
+    font-weight: 640;
+    font-size: clamp(1.55rem, 2.2vw, 2.05rem);
+    letter-spacing: -0.05em;
+    line-height: 0.92;
+  }
+  .group .idx {
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.78);
+  }
+  .blurb {
+    margin: 0 0 8px;
+    max-width: 42ch;
+    color: var(--mute);
+    font-size: 0.98rem;
+    line-height: 1.35;
+  }
+  .mol, .door {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+    padding: 7px 8px 7px 10px;
+    border: 0;
+    border-left: 2px solid transparent;
+    background: transparent;
+    color: var(--pearl);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    font: inherit;
+  }
+  .mol:hover, .door:hover, .mol:focus-visible, .door:focus-visible {
+    border-left-color: rgba(255, 179, 107, 0.7);
+  }
+  .mol[aria-current="true"] {
+    border-left-color: var(--accent);
+    background: transparent;
+  }
+  .mol[aria-current="true"] .who { color: var(--accent); }
+  .mol .who, .door .who {
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: 1.22rem;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
+  }
+  .meta {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--mute);
+    text-align: right;
+  }
+  .meta b {
+    display: block;
+    font-weight: 400;
+    color: rgba(255, 179, 107, 0.9);
+  }
+  .view {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    background: var(--void);
+    overflow: hidden;
+  }
+  .stage-wrap {
+    position: relative;
+    min-height: 0;
+    min-width: 0;
+  }
+  #stage { position: absolute; inset: 0; }
+  #stage canvas.gl {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+  }
+  #stage canvas.gl:active { cursor: grabbing; }
+  .readout {
+    border-top: 1px solid var(--line);
+    padding: 12px 18px max(14px, var(--safe-b)) 20px;
+    max-height: min(40%, 300px);
+    overflow: auto;
+    background: var(--void);
+  }
+  .view.mode-card { grid-template-rows: minmax(0, 1fr); }
+  .view.mode-card .stage-wrap { display: none; }
+  .view.mode-card .readout {
+    max-height: none;
+    border-top: 0;
+    padding: 7vh 8vw max(24px, var(--safe-b)) 6vw;
+  }
+  .view h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 640;
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+  }
+  .view.mode-model h2 { font-size: clamp(1.7rem, 2.6vw, 2.5rem); }
+  .view.mode-model .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px 28px;
+  }
+  .view.mode-model .head .formula { margin: 0; text-align: right; }
+  .view.mode-card h2 { font-size: clamp(3rem, 6vw, 5.6rem); max-width: 12ch; }
+  .formula {
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+  .formula sub { font-size: 0.75em; }
+  .badge {
+    margin: 12px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.88);
+  }
+  .teach, .note, .bonds, .pick, .hold {
+    margin: 10px 0 0;
+    max-width: 46ch;
+    line-height: 1.45;
+  }
+  .teach { font-size: 1.12rem; }
+  .note, .bonds, .pick, .hold {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  .hold { color: rgba(255, 179, 107, 0.9); }
+  .swatch { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 10px; }
+  .swatch span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .swatch i {
+    display: inline-block;
+    width: 9px; height: 9px;
+    margin-right: 6px;
+    vertical-align: -1px;
+    border: 1px solid rgba(239, 230, 242, 0.35);
+  }
+  #err {
+    margin: 8px 0 0;
+    max-width: 42ch;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #ffd6d6;
+    display: none;
+  }
+  @media (max-width: 800px) {
+    body { overflow: hidden; }
+    .workspace {
+      grid-template-columns: 1fr;
+      grid-template-rows: minmax(148px, 36dvh) minmax(0, 1fr);
+    }
+    .list { border-right: 0; border-bottom: 1px solid var(--line); }
+    .mast h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
+    .view.mode-model { grid-template-rows: minmax(0, 1fr) auto; }
+    .view.mode-model h2 { font-size: 1.55rem; }
+    .view.mode-card h2 { font-size: clamp(2.4rem, 12vw, 3.4rem); }
+    .readout { max-height: 42%; }
+    .view.mode-card .readout { max-height: none; padding-top: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mol, .door { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <p class="tag">Intro chemistry</p>
+    <nav class="nav">
+      <a href="../index.html">← Atom room</a>
+      <a href="../ethanol.html">Ethanol · C₂H₆O</a>
+    </nav>
+  </header>
+  <div class="workspace">
+    <aside class="list" id="list" aria-label="Molecule groups">
+      <div class="mast">
+        <h1><span class="num">100</span><span class="name">incredible molecules</span></h1>
+      </div>
+      <div id="catalog"></div>
+    </aside>
+    <section class="view mode-model" id="view" aria-live="polite">
+      <div class="stage-wrap">
+        <div id="stage"></div>
+      </div>
+      <article class="readout" id="readout"></article>
+    </section>
+  </div>
+</div>
+<noscript>This gallery needs scripts to list the molecules and draw the models.</noscript>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import { CATEGORIES, MOLECULES } from "./molecules-data.js";
+import { GEOMETRIES } from "./geometries.js";
+import { createViewer, bondRecords, angleAt } from "./viewer.js";
+
+const NAMES = {
+  H: "hydrogen", C: "carbon", N: "nitrogen", O: "oxygen",
+  F: "fluorine", P: "phosphorus", S: "sulfur", Cl: "chlorine",
+  Mg: "magnesium", Fe: "iron", Na: "sodium",
+};
+const SWATCH = {
+  H: "#ffffff", C: "#909090", N: "#3050F8", O: "#FF0D0D",
+  F: "#90E050", P: "#FF8000", S: "#FFFF30", Cl: "#1FF01F",
+};
+
+const byId = Object.fromEntries(MOLECULES.map((m) => [m.id, m]));
+const catalog = document.getElementById("catalog");
+const view = document.getElementById("view");
+const readout = document.getElementById("readout");
+
+function formatFormula(raw) {
+  if (!raw) return "";
+  const body = raw.replace(/([A-Z][a-z]?)(\d*)/g, (_, el, n) => (n ? `${el}<sub>${n}</sub>` : el));
+  return body.replace(/\+/g, "<sup>+</sup>");
+}
+function displayFormula(m) {
+  return formatFormula(m.formulaLabel || m.formula || "");
+}
+function parseFormula(formula) {
+  const counts = {};
+  const re = /([A-Z][a-z]?)(\d*)/g;
+  let match;
+  while ((match = re.exec(formula))) {
+    counts[match[1]] = (counts[match[1]] || 0) + (match[2] ? Number(match[2]) : 1);
+  }
+  return counts;
+}
+function sameCounts(a, b) {
+  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
+  for (const k of keys) if ((a[k] || 0) !== (b[k] || 0)) return false;
+  return true;
+}
+function badge(m) {
+  if (m.structureMode === "ballstick") return "Ball and stick";
+  if (m.structureMode === "schematic") return "Sketch";
+  return "Card";
+}
+function footer(m) {
+  if (m.restraint) return "This card does not describe how to make it.";
+  if (m.structureMode === "schematic") return "Sketch. Bonds are not drawn.";
+  if (m.structureMode === "card-only") return "A ball-and-stick model of this one comes later.";
+  return "";
+}
+
+CATEGORIES.forEach((cat, i) => {
+  const section = document.createElement("section");
+  section.className = "group";
+  section.id = "group-" + cat.id;
+  const h = document.createElement("h2");
+  const idx = document.createElement("span");
+  idx.className = "idx";
+  idx.textContent = String(i + 1).padStart(2, "0");
+  h.append(idx, document.createTextNode(cat.name));
+  const blurb = document.createElement("p");
+  blurb.className = "blurb";
+  blurb.textContent = cat.blurb;
+  section.append(h, blurb);
+  for (const m of MOLECULES.filter((row) => row.category === cat.id)) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "mol";
+    btn.dataset.id = m.id;
+    const who = document.createElement("span");
+    who.className = "who";
+    who.textContent = m.name;
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.innerHTML = displayFormula(m);
+    if (m.structureMode === "ballstick") {
+      const tag = document.createElement("b");
+      tag.textContent = "model";
+      meta.prepend(tag);
+    } else if (m.structureMode === "schematic") {
+      const tag = document.createElement("b");
+      tag.textContent = "sketch";
+      meta.prepend(tag);
+    }
+    btn.append(who, meta);
+    btn.addEventListener("click", () => openMolecule(m.id, true));
+    section.append(btn);
+  }
+  if (cat.id === "history") {
+    const door = document.createElement("a");
+    door.className = "door";
+    door.href = "../ethanol.html";
+    const who = document.createElement("span");
+    who.className = "who";
+    who.textContent = "Ethanol";
+    const meta = document.createElement("span");
+    meta.className = "meta";
+    meta.innerHTML = "<b>model</b>C<sub>2</sub>H<sub>6</sub>O";
+    door.append(who, meta);
+    section.append(door);
+  }
+  catalog.append(section);
+});
+
+let viewer = null;
+try {
+  viewer = createViewer(document.getElementById("stage"));
+  if (!viewer.ok) throw viewer.error || new Error("no-gl");
+  viewer.onPick((index) => {
+    if (!current || current.structureMode !== "ballstick") return;
+    renderPick(index);
+  });
+} catch (e) {
+  console.error(e);
+  errEl.style.display = "block";
+  errEl.textContent = "This browser can’t draw the 3D molecule. The cards still open.";
+  viewer = null;
+}
+
+let current = null;
+
+function setCurrentButton(id) {
+  for (const btn of catalog.querySelectorAll(".mol")) {
+    btn.setAttribute("aria-current", btn.dataset.id === id ? "true" : "false");
+  }
+}
+
+function bondLine(geo) {
+  const rows = bondRecords(geo);
+  const groups = new Map();
+  for (const row of rows) {
+    const pair = [row.elA, row.elB].sort().join("");
+    const key = pair + ":" + row.order;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row.angstrom);
+  }
+  const markFor = { 1: "–", 2: "=", 3: "≡", 4: "–", 5: "–" };
+  const bits = [];
+  for (const [key, lengths] of groups) {
+    const [pair, order] = key.split(":");
+    const lo = Math.min(...lengths);
+    const hi = Math.max(...lengths);
+    const shown = Math.abs(hi - lo) < 0.008 ? lo.toFixed(3) : `${lo.toFixed(3)}–${hi.toFixed(3)}`;
+    const word = order === "4" ? " aromatic" : order === "5" ? " partial" : "";
+    bits.push(`${pair[0]}${markFor[order] || "–"}${pair.slice(1)} ${shown} Å${word}${lengths.length > 1 ? ` ×${lengths.length}` : ""}`);
+  }
+  return bits.join(" · ");
+}
+
+function countLine(geo) {
+  const counts = {};
+  for (const a of geo.atoms) counts[a.el] = (counts[a.el] || 0) + 1;
+  return counts;
+}
+
+const errEl = document.createElement("p");
+errEl.id = "err";
+errEl.setAttribute("role", "status");
+
+function renderPick(index) {
+  const pick = readout.querySelector(".pick");
+  if (!pick || !current) return;
+  const geo = GEOMETRIES[current.id];
+  if (index == null || !geo) {
+    pick.textContent = "Click an atom. The count has to match the formula.";
+    return;
+  }
+  const atom = geo.atoms[index];
+  const touch = bondRecords(geo).filter((b) => b.i === index || b.j === index);
+  const bits = touch.map((b) => {
+    const other = b.i === index ? b.elB : b.elA;
+    const glyph = b.order === 2 ? "=" : b.order === 3 ? "≡" : "–";
+    return `${atom.el}${glyph}${other} ${b.angstrom.toFixed(3)} Å`;
+  });
+  const ang = angleAt(geo, index);
+  const angBit = ang == null ? "" : ` · angle ${ang.toFixed(1)}°`;
+  pick.textContent = `${NAMES[atom.el] || atom.el} · ${bits.join(" · ")}${angBit}`;
+}
+
+function showModel(m) {
+  const geo = GEOMETRIES[m.id];
+  view.className = "view mode-model";
+  readout.replaceChildren();
+  if (!geo) {
+    errEl.style.display = "block";
+    errEl.textContent = "This model is not on the page yet.";
+    readout.append(errEl);
+    return;
+  }
+  const got = countLine(geo);
+  if (m.formula && !sameCounts(got, parseFormula(m.formula))) {
+    errEl.style.display = "block";
+    errEl.textContent = "The atom count does not match the formula, so the model stays hidden.";
+    readout.append(errEl);
+    return;
+  }
+  errEl.style.display = "none";
+  if (viewer) {
+    viewer.setVisible(true);
+    viewer.resize();
+    viewer.show(geo);
+  }
+  const els = Object.keys(got);
+  const head = document.createElement("div");
+  head.className = "head";
+  const h = document.createElement("h2");
+  h.textContent = m.name;
+  const formula = document.createElement("p");
+  formula.className = "formula";
+  formula.innerHTML = displayFormula(m);
+  head.append(h, formula);
+  const b = document.createElement("p");
+  b.className = "badge";
+  b.textContent = badge(m);
+  const teach = document.createElement("p");
+  teach.className = "teach";
+  teach.textContent = m.teach;
+  const bonds = document.createElement("p");
+  bonds.className = "bonds";
+  const countText = els.map((el) => `${got[el]} ${el}`).join(" · ");
+  bonds.textContent = `${countText} · ${bondLine(geo)}`;
+  readout.append(head, b, teach);
+  if (m.note) {
+    const note = document.createElement("p");
+    note.className = "note";
+    note.textContent = m.note;
+    readout.append(note);
+  }
+  readout.append(bonds);
+  const pick = document.createElement("p");
+  pick.className = "pick";
+  pick.textContent = "Click an atom. The count has to match the formula.";
+  readout.append(pick);
+  const sw = document.createElement("div");
+  sw.className = "swatch";
+  for (const el of els) {
+    const span = document.createElement("span");
+    const chip = document.createElement("i");
+    chip.style.background = SWATCH[el] || "#c8b8d4";
+    span.append(chip, document.createTextNode(NAMES[el] || el));
+    sw.append(span);
+  }
+  readout.append(sw);
+}
+
+function showCard(m) {
+  view.className = "view mode-card";
+  if (viewer) viewer.setVisible(false);
+  readout.replaceChildren();
+  const h = document.createElement("h2");
+  h.textContent = m.name;
+  const formula = document.createElement("p");
+  formula.className = "formula";
+  formula.innerHTML = displayFormula(m);
+  const b = document.createElement("p");
+  b.className = "badge";
+  b.textContent = badge(m);
+  const teach = document.createElement("p");
+  teach.className = "teach";
+  teach.textContent = m.teach;
+  readout.append(h, formula, b, teach);
+  if (m.note) {
+    const note = document.createElement("p");
+    note.className = "note";
+    note.textContent = m.note;
+    readout.append(note);
+  }
+  const line = footer(m);
+  if (line) {
+    const hold = document.createElement("p");
+    hold.className = "hold";
+    hold.textContent = line;
+    readout.append(hold);
+  }
+}
+
+function openMolecule(id, scroll) {
+  const m = byId[id];
+  if (!m) return;
+  current = m;
+  setCurrentButton(id);
+  if (scroll && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  if (m.structureMode === "ballstick") showModel(m);
+  else showCard(m);
+  if (scroll || location.hash === "#" + id) {
+    const btn = catalog.querySelector(`.mol[data-id="${id}"]`);
+    btn?.scrollIntoView({ block: "nearest" });
+  }
+}
+
+const start = (location.hash || "").slice(1);
+openMolecule(byId[start] ? start : "buckminsterfullerene", false);
+if (document.fonts) {
+  document.fonts.ready.then(() => {
+    if (current && current.structureMode === "ballstick") showModel(current);
+  });
+}
+window.addEventListener("hashchange", () => {
+  const id = location.hash.slice(1);
+  if (byId[id]) openMolecule(id, true);
+});
+</script>
+</body>
+</html>

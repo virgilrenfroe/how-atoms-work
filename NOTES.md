@@ -114,4 +114,12 @@ The page is a split. The periodic table is the left panel; the WebGL atom is the
 | Dihedral H–O–C–C | 180° (anti) |
 | Methyl vs O | one H anti (180°), two gauche (±60°) |
 
-CPK (Jmol): C `#909090` · H `#FFFFFF` · O `#FF0D0D`. Satin `MeshPhysicalMaterial` metalness 0.32, roughness 0.45, clearcoat 0.22, clearcoat roughness 0.38. Anisotropy 0.55 on desktop WebGL2 and off on mobile. Sphere display radii are not van der Waals radii, so the sticks stay visible. Oxygen’s two lone pairs are not drawn. Void `#140818`. DPR ≤ 1.5. Linked from the atom-room header.
+CPK (Jmol): C `#909090` · H `#FFFFFF` · O `#FF0D0D`. Satin `MeshPhysicalMaterial` metalness 0.32, roughness 0.45, clearcoat 0.22, clearcoat roughness 0.38. Anisotropy 0.55 on desktop WebGL2 and off on mobile. Sphere display radii are not van der Waals radii, so the sticks stay visible. Oxygen’s two lone pairs are not drawn. Void `#140818`. DPR ≤ 1.5. Linked from the atom-room header and from the molecule gallery.
+
+## 100 molecules
+
+`molecules/index.html` lists ten groups from the curriculum brief. `molecules/molecules-data.js` holds the hundred entries. The list column and the model column do not overlap. The lesson sits under the model, on its own band, so the structure stays clear.
+
+Ball-and-stick in this pass: buckminsterfullerene, cubane, prismane, housane, a short (5,5) nanotube (C₄₀H₂₀), water, carbon dioxide, ozone, methane, ammonia, vanillin, menthol, caffeine, isoamyl acetate, capsaicin, aspirin, and β-D-glucose in the chair. Ethanol is the existing page, not a second model.
+
+Water, carbon dioxide, ozone, methane, and ammonia use textbook gas-phase distances and angles. C₆₀ is a truncated icosahedron: 5–6 bonds 1.455 Å, 6–6 bonds 1.391 Å. The nanotube is a hydrogen-capped graphene roll, C–C about 1.42 Å. The other ball-and-stick entries use PubChem 3D conformers. Atom counts have to match the formula. Explosives, nerve agents, and extreme toxins are cards: a public fact, no preparation. Prithivi, graphyne, metallic hydrogen, carbyne, and N₈ are sketches, not spinning models.
