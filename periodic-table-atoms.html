@@ -43,18 +43,18 @@
   }
   * { box-sizing: border-box; }
   html, body {
-    margin: 0; height: 100%;
+    margin: 0; min-height: 100%;
     background: var(--void); color: var(--pearl);
     font-family: var(--font-sans);
   }
-  body { overflow: hidden; }
+  body { overflow-x: clip; overflow-y: auto; }
 
   .app {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    height: 100%;
+    display: flex;
+    flex-direction: column;
     min-height: 100dvh;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
     padding: 0;
     background: var(--void);
   }
@@ -136,15 +136,15 @@
     width: auto;
   }
 
-  /* Two panels. The canvas lives only in the atom column — never under the tiles. */
+  /* Two panels, stacked. The canvas lives only in the atom panel below the table — never over the tiles. */
   .workspace {
     position: relative;
     inset: auto;
     min-height: 0;
     min-width: 0;
     z-index: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.8fr);
+    display: flex;
+    flex-direction: column;
     background: var(--void);
   }
 
@@ -154,25 +154,30 @@
     border: none;
     border-radius: 0;
     background: var(--void);
-    overflow: hidden;
+    overflow: visible;
   }
   .table-panel {
     display: flex; flex-direction: column;
     position: relative;
     z-index: 1;
     transform: none;
-    padding: 0 10px 0 max(12px, var(--safe-l));
+    width: 100%;
+    padding: 0 max(6px, var(--safe-r)) 0 max(6px, var(--safe-l));
+    scroll-margin-top: 8px;
   }
-  /* Stage row is minmax(0,1fr) so the WebGL canvas cannot collapse to 0×0. */
+  /* Stage keeps a real height so the WebGL canvas cannot collapse to 0×0. */
   .atom-panel {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     position: relative;
     inset: auto;
     z-index: 1;
-    height: 100%;
-    border-left: 1px solid rgba(239, 230, 242, 0.14);
+    width: 100%;
+    height: auto;
+    border-top: 1px solid rgba(239, 230, 242, 0.14);
+    border-left: none;
     background: #140818;
+    scroll-margin-top: 0;
   }
   .corners {
     position: absolute;
@@ -193,13 +198,13 @@
   .corners i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
   .corners i:nth-child(4) { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
   .atom-panel.show-atlas {
-    grid-template-rows: minmax(0, 1fr) minmax(0, min(46%, 42dvh));
+    height: auto;
   }
   .stage-wrap {
     position: relative;
     min-width: 0;
-    min-height: 0;
-    height: 100%;
+    min-height: 480px;
+    height: min(70vh, 760px);
     overflow: hidden;
     display: grid;
     grid-template-rows: minmax(0, 1fr);
@@ -223,8 +228,8 @@
   }
 
   .table-scroll {
-    overflow: auto; -webkit-overflow-scrolling: touch;
-    padding: 0 8px 8px 0; flex: 1; min-height: 0;
+    overflow: visible;
+    padding: 0 0 8px 0; flex: none; min-height: 0; min-width: 0;
   }
 
   .ptable {
@@ -233,7 +238,7 @@
     grid-template-rows: repeat(7, auto) 10px repeat(2, auto);
     gap: 3px;
     width: 100%;
-    min-width: 640px;
+    min-width: 0;
   }
 
   .el {
@@ -250,7 +255,8 @@
     transition: transform 0.18s ease, box-shadow 0.15s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    min-height: 36px;
+    min-height: 0;
+    min-width: 0;
   }
   .el:hover, .el:focus-visible {
     outline: none;
@@ -265,13 +271,13 @@
     box-shadow: 0 0 0 2px var(--accent), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   }
   .el .z {
-    font-family: var(--font-mono); font-size: clamp(7px, 0.9vw, 9px);
+    font-family: var(--font-mono); font-size: clamp(6px, 1.35vw, 9px);
     color: rgba(239, 230, 242, 0.82); line-height: 1; letter-spacing: 0.02em;
   }
   .el .sym {
     font-family: var(--font-display); font-weight: 600;
-    font-size: clamp(11px, 1.6vw, 15px);
-    letter-spacing: -0.02em; line-height: 1.1;
+    font-size: clamp(8px, 2.15vw, 15px);
+    letter-spacing: -0.03em; line-height: 1.05;
   }
 
   /* Family fills sit in the 0.35–0.55 range so they match the solid legend on the void. */
@@ -466,9 +472,9 @@
   .btn.primary { border-bottom-color: var(--accent); color: var(--accent); }
   .btn.doorbtn { border-bottom-style: dashed; border-bottom-color: var(--doorline); color: var(--door); }
   .atlas-dock {
-    min-height: 0; min-width: 0; overflow: auto; -webkit-overflow-scrolling: touch;
+    min-height: 0; min-width: 0; overflow: visible; height: auto;
     border-top: 1px dashed var(--doorline);
-    padding: 8px 10px 10px;
+    padding: 16px 18px 18px;
     background: rgba(18, 10, 31, 0.92);
   }
   .atlas-dock[hidden] { display: none !important; }
@@ -512,7 +518,7 @@
   }
   /* stage must own the 1fr row so the canvas isn't 0×0 */
   #stage {
-    min-height: 0;
+    min-height: 440px;
     min-width: 0;
     height: 100%;
     position: relative;
@@ -658,139 +664,51 @@
 
   html.embed, body.embed { background: transparent !important; }
   body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-nav, body.embed .lesson-door, body.embed .field, body.embed .legend { display: none !important; }
-  body.embed .app { padding: 0; }
-  body.embed .workspace { position: absolute; inset: 0; }
+  html.embed, body.embed { height: 100%; overflow: hidden; }
+  body.embed .app { padding: 0; height: 100%; overflow: hidden; }
+  body.embed .workspace { position: absolute; inset: 0; height: 100%; }
   body.embed .table-panel { display: none; }
+  body.embed .detail-bar, body.embed .real-world { display: none !important; }
   body.embed .atom-panel {
     position: absolute; inset: 0; border: none; border-radius: 0;
     background: transparent; transform: none; width: auto; height: 100%;
   }
+  body.embed .stage-wrap { height: 100%; min-height: 0; }
+  body.embed #stage { min-height: 0; height: 100%; }
   body.embed .formula,
   body.embed .atom-bottom { position: absolute; }
 
   @media (max-width: 900px) {
-    .app {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      padding:
-        max(10px, var(--safe-t))
-        max(12px, var(--safe-r))
-        max(10px, var(--safe-b))
-        max(12px, var(--safe-l));
-    }
-    .top {
-      position: relative;
-      inset: auto;
-      width: auto;
-      display: flex;
-      flex-wrap: wrap;
-    }
+    .top { flex-wrap: wrap; }
     .lesson-nav { width: 100%; justify-content: flex-start; padding-bottom: 0; }
-    .field {
-      position: relative;
-      inset: auto;
-      width: auto;
-      height: auto;
-      right: auto;
-      bottom: auto;
-      overflow: visible;
-      justify-content: flex-start;
-      gap: 6px;
-      transform: none !important;
-    }
     .field h1 .display { font-size: clamp(2.4rem, 14vw, 3.4rem); }
     .field .empty-stage { font-size: 1.2rem; }
     .legend {
-      position: relative;
-      inset: auto;
-      width: auto;
-      right: auto;
-      left: auto;
-      bottom: auto;
-      flex-direction: row;
       flex-wrap: wrap;
-      gap: 4px 10px;
-      margin: 8px 0;
+      gap: 4px 8px;
+      margin: 8px 0 0;
       max-width: 100%;
-    }
-    .table-scroll { padding-top: 8px; }
-    .workspace {
-      position: relative;
-      inset: auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: minmax(0, 1fr);
-      flex: 1;
-      min-height: 0;
-    }
-    .table-panel {
-      position: relative;
-      inset: auto;
-      width: auto;
-      top: auto;
-      bottom: auto;
-      left: auto;
-      right: auto;
-      height: 100%;
-    }
-    .formula,
-    .atom-bottom {
-      position: static;
-      width: auto;
-      right: auto;
-      top: auto;
-      bottom: auto;
+      justify-content: flex-start;
     }
     #ladderChips { flex-direction: row; }
     .chip { font-size: 1.15rem; margin-right: 10px; }
-    .empty-stage { padding: 8vh 7% 18%; }
+    .stage-wrap { height: 68vh; min-height: 460px; }
     .legend, .formula, .horizon, .corners, .table-panel, .field {
       transform: none !important;
     }
-    .horizon { bottom: 18%; }
-    body.atom-open .field {
-      position: fixed;
-      z-index: 30;
-      inset:
-        max(10px, var(--safe-t))
-        max(12px, var(--safe-r))
-        max(10px, var(--safe-b))
-        max(12px, var(--safe-l));
-      width: auto;
-      height: auto;
-      justify-content: space-between;
-      pointer-events: none;
-      overflow: auto;
+  }
+
+  @media (max-width: 700px) {
+    .table-panel { padding-left: 3px; padding-right: 3px; }
+    .ptable {
+      gap: 1px;
+      grid-template-rows: repeat(7, auto) 5px repeat(2, auto);
     }
-    body.atom-open .back { display: inline-flex; }
-    body.atom-open:has(.atom-panel.show-atlas) .field { bottom: 42dvh; }
-    .atom-panel {
-      position: fixed; inset: 0; z-index: 20;
-      border-radius: 0; border: none; border-left: none;
-      transform: translateY(105%);
-      transition: transform 0.28s ease;
-      background: var(--void);
-      display: grid;
-      grid-template-rows: minmax(0, 1fr);
-      min-height: 100dvh;
-      height: 100dvh;
-    }
-    .atom-panel.open {
-      transform: translateY(0);
-      display: grid;
-      grid-template-rows: minmax(0, 1fr);
-      min-height: 100dvh;
-      height: 100dvh;
-    }
-    .atom-panel.open.show-atlas {
-      grid-template-rows: minmax(0, 1fr) minmax(120px, 42dvh);
-    }
-    .atom-panel.open #stage { min-height: 0; }
-    .atom-chrome .back { display: inline-flex; }
-    body.atom-open { overflow: hidden; }
-    .ptable { min-width: 560px; }
-    .legend { max-width: 100%; justify-content: flex-start; }
+    .el { padding: 0; border-left-width: 2px; }
+    .legend { font-size: 8px; letter-spacing: 0.04em; gap: 3px 7px; }
+    .stage-wrap { min-height: 440px; height: 64vh; }
+    .detail-bar { padding: 8px 10px; gap: 8px; }
+    .real-world { padding: 18px 14px 28px; }
   }
 
   /* Right-hand room column. One flow, so type, ladder, and captions cannot occupy the same pixels. */
@@ -849,7 +767,9 @@
     transform: none;
   }
   .field .formula .sym-big {
-    font-size: clamp(3.4rem, 32cqw, 7rem);
+    font-size: clamp(3.4rem, 8vw, 7.5rem);
+    line-height: 0.9;
+    padding-top: 0.04em;
   }
   .field .empty-stage {
     display: block;
@@ -877,18 +797,86 @@
   }
   .field-top, .field-bottom { flex-shrink: 0; }
 
-  @media (max-width: 900px) {
-    .field {
-      position: relative;
-      top: auto;
-      right: auto;
-      bottom: auto;
-      left: auto;
-      width: auto;
-      height: auto;
-      overflow: visible;
-      justify-content: flex-start;
-    }
+  .detail-bar {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 18px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: rgba(20, 8, 24, 0.94);
+    border-bottom: 1px solid rgba(239, 230, 242, 0.14);
+  }
+  .detail-bar[hidden] { display: none !important; }
+  .back-table {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 179, 107, 0.55);
+    padding: 2px 0;
+    cursor: pointer;
+  }
+  .back-table:focus-visible,
+  .switcher button:focus-visible,
+  .switcher select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .switcher button {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1;
+    color: var(--pearl);
+    background: transparent;
+    border: 1px solid rgba(239, 230, 242, 0.28);
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0 8px;
+    cursor: pointer;
+  }
+  .switcher button:hover { color: var(--accent); border-color: rgba(255, 179, 107, 0.55); }
+  .switcher select {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--pearl);
+    background: #140818;
+    border: 1px solid rgba(239, 230, 242, 0.28);
+    border-radius: 0;
+    padding: 8px 10px;
+    max-width: min(52vw, 280px);
+  }
+  .real-world {
+    padding: 22px 18px 40px;
+    border-top: 1px solid var(--line);
+    max-width: 78ch;
+  }
+  .real-world[hidden] { display: none !important; }
+  .real-world h2 {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+  }
+  .real-world p {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: var(--pearl);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -900,50 +888,40 @@
     .legend, .formula, .horizon, .corners, .table-panel, .field {
       transform: none !important;
     }
+    html { scroll-behavior: auto; }
   }
 
-  /* Desktop lock: table and atom are columns. The canvas cannot cover the tiles. */
-  @media (min-width: 901px) {
-    body:not(.embed) .workspace {
-      position: relative !important;
-      inset: auto !important;
-      display: grid !important;
-      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.8fr) !important;
-      grid-template-rows: minmax(0, 1fr) !important;
-    }
-    body:not(.embed) .table-panel,
-    body:not(.embed) .atom-panel,
-    body:not(.embed):has(.handoff.show) .atom-panel {
-      position: relative !important;
-      inset: auto !important;
-      top: auto !important;
-      right: auto !important;
-      bottom: auto !important;
-      left: auto !important;
-      width: auto !important;
-      transform: none !important;
-    }
-    body:not(.embed) .atom-panel,
-    body:not(.embed):has(.handoff.show) .atom-panel {
-      height: 100% !important;
-      z-index: 1 !important;
-      overflow: hidden !important;
-    }
-    body:not(.embed) .table-panel {
-      height: auto !important;
-      overflow: hidden !important;
-      background: var(--void) !important;
-    }
-    body:not(.embed) .stage-wrap > .field,
-    body:not(.embed):has(.atom-panel.show-atlas) .field {
-      position: absolute !important;
-      left: 16px !important;
-      right: 16px !important;
-      top: 14px !important;
-      bottom: 14px !important;
-      width: auto !important;
-      height: auto !important;
-    }
+  /* Stack lock: table on top, atom panel below, both full width. The canvas never covers the tiles. */
+  body:not(.embed) .workspace {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  body:not(.embed) .table-panel,
+  body:not(.embed) .atom-panel,
+  body:not(.embed):has(.handoff.show) .atom-panel {
+    position: relative !important;
+    inset: auto !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+  body:not(.embed) .stage-wrap > .field,
+  body:not(.embed):has(.atom-panel.show-atlas) .field {
+    position: absolute !important;
+    left: 16px !important;
+    right: 16px !important;
+    top: 16px !important;
+    bottom: 14px !important;
+    width: auto !important;
+    height: auto !important;
   }
 </style>
 </head>
@@ -972,7 +950,7 @@
   </header>
 
   <div class="workspace">
-    <section class="table-panel" aria-label="Periodic table">
+    <section class="table-panel" id="tablePanel" aria-label="Periodic table">
       <div class="table-scroll">
         <div class="ptable" id="ptable" role="list"></div>
       </div>
@@ -990,7 +968,15 @@
       </div>
     </section>
 
-    <section class="atom-panel" id="atomPanel" aria-label="Atom view">
+    <section class="atom-panel" id="atomPanel" aria-label="Atom view" tabindex="-1">
+      <div class="detail-bar" id="detailBar" hidden>
+        <button type="button" class="back-table" id="backToTable">Back to table</button>
+        <div class="switcher" role="group" aria-label="Element switcher">
+          <button type="button" id="prevEl" aria-label="Previous element">‹</button>
+          <select id="elementSelect" aria-label="Choose an element"></select>
+          <button type="button" id="nextEl" aria-label="Next element">›</button>
+        </div>
+      </div>
       <div class="stage-wrap" id="stageWrap">
         <div id="stage"></div>
         <div class="horizon" aria-hidden="true"></div>
@@ -1043,6 +1029,10 @@
         <div id="err" role="status"></div>
       </div>
       <div class="atlas-dock" id="atlasDock" hidden></div>
+      <section class="real-world" id="realWorld" hidden aria-labelledby="realWorldHeading">
+        <h2 id="realWorldHeading">In the real world</h2>
+        <p id="realWorldText"></p>
+      </section>
     </section>
   </div>
 </div>
@@ -1064,6 +1054,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { ELEMENTS, MASS_SOURCE } from './periodic-table-data.js';
+import { REAL_WORLD } from './element-real-world.js';
 
 const VOID = 0x140818;
 const PROTON_COLOR = 0xff6b3d;
@@ -1167,6 +1158,14 @@ const handoffEl = document.getElementById('handoff');
 const handoffFlow = document.getElementById('handoffFlow');
 const handoffBody = document.getElementById('handoffBody');
 const atlasDock = document.getElementById('atlasDock');
+const tablePanel = document.getElementById('tablePanel');
+const detailBar = document.getElementById('detailBar');
+const backToTable = document.getElementById('backToTable');
+const prevElBtn = document.getElementById('prevEl');
+const nextElBtn = document.getElementById('nextEl');
+const elementSelect = document.getElementById('elementSelect');
+const realWorld = document.getElementById('realWorld');
+const realWorldText = document.getElementById('realWorldText');
 const btnBack = document.getElementById('btnBack');
 const btnNext = document.getElementById('btnNext');
 const btnEnter = document.getElementById('btnEnter');
@@ -1497,6 +1496,7 @@ const LADDER = ['atom', 'nucleus', 'quark', 'atlas'];
 let eOpacity = 1;
 let nOpacity = 1;
 let camKey = 'atom';
+let userFramed = false;
 const CAM = {
   atom: { dist: 5.4, elev: 1.1, min: 2.8, max: 14 },
   nucleus: { dist: 1.45, elev: 0.35, min: 0.85, max: 4.0 },
@@ -1731,11 +1731,24 @@ function currentNucleonRec() {
     || null;
 }
 
+function frameDistance(worldRadius, pad) {
+  const aspect = Math.max(0.25, camera && camera.aspect ? camera.aspect : 1);
+  const fov = ((camera && camera.fov) || 40) * Math.PI / 180;
+  const halfV = Math.tan(fov / 2);
+  const halfH = halfV * aspect;
+  const r = Math.max(0.08, worldRadius);
+  return Math.max(r / halfV, r / halfH) * (pad || 1.2);
+}
+
 function camPreset(key) {
   if (key === 'atlas') {
-    return { dist: 2.7, elev: 0.18, min: 1.35, max: 8, target: new THREE.Vector3(0, 0.42, 0) };
+    const dist = frameDistance(1.15, 1.48);
+    return { dist, elev: dist * 0.12, min: dist * 0.55, max: dist * 3.2, target: new THREE.Vector3(0, 0.48, 0) };
   }
-  if (!atomRoot) return CAM[key] || CAM.atom;
+  if (!atomRoot) {
+    const base = CAM[key] || CAM.atom;
+    return { ...base, target: new THREE.Vector3() };
+  }
   const sc = atomRoot.scale.x;
   const nr = (atomRoot.userData.nucleusR || 0.25) * sc;
   if (key === 'quark') {
@@ -1743,30 +1756,36 @@ function camPreset(key) {
     const rec = currentNucleonRec();
     const target = rec ? rec.pos.clone() : new THREE.Vector3();
     if (rec) atomRoot.localToWorld(target);
-    const dist = Math.max(0.36, (rec ? rec.baseScale : 0.08) * sc * 8.2);
+    const base = rec ? rec.baseScale : 0.08;
+    const radius = Math.max(0.16, base * sc * 6.2);
+    const dist = frameDistance(radius, 1.5);
     return {
       dist,
-      elev: Math.max(0.08, dist * 0.2),
-      min: Math.max(0.2, dist * 0.4),
-      max: Math.max(2.4, dist * 5),
+      elev: Math.max(0.04, dist * 0.16),
+      min: dist * 0.45,
+      max: dist * 4,
       target,
     };
   }
   if (key === 'nucleus') {
-    const dist = Math.max(1.05, Math.min(2.8, nr * 5.2 + 0.55));
+    const radius = Math.max(0.32, nr * 1.85);
+    const dist = frameDistance(radius, 1.42);
     return {
       dist,
-      elev: Math.max(0.2, dist * 0.22),
-      min: Math.max(0.7, nr * 2.4),
-      max: Math.max(3.2, dist * 2.8),
+      elev: Math.max(0.12, dist * 0.2),
+      min: dist * 0.5,
+      max: dist * 3.5,
+      target: new THREE.Vector3(),
     };
   }
-  const mobileBump = isMobile ? 0.8 : 0;
+  const outer = (atomRoot.userData.outer || 1) * sc;
+  const eSize = (atomRoot.userData.eSize || 0.07) * sc;
+  const dist = frameDistance(outer + eSize + 0.12, 1.42);
   return {
-    dist: CAM.atom.dist + mobileBump,
-    elev: CAM.atom.elev,
-    min: CAM.atom.min,
-    max: CAM.atom.max,
+    dist,
+    elev: Math.min(1.5, dist * 0.18),
+    min: Math.max(1.2, dist * 0.42),
+    max: dist * 2.5,
     target: new THREE.Vector3(),
   };
 }
@@ -1810,6 +1829,7 @@ function startCamAnim(key, nextE, nextN, onDone) {
     applyVisibility();
     camAnim.active = false;
     if (onDone) onDone();
+    assertFrameFits(key);
     renderFrame();
   }
 }
@@ -1825,9 +1845,11 @@ function tickCamAnim(now) {
   applyVisibility();
   if (u >= 1) {
     camAnim.active = false;
+    const doneKey = camKey;
     const cb = camAnim.onDone;
     camAnim.onDone = null;
     if (cb) cb();
+    assertFrameFits(doneKey);
   }
 }
 
@@ -2140,6 +2162,7 @@ function hideElectronsNow() {
 
 function goStage(stageName) {
   if (!atomRoot && stageName !== 'atom') return;
+  userFramed = false;
   closeHandoff(false);
   if (stageName !== 'atlas') leaveAtlasVisual();
   stageState.stage = stageName;
@@ -2384,6 +2407,46 @@ function resetStageToAtom(instant) {
   }
   applyVisibility();
   syncLadderUi();
+  assertFrameFits('atom');
+}
+
+function assertFrameFits(key) {
+  if (!camera || !controls || userFramed || !atomRoot) return;
+  const c = camPreset(key || camKey);
+  const target = c.target || controls.target;
+  const dist = camera.position.distanceTo(target);
+  console.assert(
+    dist + 0.08 >= c.dist * 0.94,
+    `stage ${key || camKey} does not fit: camera ${dist.toFixed(2)} < ${c.dist.toFixed(2)}`,
+  );
+}
+
+function sentenceCount(text) {
+  return text.split(/[.!?]+/).map((s) => s.trim()).filter(Boolean).length;
+}
+
+function showRealWorld(el) {
+  if (!realWorld || !realWorldText) return;
+  const text = el ? REAL_WORLD[el.z] : '';
+  if (!text) {
+    realWorld.hidden = true;
+    realWorldText.textContent = '';
+    return;
+  }
+  realWorldText.textContent = text;
+  realWorld.hidden = false;
+}
+
+function syncSwitcher(el) {
+  if (!detailBar) return;
+  detailBar.hidden = !el;
+  if (!el) return;
+  if (elementSelect && elementSelect.value !== String(el.z)) elementSelect.value = String(el.z);
+}
+
+function scrollPanel(el) {
+  if (!el || embed) return;
+  el.scrollIntoView({ behavior: motionQuery.matches ? 'auto' : 'smooth', block: 'start' });
 }
 
 function updateFormula(el) {
@@ -2392,6 +2455,8 @@ function updateFormula(el) {
   ladderUi.hidden = false;
   fSym.textContent = el.symbol;
   fName.textContent = el.name;
+  syncSwitcher(el);
+  showRealWorld(el);
   const N = neutronsOf(el);
   const massStr = String(el.atomicMass);
   /* HUD always shows correct p / n / e (neutral: e = Z) */
@@ -2408,15 +2473,16 @@ function selectElement(z) {
   const el = byZ.get(z);
   if (!el) return;
   currentZ = z;
+  userFramed = false;
   for (const [kz, btn] of cellButtons) {
     btn.classList.toggle('active', kz === z);
+    btn.setAttribute('aria-current', kz === z ? 'true' : 'false');
   }
   updateFormula(el);
-  if (isMobile && !embed) {
-    atomPanel.classList.add('open');
-    document.body.classList.add('atom-open');
+  if (!renderer) {
+    scrollPanel(atomPanel);
+    return;
   }
-  if (!renderer) return;
   try {
     /* reset ladder before rebuild so visibility matches Atom default */
     closeHandoff(false);
@@ -2426,10 +2492,13 @@ function selectElement(z) {
     nOpacity = 1;
     camAnim.active = false;
     atlasSel = 'bp';
+    camKey = 'atom';
     buildAtom(el);
+    resize();
     resetStageToAtom(true);
     if (still) holdStill();
     else start();
+    scrollPanel(atomPanel);
   } catch (e) {
     console.error(e);
     showErr('This browser can’t draw the 3D atom. Try another browser or update graphics.');
@@ -2446,7 +2515,7 @@ backBtn.addEventListener('click', () => {
     stepBack();
     return;
   }
-  closeAtomPanel();
+  returnToTable();
 });
 
 try {
@@ -2579,17 +2648,32 @@ try {
   console.warn(e);
 }
 
+function applyPresetFrame() {
+  if (!camera || !controls || camAnim.active || userFramed || currentZ == null) return;
+  const c = camPreset(camKey);
+  const target = c.target ? c.target.clone() : new THREE.Vector3();
+  let dir = camera.position.clone().sub(controls.target);
+  if (dir.lengthSq() < 1e-6) dir.set(0.35, c.elev || 1, 1);
+  dir.normalize();
+  camera.position.copy(target).add(dir.multiplyScalar(c.dist));
+  controls.target.copy(target);
+  controls.minDistance = c.min;
+  controls.maxDistance = c.max;
+  controls.update();
+}
+
 function resize() {
-  if (!renderer) return;
-  const w = stage.clientWidth || 1;
-  const h = stage.clientHeight || 1;
-  camera.aspect = w / Math.max(1, h);
+  if (!renderer || !camera) return;
+  const w = Math.max(1, stage.clientWidth || 1);
+  const h = Math.max(1, stage.clientHeight || 1);
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  renderer.setSize(w, h, isMobile);
+  renderer.setSize(w, h, false);
   if (composer) {
     composer.setPixelRatio(renderer.getPixelRatio());
     composer.setSize(w, h);
   }
+  applyPresetFrame();
   if (still) renderFrame();
 }
 new ResizeObserver(resize).observe(stage);
@@ -2671,7 +2755,40 @@ function start() {
   raf = requestAnimationFrame(frame);
 }
 
-if (controls) controls.addEventListener('change', () => { if (still) renderFrame(); });
+if (controls) {
+  controls.addEventListener('start', () => { userFramed = true; });
+  controls.addEventListener('change', () => { if (still) renderFrame(); });
+}
+
+if (elementSelect) {
+  elementSelect.innerHTML = ELEMENTS.map((el) => `<option value="${el.z}">${el.symbol} · ${el.name}</option>`).join('');
+  elementSelect.addEventListener('change', () => selectElement(Number(elementSelect.value)));
+}
+function stepElement(delta) {
+  const base = currentZ == null ? 1 : currentZ;
+  let next = base + delta;
+  if (next < 1) next = 118;
+  if (next > 118) next = 1;
+  selectElement(next);
+}
+if (prevElBtn) prevElBtn.addEventListener('click', () => stepElement(-1));
+if (nextElBtn) nextElBtn.addEventListener('click', () => stepElement(1));
+function returnToTable() {
+  scrollPanel(tablePanel);
+  const active = currentZ != null ? cellButtons.get(currentZ) : null;
+  if (active) active.focus({ preventScroll: true });
+}
+if (backToTable) backToTable.addEventListener('click', returnToTable);
+
+(function assertRealWorldCopy() {
+  for (let z = 1; z <= 118; z++) {
+    const text = REAL_WORLD[z];
+    console.assert(typeof text === 'string' && text.length > 40, `missing real-world note ${z}`);
+    if (typeof text !== 'string') continue;
+    const n = sentenceCount(text);
+    console.assert(n >= 2 && n <= 4, `real-world sentences for Z ${z}: ${n}`);
+  }
+})();
 
 motionQuery.addEventListener('change', (e) => {
   still = e.matches || params.has('still');
@@ -2788,6 +2905,9 @@ addEventListener('keydown', (e) => {
     if (handoffOpen() || stageState.stage !== 'atom') {
       e.preventDefault();
       stepBack();
+    } else if (!embed) {
+      e.preventDefault();
+      returnToTable();
     }
     return;
   }
