@@ -629,6 +629,14 @@
     text-transform: uppercase;
     color: rgba(239, 230, 242, 0.48);
   }
+  .lesson-nav {
+    pointer-events: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px 14px;
+    padding-bottom: 0.35rem;
+  }
   .lesson-door {
     pointer-events: auto;
     font-family: var(--font-mono);
@@ -649,7 +657,7 @@
   }
 
   html.embed, body.embed { background: transparent !important; }
-  body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-door, body.embed .field, body.embed .legend { display: none !important; }
+  body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-nav, body.embed .lesson-door, body.embed .field, body.embed .legend { display: none !important; }
   body.embed .app { padding: 0; }
   body.embed .workspace { position: absolute; inset: 0; }
   body.embed .table-panel { display: none; }
@@ -676,7 +684,9 @@
       inset: auto;
       width: auto;
       display: flex;
+      flex-wrap: wrap;
     }
+    .lesson-nav { width: 100%; justify-content: flex-start; padding-bottom: 0; }
     .field {
       position: relative;
       inset: auto;
@@ -955,7 +965,10 @@
       <p class="tag">Intro chemistry</p>
       <p class="teach">Atom structure → nucleus → quarks → Standard Model atlas</p>
     </div>
-    <a class="lesson-door" href="ethanol.html">Ethanol · C₂H₆O</a>
+    <nav class="lesson-nav">
+      <a class="lesson-door" href="molecules/index.html">115 molecules</a>
+      <a class="lesson-door" href="ethanol.html">Ethanol · C₂H₆O</a>
+    </nav>
   </header>
 
   <div class="workspace">

@@ -4,20 +4,25 @@ Intro chemistry · atom structure → nucleus → quarks → Standard Model atla
 
 **Live preview:** https://how-atoms-work-production.up.railway.app/
 
-GitHub Pages (same source): https://virgilrenfroe.github.io/how-atoms-work/  
 Repo: https://github.com/virgilrenfroe/how-atoms-work
 
 Static three.js lab. Open any element from hydrogen through oganesson and walk one ladder: Atom → Nucleus → Quark, then a door into a separate Standard Model atlas room. Shells and orbitals stay on the Atom readout. They are not extra zoom stages.
 
 The page is a split: the periodic table is one panel, the atom stage is the other. The WebGL view never sits under the tiles. Inside the stage, a floor grid drops away in the nucleus and rises on the atlas. Type is Bricolage Grotesque, Instrument Sans, and Space Mono. Counts, family colors, B2 electrons, satin nucleons, and the ladder are unchanged.
 
+The molecule gallery is the same kind of split. Categories and names stay in one column. The model or the teaching card stays in the other. Ethanol remains its own page and is linked from the atom-room header and from the history group.
+
 ## Demos
 
 - [`index.html`](index.html) — homepage. Full H–Og periodic table and the WebGL drill-down.
 - [`periodic-table-atoms.html`](periodic-table-atoms.html) — the same lesson at the source filename.
 - [`ethanol.html`](ethanol.html) — Intro chem · molecular structure / bonding. Satin ethanol, C₂H₆O, anti conformer.
+- [`molecules/index.html`](molecules/index.html) — 115 incredible molecules. Category hub, teaching cards, and ball-and-stick models.
+- [`molecules/molecules-data.js`](molecules/molecules-data.js) — the hundred entries (id, name, formula, category, teaching sentence, structure mode).
+- [`molecules/geometries.js`](molecules/geometries.js) — coordinates for the ball-and-stick set.
+- [`molecules/check-geometries.mjs`](molecules/check-geometries.mjs) — checks each model’s formula against its atoms, and each atom’s valence.
 - [`periodic-table-data.js`](periodic-table-data.js) — Z 1–118 (symbol, name, category, atomic mass, neutrons, period, group).
-- [`NOTES.md`](NOTES.md) — chemistry rules, ladder, ethanol geometry, and craft notes.
+- [`NOTES.md`](NOTES.md) — chemistry rules, ladder, ethanol geometry, molecule gallery, and craft notes.
 
 Query params (either HTML page):
 
