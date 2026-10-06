@@ -218,3 +218,48 @@ Water’s bent shape → polarity → dissolving salts (water treatment operator
 ### Craft
 
 Same void, fonts, and satin as the rest of the site. CPK: H `#ffffff`, C `#55555c`, N `#3050f8`, O `#ff0d0d`, S `#ffff30`. Bonded-pair markers teal `#5fd6c6`; lone-pair markers gold `#f0c45c`. Anisotropy 0.55 on desktop WebGL2 only, off on mobile. DPR ≤ 1.5. One renderer for the shape stage, drawn only while on screen.
+
+## How Reactions Happen · `reactions/`
+
+`reactions/index.html` — Intro chem · conservation of atoms, balanced equations, and early reaction types (combination, decomposition, combustion). Four 3D stages (conservation, combustion, decomposition, coefficient checker), an **In the real world** band, and Check yourself. Linked from the hub header (`index.html` only) as “How reactions happen”.
+
+`node reactions/check-reactions.mjs` checks formulas, bond orders, valences, model distances against measured values, that each demo equation conserves atoms, that the balance interactive’s target coefficients work, and that the page copy has no developer text. `node reactions/build-geometry.mjs` rebuilds `reactions/geometry.js` from `reactions/sdf/`.
+
+### Scenes
+
+1. **Conservation · 2 H₂ + O₂ → 2 H₂O.** Reactants → rearrange → products. Live H/O tally stays 4 H and 2 O. Combination (synthesis) example.
+2. **Combustion · CH₄ + 2 O₂ → CO₂ + 2 H₂O.** Same morph pattern; tally 1 C, 4 H, 4 O.
+3. **Decomposition · 2 H₂O₂ → 2 H₂O + O₂.** Tally 4 H, 4 O. Stage shows balanced start and finish only (no invented intermediates).
+4. **Check the balance.** Student sets coefficients for `_ H₂ + _ O₂ → _ H₂O` (0–4 each). Atom counts go green when equal; the smallest whole-number set is 2, 1, 2.
+
+### Geometry source
+
+| Model | Source | Model value | Measured (quoted on page) |
+|---|---|---|---|
+| H₂ | **No PubChem 3D conformer** (CID 783 → 404) | H–H 0.7414 Å | 0.7414 Å |
+| O₂ | PubChem CID 977 3D conformer | O=O 1.232 Å | 1.2075 Å |
+| H₂O | PubChem CID 962 3D conformer | O–H 0.969 Å, 104.0° | O–H 0.958 Å, 104.48° |
+| CH₄ | PubChem CID 297 3D conformer | C–H 1.092 Å, 109.47° | C–H 1.087 Å, 109.471° |
+| CO₂ | PubChem CID 280 3D conformer | C=O 1.197 Å, 180° | C=O 1.162 Å, 180° |
+| H₂O₂ | PubChem CID 784 3D conformer | O–O 1.449 Å, O–H 0.972 Å, ∠HOO 95.8° | O–O 1.475 Å, O–H 0.950 Å, ∠HOO 94.8° |
+
+SDF files fetched 2026-10-06 from `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/SDF?record_type=3d` and stored in `reactions/sdf/`. H₂ uses the same NIST exception as the bonds lesson.
+
+### Values and sources
+
+| Value | Source |
+|---|---|
+| H–H r_e 0.7414 Å | NIST CCCBDB, H₂ (Huber & Herzberg 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=1333740 |
+| O=O r_e 1.2075 Å | NIST CCCBDB, O₂ — https://cccbdb.nist.gov/exp2x.asp?casno=7782447 |
+| O–H 0.958 Å, ∠HOH 104.4776° | NIST CCCBDB, H₂O (Hoy & Bunker 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=7732185 |
+| C–H 1.087 Å, ∠HCH 109.471° | NIST CCCBDB, CH₄ — https://cccbdb.nist.gov/exp2x.asp?casno=74828 |
+| C=O 1.162 Å, ∠OCO 180° | NIST CCCBDB, CO₂ (Herzberg 1966) — https://cccbdb.nist.gov/exp2x.asp?casno=124389 |
+| O–H 0.950 Å, O–O 1.475 Å, ∠HOO 94.8°, dihedral 119.8° | NIST CCCBDB, H₂O₂ (Redington, Olson & Cross 1962) — https://cccbdb.nist.gov/exp2x.asp?casno=7722841 |
+
+### In the real world (all true, plain sentences)
+
+Natural-gas furnace combustion (HVAC technicians). Hydrocarbon combustion in engines (auto technicians). Combustion triangle / extinguishers (firefighters). Peroxide dosing in treatment (wastewater operators). Dilute peroxide cleaners (janitorial workers). CO₂ from baking-soda reactions lifting dough (bakers). Food + O₂ rearranged to CO₂ + H₂O in metabolism, framed carefully as classroom chemistry parallel (biology teachers) — not medical advice.
+
+### Craft
+
+Same void, fonts, and satin as the rest of the site. CPK: H `#ffffff`, C `#55555c`, O `#ff0d0d`. Stage and lesson text in separate columns. Anisotropy off on mobile. DPR ≤ 1.5. One renderer per stage.
