@@ -15,6 +15,9 @@
 // C− in carbon monoxide is 3). Sulfur may be 4 or 6 and phosphorus
 // may be 5 when the degree matches a sulfoxide, sulfone, sulfate, or
 // phosphate. Those are the hypervalent cases, not a free pass.
+// A restraint entry (explosives, toxins, nerve agents, and other
+// dual-use or controlled substances) is a card only. It must not be
+// ball-and-stick, and it must not have coordinates in the geometry file.
 
 import { MOLECULES } from "./molecules-data.js";
 import { GEOMETRIES } from "./geometries.js";
@@ -154,6 +157,15 @@ for (const id of ballIds) {
 }
 for (const id of geoIds) {
   if (!ballIds.has(id)) failures.push(`${id}: geometry is not a ball-and-stick entry`);
+}
+for (const molecule of MOLECULES) {
+  if (!molecule.restraint) continue;
+  if (molecule.structureMode === "ballstick") {
+    failures.push(`${molecule.id}: restraint entry is ball-and-stick`);
+  }
+  if (geoIds.has(molecule.id)) {
+    failures.push(`${molecule.id}: restraint entry has geometry`);
+  }
 }
 
 const lines = [];
