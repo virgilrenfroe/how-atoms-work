@@ -176,3 +176,45 @@ Rock salt on winter roads (highway maintenance crews; freezing-point depression)
 ### Craft
 
 Same void, fonts, and satin as the rest of the site: `MeshPhysicalMaterial` metalness 0.32, roughness 0.45, clearcoat 0.22, clearcoat roughness 0.38; anisotropy 0.55 on desktop WebGL2 only, off on mobile. Protons `#ff6b3d`, neutrons `#6c84a8`, electrons `#5fd6c6`. CPK: H `#ffffff`, C `#55555c` (dark grey), N `#3050f8`, O `#ff0d0d`, Na `#ab5cf2`, Cl `#1ff01f`. Oversized Bricolage headings, outlined chapter numbers, chapters alternate text-left / stage-left, and the real-world band is a full-bleed proton-orange block. DPR ≤ 1.5. One renderer per stage, drawn only while on screen. Drag to turn on desktop; on phones the page scrolls normally over the stage and the models turn on their own.
+
+## How Molecules Shape · `shape/`
+
+`shape/index.html` — Intro chem · VSEPR molecular geometry. One interactive 3D stage with a shape picker, then a quick-reference grid, an **In the real world** band, and Check yourself questions. Linked from the hub header as “How molecules shape”.
+
+`node shape/check-shape.mjs` checks formulas, connectivity, bond orders, model distances and angles against measured values, VSEPR domain counts, and that the page copy has no developer text. `node shape/build-geometry.mjs` rebuilds `shape/geometry.js` from `shape/sdf/`.
+
+### Scenes
+
+Interactive picker: CO₂ (linear), SO₃ (trigonal planar), CH₄ (tetrahedral), NH₃ (trigonal pyramidal), H₂O (bent). Each model uses satin `MeshPhysicalMaterial` (metalness 0.32, roughness 0.45, clearcoat 0.22), CPK colours, bond cylinders, teal bonded-pair markers, and gold lone-pair markers. The measured bond angle is drawn on the stage. Stage and lesson text sit in separate columns — never overlaid.
+
+### Geometry source
+
+| Model | Source | Model value | Measured (quoted on page) |
+|---|---|---|---|
+| CO₂ | PubChem CID 280 3D conformer | C=O 1.197 Å, 180.0° | C=O 1.162 Å, 180° |
+| SO₃ | PubChem CID 24682 3D conformer | S=O 1.451 Å, 120.0° | S=O 1.418 Å, 120° |
+| CH₄ | PubChem CID 297 3D conformer | C–H 1.092 Å, 109.47° | C–H 1.087 Å, 109.471° |
+| NH₃ | PubChem CID 222 3D conformer | N–H 1.019 Å, 106.0° | N–H 1.012 Å, 106.67° |
+| H₂O | PubChem CID 962 3D conformer | O–H 0.969 Å, 104.0° | O–H 0.958 Å, 104.4776° |
+
+SDF files fetched 2026-10-06 from `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/SDF?record_type=3d`. PubChem conformers are computed (MMFF94s), so lengths can differ from experiment by up to about 0.04 Å; the page quotes the measured values. **BF₃** (CID 6356), **PCl₅** (CID 24819), and **SF₆** (CID 17358) return 404 for `record_type=3d`, so trigonal planar uses SO₃ instead of BF₃, and trigonal bipyramidal / octahedral examples are omitted.
+
+### Values and sources
+
+| Value | Source |
+|---|---|
+| O=C=O 180°, C=O 1.162 Å | NIST CCCBDB, CO₂ (Herzberg 1966) — https://cccbdb.nist.gov/exp2x.asp?casno=124389 |
+| O=S=O 120°, S=O 1.418 Å | NIST CCCBDB, SO₃ — https://cccbdb.nist.gov/exp2x.asp?casno=7446119 |
+| ∠HCH 109.471°, C–H 1.087 Å | NIST CCCBDB, CH₄ — https://cccbdb.nist.gov/exp2x.asp?casno=74828 |
+| ∠HNH 106.67°, N–H 1.012 Å | NIST CCCBDB, NH₃ (Herzberg 1966) — https://cccbdb.nist.gov/exp2x.asp?casno=7664417 |
+| ∠HOH 104.4776°, O–H 0.958 Å | NIST CCCBDB, H₂O (Hoy & Bunker 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=7732185 |
+
+Classroom angles on the page are rounded the usual way: 180°, 120°, ~109.5°, ~107°, ~104.5°.
+
+### In the real world (all true, plain sentences)
+
+Water’s bent shape → polarity → dissolving salts (water treatment operators). Methane tetrahedral → natural gas (HVAC technicians, gas utility workers). CO₂ linear → carbonation and CO₂ extinguishers / dry ice (beverage plant techs, firefighters). Ammonia pyramidal → fertilizer and cleaners (farmers, janitorial chemists). Drug molecule shape fitting receptors (pharmacists, medicinal chemists). SO₃ planar → sulfuric acid manufacture (sulfuric acid plant operators).
+
+### Craft
+
+Same void, fonts, and satin as the rest of the site. CPK: H `#ffffff`, C `#55555c`, N `#3050f8`, O `#ff0d0d`, S `#ffff30`. Bonded-pair markers teal `#5fd6c6`; lone-pair markers gold `#f0c45c`. Anisotropy 0.55 on desktop WebGL2 only, off on mobile. DPR ≤ 1.5. One renderer for the shape stage, drawn only while on screen.
