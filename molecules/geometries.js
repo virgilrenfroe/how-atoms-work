@@ -5,9 +5,13 @@
 // icosahedron with 5–6 bonds 1.455 Å and 6–6 bonds 1.391 Å. Those two
 // lengths stay separate. The nanotube is a hydrogen-capped (5,5)
 // segment, C40H20, with every carbon–carbon bond order 4.
-// Other entries are PubChem 3D conformers. Stereochemistry is the
-// conformer’s, checked against the named isomer. Aromatic ring bonds
+// Other entries are PubChem 3D conformers, or ideal coordinates from
+// the PDB Chemical Component Dictionary. Stereochemistry is the
+// source’s, checked against the named isomer. Aromatic ring bonds
 // are order 1.5, drawn as one stick. Every entry includes its hydrogens.
+// Polymers and sheets are capped fragments, named as pieces.
+
+import { PROMOTED } from "./geometries-promoted.js";
 
 const GEOMETRIES = {
   "buckminsterfullerene": {
@@ -2642,4 +2646,5 @@ const GEOMETRIES = {
     ],
   },
 };
+Object.assign(GEOMETRIES, PROMOTED);
 export { GEOMETRIES };

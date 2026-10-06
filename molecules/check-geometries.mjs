@@ -10,12 +10,31 @@
 // nitrogen is 4, and a thiophene sulfur is 3. Bond order 4 (the
 // nanotube) and 5 (ozone) skip the classical sum. Degree is still
 // checked. Hydrogens must be degree 1.
+//
+// Formal charge `c` shifts the expected order sum (N+ is 4, O− is 1,
+// C− in carbon monoxide is 3). Sulfur may be 4 or 6 and phosphorus
+// may be 5 when the degree matches a sulfoxide, sulfone, sulfate, or
+// phosphate. Those are the hypervalent cases, not a free pass.
 
 import { MOLECULES } from "./molecules-data.js";
 import { GEOMETRIES } from "./geometries.js";
 
-const DEGREE = { H: new Set([1]), C: new Set([2, 3, 4]), N: new Set([2, 3]), O: new Set([1, 2]), S: new Set([1, 2]) };
-const CLASSICAL = { H: 1, C: 4, N: 3, O: 2, S: 2 };
+const DEGREE = {
+  H: new Set([1]),
+  C: new Set([1, 2, 3, 4]),
+  N: new Set([1, 2, 3, 4]),
+  O: new Set([1, 2]),
+  F: new Set([1]),
+  Mg: new Set([4]),
+  Si: new Set([4]),
+  P: new Set([3, 4, 5]),
+  S: new Set([1, 2, 3, 4, 6]),
+};
+const CLASSICAL = { H: 1, C: 4, N: 3, O: 2, F: 1, Mg: 2, Si: 4, P: 3, S: 2 };
+const HYPER = {
+  S: { 4: new Set([3]), 6: new Set([4]) },
+  P: { 5: new Set([4, 5]) },
+};
 const AROMATIC_SUM = {
   H: new Set([1]),
   C: new Set([4, 4.5, 5]),
@@ -96,14 +115,19 @@ function problemsFor(geo) {
       return;
     }
     if (!allowed.has(degree[i])) problems.push(`${atom.el}${i} degree ${degree[i]}`);
+    const charge = atom.c || 0;
     if (atom.el === "H" && orderSum[i] !== 1) problems.push(`H${i} order ${orderSum[i]}`);
     if (aromatic[i]) {
       const allowedSum = AROMATIC_SUM[atom.el];
       if (!allowedSum || !allowedSum.has(orderSum[i])) {
         problems.push(`${atom.el}${i} aromatic valence ${orderSum[i]}`);
       }
-    } else if (!special[i] && orderSum[i] !== CLASSICAL[atom.el]) {
-      problems.push(`${atom.el}${i} valence ${orderSum[i]}`);
+    } else if (!special[i]) {
+      const expected = CLASSICAL[atom.el] + charge;
+      const hyper = HYPER[atom.el] && HYPER[atom.el][orderSum[i]];
+      if (orderSum[i] !== expected && !(hyper && hyper.has(degree[i]))) {
+        problems.push(`${atom.el}${i} valence ${orderSum[i]}`);
+      }
     }
   });
   if (atoms.length) {

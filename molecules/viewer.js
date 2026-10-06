@@ -14,10 +14,11 @@ const CPK = {
   S: 0xffff30,
   Cl: 0x1ff01f,
   Mg: 0x8aff00,
+  Si: 0xf0c8a0,
   Fe: 0xe06633,
   Na: 0xab5cf2,
 };
-const RADIUS = { H: 0.22, C: 0.4, N: 0.38, O: 0.36, F: 0.32, P: 0.42, S: 0.42, Cl: 0.44 };
+const RADIUS = { H: 0.22, C: 0.4, N: 0.38, O: 0.36, F: 0.32, P: 0.42, S: 0.42, Cl: 0.44, Si: 0.44, Mg: 0.46 };
 const SHOW = 1.15;
 
 const LABEL_INK = {
@@ -29,6 +30,8 @@ const LABEL_INK = {
   P: "#140818",
   S: "#140818",
   Cl: "#140818",
+  Si: "#140818",
+  Mg: "#140818",
 };
 
 function fail(msg) {
