@@ -471,7 +471,7 @@ function buildCovalent(st) {
     });
     say.textContent = COV[id].say;
     read.innerHTML = COV[id].rows.map(([a, b]) => `<tr><th>${a}</th><td><b>${b}</b></td></tr>`).join('');
-    const R = Math.max(2.6, Math.max(...cur.userData.pos.map((p) => p.length())) + 1.0);
+    const R = Math.max(2.0, Math.max(...cur.userData.pos.map((p) => p.length())) + 0.9);
     st.fit = { w: R * 1.1, h: R * 1.1 };
     st.refit();
   }
