@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="How atoms bond: ionic, covalent, and polar covalent bonds in 3D. An intro chemistry lesson for students and teachers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>How Atoms Bond · Ionic, covalent, polar · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --void-2: #1d0c23;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.66);
+    --line: rgba(239, 230, 242, 0.18);
+    --proton: #ff6b3d;
+    --neutron: #6c84a8;
+    --electron: #5fd6c6;
+    --na: #ab5cf2;
+    --cl: #1ff01f;
+    --o: #ff2a2a;
+    --h: #ffffff;
+    --c: #6b6b72;
+    --n: #4f6bff;
+    --pad: clamp(18px, 4.4vw, 72px);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--void); }
+  body {
+    margin: 0; background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans); font-size: 18px; line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: inherit; }
+  sub, sup { line-height: 0; }
+
+  /* masthead */
+  .mast {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 18px var(--pad); border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mast .home { text-decoration: none; font-weight: 700; }
+  .mast nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .mast nav a { text-decoration: none; color: var(--mute); }
+  .mast nav a:hover, .mast nav a:focus-visible { color: var(--pearl); }
+
+  /* hero */
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(20px, 4vw, 60px); align-items: end;
+    padding: clamp(40px, 8vw, 120px) var(--pad) clamp(36px, 6vw, 90px);
+  }
+  .kicker {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--proton); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(64px, 12.4vw, 220px); line-height: 0.84; letter-spacing: -0.045em;
+    margin: 0;
+  }
+  h1 .hot { color: var(--proton); display: block; padding-left: 0.9em; }
+  .lede { font-size: clamp(19px, 1.6vw, 24px); line-height: 1.45; margin: 0 0 18px; max-width: 30ch; }
+  .toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .toc li { border-bottom: 1px solid var(--line); }
+  .toc a { display: flex; gap: 14px; padding: 10px 0; text-decoration: none; font-weight: 600; }
+  .toc a span { font-family: var(--font-mono); color: var(--mute); font-weight: 400; min-width: 2ch; }
+  .toc a:hover, .toc a:focus-visible { color: var(--electron); }
+
+  /* why */
+  .why {
+    display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: clamp(20px, 4vw, 60px); padding: clamp(40px, 6vw, 90px) var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .why h2 { grid-column: 1 / span 2; }
+  .why .body { grid-column: 2 / span 1; }
+  .why .shells { grid-column: 3; align-self: start; }
+  h2 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.035em;
+    font-size: clamp(40px, 6.2vw, 104px); line-height: 0.9; margin: 0 0 24px;
+  }
+  .body p { margin: 0 0 16px; max-width: 58ch; }
+  .shells { font-family: var(--font-mono); font-size: 14px; }
+  .shells div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .shells div b { font-weight: 700; }
+  .shells .full { color: var(--electron); }
+
+  /* chapters */
+  .chapter {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(22px, 3.6vw, 60px); align-items: start;
+    padding: clamp(40px, 6vw, 96px) var(--pad); border-top: 1px solid var(--line);
+  }
+  .chapter.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .chapter.flip .copy { order: 2; }
+  .num {
+    font-family: var(--font-display); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em;
+    font-size: clamp(88px, 13vw, 220px); margin: 0 0 6px;
+    color: transparent; -webkit-text-stroke: 2px var(--proton);
+  }
+  .chapter h2 { font-size: clamp(38px, 4.6vw, 80px); }
+  .copy p { margin: 0 0 14px; max-width: 54ch; }
+  .copy .small { font-size: 15px; color: var(--mute); }
+  .steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 18px; }
+  .steps button {
+    font: 700 13px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--pearl); background: transparent; border: 1.5px solid var(--pearl);
+    padding: 12px 14px; border-radius: 999px; cursor: pointer; min-height: 44px;
+  }
+  .steps button[aria-pressed="true"] { background: var(--electron); border-color: var(--electron); color: var(--void); }
+  .steps button:focus-visible { outline: 3px solid var(--proton); outline-offset: 2px; }
+  .say { font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; min-height: 4.4em; }
+  .read {
+    width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; margin: 8px 0 18px;
+  }
+  .read th, .read td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .read th { font-weight: 400; color: var(--mute); }
+  .read td b { font-weight: 700; }
+  .chip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+  /* stage */
+  .stage-col { min-width: 0; position: sticky; top: 16px; }
+  .stage {
+    position: relative; height: clamp(440px, 76vh, 780px); min-width: 0;
+    background: var(--void-2); border: 1px solid var(--line); overflow: hidden;
+  }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage .lbl {
+    position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--pearl);
+    transform: translate(-50%, -50%); text-shadow: 0 1px 6px rgba(20, 8, 24, 0.9);
+  }
+  .stage .lbl.big { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); font-weight: 800; letter-spacing: -0.02em; }
+  .stage .lbl.pos { color: #ffd2c2; }
+  .stage .lbl.neg { color: #bff6ef; }
+  .stage .lbl.atom { font-size: 13px; color: var(--void); background: rgba(239, 230, 242, 0.88); padding: 1px 6px; border-radius: 4px; text-shadow: none; }
+  .stage .lbl.dim { color: var(--mute); font-weight: 400; font-size: 12px; }
+  .stage .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--pearl); opacity: 0.6; pointer-events: none; }
+  .stage .tick.a { top: 10px; left: 10px; border-width: 1.5px 0 0 1.5px; }
+  .stage .tick.b { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+  .caption { font-family: var(--font-mono); font-size: 12px; color: var(--mute); margin: 10px 0 0; line-height: 1.5; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-mono); font-size: 12px; margin: 10px 0 0; }
+
+  /* electronegativity */
+  .en { margin: 10px 0 20px; }
+  .en .row { display: grid; grid-template-columns: 3.4ch minmax(0, 1fr) 4.4ch; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 13px; padding: 4px 0; }
+  .en .bar { height: 12px; background: rgba(239, 230, 242, 0.08); position: relative; }
+  .en .bar i { position: absolute; inset: 0 auto 0 0; display: block; }
+  .diffs { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; margin: 6px 0 16px; }
+  .diffs td, .diffs th { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+  .diffs th { color: var(--mute); font-weight: 400; }
+
+  /* real world */
+  .real { background: var(--proton); color: var(--void); padding: clamp(48px, 7vw, 110px) var(--pad); }
+  .real .kicker { color: var(--void); }
+  .real h2 { font-size: clamp(52px, 9vw, 160px); margin-bottom: clamp(24px, 4vw, 56px); }
+  .uses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 5vw, 80px); }
+  .uses li { border-top: 2px solid var(--void); padding: 16px 0 22px; }
+  .uses .who { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .uses .what { font-family: var(--font-display); font-weight: 700; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.18; letter-spacing: -0.01em; }
+  .uses .bond { font-family: var(--font-mono); font-size: 12px; display: block; margin-top: 8px; }
+
+  /* check */
+  .check { padding: clamp(40px, 6vw, 96px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 4vw, 60px); }
+  details { border-top: 1px solid var(--line); padding: 14px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; font-size: 19px; }
+  details p { margin: 10px 0 0; color: var(--mute); max-width: 60ch; }
+  .sources { padding: 28px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
+  .sources h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pearl); margin: 0 0 10px; }
+  .sources ul { margin: 0; padding-left: 18px; }
+  .sources li { margin: 4px 0; overflow-wrap: anywhere; }
+
+  @media (max-width: 1100px) {
+    .why { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+    .why h2 { grid-column: 1 / -1; }
+    .why .body { grid-column: 1; }
+    .why .shells { grid-column: 2; }
+  }
+  @media (max-width: 860px) {
+    body { font-size: 17px; }
+    .hero, .why, .chapter, .chapter.flip, .check { grid-template-columns: minmax(0, 1fr); }
+    .why h2, .why .body, .why .shells { grid-column: 1; }
+    .chapter.flip .copy { order: 0; }
+    .stage-col { position: static; }
+    .stage { height: clamp(360px, 62vh, 540px); }
+    .uses { grid-template-columns: minmax(0, 1fr); }
+    h1 .hot { padding-left: 0.5em; }
+    .say { min-height: 0; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<header class="mast">
+  <a class="home" href="../">How Atoms Work</a>
+  <nav aria-label="Lessons">
+    <a href="../">Periodic table</a>
+    <a href="../molecules/index.html">Molecules</a>
+    <a href="../ethanol.html">Ethanol</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="kicker">Intro chemistry · Chemical bonds</p>
+    <h1>How atoms <span class="hot">bond</span></h1>
+  </div>
+  <div>
+    <p class="lede">Atoms hold together by moving or sharing their outer electrons. There are three main ways to do it.</p>
+    <ol class="toc">
+      <li><a href="#ionic"><span>01</span>Ionic: one atom gives, one takes</a></li>
+      <li><a href="#covalent"><span>02</span>Covalent: atoms share pairs</a></li>
+      <li><a href="#polar"><span>03</span>Polar covalent: unequal sharing</a></li>
+      <li><a href="#real-world"><span>04</span>In the real world</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="why" aria-labelledby="why-h">
+  <h2 id="why-h">Why bond at all?</h2>
+  <div class="body">
+    <p>Electrons sit in shells around the nucleus. The outer shell is the one that matters for bonding.</p>
+    <p>Atoms with a full outer shell are very stable. Neon (2, 8) and argon (2, 8, 8) already have one, so they almost never bond. For the atoms in this lesson, a full outer shell means 8 electrons, or 2 for hydrogen.</p>
+    <p>Most other atoms can reach a lower-energy, more stable arrangement by bonding. They do it in one of two ways: one atom <strong>transfers</strong> electrons to another, or two atoms <strong>share</strong> electrons.</p>
+  </div>
+  <div class="shells" aria-label="Electrons in each shell">
+    <div><b>H</b><span>1</span></div>
+    <div><b>C</b><span>2, 4</span></div>
+    <div><b>N</b><span>2, 5</span></div>
+    <div><b>O</b><span>2, 6</span></div>
+    <div class="full"><b>Ne</b><span>2, 8 full</span></div>
+    <div><b>Na</b><span>2, 8, 1</span></div>
+    <div><b>Cl</b><span>2, 8, 7</span></div>
+    <div class="full"><b>Ar</b><span>2, 8, 8 full</span></div>
+  </div>
+</section>
+
+<section class="chapter" id="ionic" aria-labelledby="ionic-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">01</p>
+    <p class="kicker">Ionic bond · Na + Cl</p>
+    <h2 id="ionic-h">One atom gives, one takes</h2>
+    <p>Sodium has one electron in its outer shell. Chlorine has seven, one short of eight. When they meet, sodium’s outer electron moves to chlorine.</p>
+    <div class="steps" role="group" aria-label="Ionic bond steps" data-steps="ionic">
+      <button type="button" data-step="0" aria-pressed="true">1 · Atoms</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Transfer</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Ions</button>
+      <button type="button" data-step="3" aria-pressed="false">4 · Crystal</button>
+    </div>
+    <p class="say" id="ionic-say" aria-live="polite"></p>
+    <table class="read" id="ionic-read" aria-label="Sodium and chlorine counts"></table>
+    <p class="small">Pulling an electron off sodium costs energy, and chlorine gives back only part of it when it takes the electron. The rest comes from the ions packing into a crystal: opposite charges pull hard on each other. That pull is the ionic bond.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="ionic" role="img" aria-label="3D model: a sodium atom passes its outer electron to a chlorine atom, then sodium and chloride ions in a salt crystal."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--proton)"></i>proton</span>
+      <span><i class="chip" style="background:var(--neutron)"></i>neutron</span>
+      <span><i class="chip" style="background:var(--electron)"></i>electron</span>
+      <span><i class="chip" style="background:var(--na)"></i>Na⁺</span>
+      <span><i class="chip" style="background:var(--cl)"></i>Cl⁻</span>
+    </div>
+    <p class="caption" id="ionic-cap">Shells are drawn as flat rings. Real electrons do not move in neat circles.</p>
+  </div>
+</section>
+
+<section class="chapter flip" id="covalent" aria-labelledby="cov-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">02</p>
+    <p class="kicker">Covalent bond · shared pairs</p>
+    <h2 id="cov-h">Atoms share pairs</h2>
+    <p>When neither atom can pull an electron away from the other, they share. Each shared pair is one bond. The pair counts toward the outer shell of both atoms at once.</p>
+    <div class="steps" role="group" aria-label="Choose a molecule" data-steps="covalent">
+      <button type="button" data-step="H2" aria-pressed="true">H₂</button>
+      <button type="button" data-step="CH4" aria-pressed="false">CH₄</button>
+      <button type="button" data-step="O2" aria-pressed="false">O₂</button>
+      <button type="button" data-step="N2" aria-pressed="false">N₂</button>
+    </div>
+    <p class="say" id="cov-say" aria-live="polite"></p>
+    <table class="read" id="cov-read" aria-label="Molecule facts"></table>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="covalent" role="img" aria-label="3D model of the chosen molecule with its shared electron pairs."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--c)"></i>C</span>
+      <span><i class="chip" style="background:var(--n)"></i>N</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--electron)"></i>shared electrons</span>
+    </div>
+    <p class="caption">Teal dots show only the shared electrons. Each pair circles its bond. Unshared pairs are not drawn.</p>
+  </div>
+</section>
+
+<section class="chapter" id="polar" aria-labelledby="polar-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">03</p>
+    <p class="kicker">Polar covalent bond · H₂O</p>
+    <h2 id="polar-h">Sharing, but not equally</h2>
+    <p><strong>Electronegativity</strong> is how strongly an atom pulls on shared electrons. When two different atoms share, the stronger puller holds the pair closer.</p>
+    <div class="en" aria-label="Pauling electronegativity">
+      <div class="row"><b>Na</b><span class="bar"><i style="width:23.25%;background:var(--na)"></i></span><span>0.93</span></div>
+      <div class="row"><b>H</b><span class="bar"><i style="width:55%;background:var(--h)"></i></span><span>2.20</span></div>
+      <div class="row"><b>C</b><span class="bar"><i style="width:63.75%;background:#8a8a92"></i></span><span>2.55</span></div>
+      <div class="row"><b>N</b><span class="bar"><i style="width:76%;background:var(--n)"></i></span><span>3.04</span></div>
+      <div class="row"><b>Cl</b><span class="bar"><i style="width:79%;background:var(--cl)"></i></span><span>3.16</span></div>
+      <div class="row"><b>O</b><span class="bar"><i style="width:86%;background:var(--o)"></i></span><span>3.44</span></div>
+    </div>
+    <p>In water, oxygen (3.44) pulls harder than hydrogen (2.20). The shared pairs sit closer to oxygen. Oxygen gets a small negative charge, <b>δ−</b>, and each hydrogen gets a small positive charge, <b>δ+</b>.</p>
+    <p>Water is bent, so both δ+ ends are on one side. The whole molecule has a positive side and a negative side. Chemists call it <strong>polar</strong>.</p>
+    <table class="diffs" aria-label="Electronegativity differences">
+      <tr><th>Bond</th><th>Difference</th><th>Sharing</th></tr>
+      <tr><td>H–H</td><td>0.00</td><td>equal</td></tr>
+      <tr><td>C–H</td><td>0.35</td><td>almost equal</td></tr>
+      <tr><td>O–H</td><td>1.24</td><td>unequal (polar)</td></tr>
+      <tr><td>Na–Cl</td><td>2.23</td><td>transferred (ionic)</td></tr>
+    </table>
+    <p class="small">A rough guide, not a hard line: a difference below about 0.4 is nearly equal sharing, about 0.4 to 1.7 is polar, and above about 1.7 is usually ionic.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="polar" role="img" aria-label="3D model of a water molecule with partial charges: delta minus on oxygen, delta plus on each hydrogen."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--o)"></i>O · 3.44</span>
+      <span><i class="chip" style="background:var(--h)"></i>H · 2.20</span>
+      <span><i class="chip" style="background:var(--electron)"></i>shared electrons</span>
+    </div>
+    <p class="caption">O–H bond 0.958 Å, H–O–H angle 104.5° (measured in the gas phase). The shared pairs are drawn nearer to oxygen. Oxygen’s two unshared pairs are not drawn.</p>
+  </div>
+</section>
+
+<section class="real" id="real-world" aria-labelledby="real-h">
+  <p class="kicker">04 · Where you meet these bonds</p>
+  <h2 id="real-h">In the real world</h2>
+  <ul class="uses">
+    <li><span class="who">Highway maintenance crews</span><span class="what">Table salt is sodium chloride. In winter, crews spread rock salt on roads because salt dissolved in water lowers the temperature at which it freezes.</span><span class="bond">Ionic · NaCl</span></li>
+    <li><span class="who">Nurses</span><span class="what">Nurses hang bags of normal saline as IV drips. Normal saline is 0.9% sodium chloride in water, used to replace body fluid.</span><span class="bond">Ionic · Na⁺ and Cl⁻ in water</span></li>
+    <li><span class="who">Athletes and coaches</span><span class="what">Sports drinks contain electrolytes such as sodium and potassium ions, to help replace what the body loses in sweat.</span><span class="bond">Ionic · dissolved ions</span></li>
+    <li><span class="who">Water treatment operators</span><span class="what">Because water is polar, it dissolves salts and many minerals. Water treatment operators test drinking water for what is dissolved in it and treat it to make it safe.</span><span class="bond">Polar covalent · H₂O</span></li>
+    <li><span class="who">HVAC technicians and gas utility workers</span><span class="what">Natural gas is mostly methane. HVAC techs install and repair gas furnaces, and utility workers keep the gas lines safe. Methane has no smell, so utilities add an odorant so people can notice a leak.</span><span class="bond">Covalent · CH₄</span></li>
+    <li><span class="who">Farmers</span><span class="what">Air is mostly nitrogen, but the triple bond in N₂ is so strong that plants cannot use it directly. Factories break it with high heat and pressure to make ammonia, and farmers spread nitrogen fertilizer made from it.</span><span class="bond">Covalent · N≡N</span></li>
+    <li><span class="who">Respiratory therapists</span><span class="what">Respiratory therapists give patients extra oxygen from tanks and oxygen concentrators when their lungs need help.</span><span class="bond">Covalent · O₂</span></li>
+  </ul>
+</section>
+
+<section class="check" aria-labelledby="check-h">
+  <div>
+    <p class="kicker">For the classroom</p>
+    <h2 id="check-h">Check yourself</h2>
+  </div>
+  <div>
+    <details><summary>Why does sodium become Na⁺ and not Na²⁺?</summary><p>Losing one electron leaves sodium with 2, 8, a full outer shell like neon. Taking a second electron would mean breaking into that full shell, which costs far more energy.</p></details>
+    <details><summary>Chloride has 18 electrons. How many protons does it have?</summary><p>Still 17. Gaining an electron changes the charge, not the element. 17 protons and 18 electrons give a charge of −1.</p></details>
+    <details><summary>How many shared pairs hold N₂ together?</summary><p>Three. That is a triple bond, N≡N. Each nitrogen also keeps one unshared pair, so each counts 8 outer electrons.</p></details>
+    <details><summary>Which bond is more polar, C–H or O–H?</summary><p>O–H. The electronegativity difference is 3.44 − 2.20 = 1.24, compared with 2.55 − 2.20 = 0.35 for C–H.</p></details>
+    <details><summary>Methane has four C–H bonds. Why is the molecule not polar?</summary><p>C–H bonds are only slightly uneven, and the four of them point to the corners of a tetrahedron. Their small pulls cancel out, so methane has no positive side and negative side.</p></details>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="src-h">
+  <h3 id="src-h">Where the numbers come from</h3>
+  <ul>
+    <li>3D shapes of CH₄, O₂, N₂ and H₂O: PubChem 3D conformers (CID 297, 977, 947, 962). H₂ has no PubChem 3D conformer, so it is drawn at its measured length.</li>
+    <li>Measured bond lengths and angles: NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB), experimental data.</li>
+    <li>Salt crystal: rock-salt structure, space group Fm-3m, a = 5.640 Å (Handbook of Mineralogy, halite; Wyckoff, Crystal Structures).</li>
+    <li>Ion sizes: Shannon (1976) ionic radii, Na⁺ 1.02 Å and Cl⁻ 1.81 Å.</li>
+    <li>Electronegativity: Pauling scale values.</li>
+  </ul>
+</section>
+</main>
+
+<script type="module" src="./bonds.js"></script>
+</body>
+</html>

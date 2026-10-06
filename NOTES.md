@@ -127,3 +127,52 @@ Entries without an exact structure open a lesson: name, formula, and what it is,
 `node molecules/check-geometries.mjs` checks that each ball-and-stick atom list matches its formula and that every atom has a valid valence, including formal charge and the hypervalent cases (sulfate sulfur, phosphate phosphorus).
 
 Water, carbon dioxide, ozone, methane, and ammonia use textbook gas-phase distances and angles. C₆₀ is a truncated icosahedron: 5–6 bonds 1.455 Å, 6–6 bonds 1.391 Å. The nanotube is a hydrogen-capped graphene roll, C–C about 1.42 Å. The other ball-and-stick entries use PubChem 3D conformers or PDB ideal coordinates. Atom counts have to match the formula.
+
+## How Atoms Bond · `bonds/`
+
+`bonds/index.html` — Intro chem · ionic, covalent, and polar covalent bonds. Three 3D stages, each in its own column beside the lesson text (never under it), then an **In the real world** band and a Check yourself list for the classroom. Linked from the hub header (`index.html` and `periodic-table-atoms.html`) as “How atoms bond”.
+
+`node bonds/check-bonds.mjs` checks the formulas, bond orders, valences, model distances against the measured values, the salt cell, and the page copy. `node bonds/build-geometry.mjs` rebuilds `bonds/geometry.js` from `bonds/sdf/`.
+
+### Scenes
+
+1. **Ionic · Na + Cl.** Bohr shells, B2 electrons (bright heads on faint rings, no trails). Na 11 p / 12 n / 11 e, shells 2, 8, 1 → Na⁺ 2, 8 (10 e). Cl 17 p / 18 n / 17 e, shells 2, 8, 7 → Cl⁻ 2, 8, 8 (18 e). Neutrons follow the site rule `round(mass) − Z` (Na 22.99 → 12, Cl 35.45 → 18). Steps: Atoms → Transfer → Ions → Crystal. The crystal is one conventional rock-salt cell, 3 × 3 × 3 sites, 14 Na⁺ + 13 Cl⁻, spacing a/2. Sphere radii are 42% of the Shannon ionic radii so the inside shows; Na⁺ stays smaller than Cl⁻.
+2. **Covalent.** H₂, CH₄, O₂, N₂. Each shared pair is one faint ring with two electron heads around its bond. Single, double, triple bonds draw 1, 2, 3 sticks and 1, 2, 3 rings. Unshared pairs are not drawn (the caption says so).
+3. **Polar covalent · H₂O.** δ− on O, δ+ on each H, Pauling values beside each atom. Shared-pair rings sit 36% of the way from O to H (a drawing choice to show unequal sharing, not a measured electron position).
+
+### Geometry source
+
+| Model | Source | Model value | Measured (quoted on page) |
+|---|---|---|---|
+| CH₄ | PubChem CID 297 3D conformer | C–H 1.092 Å, 109.47° | C–H 1.087 Å, 109.471° |
+| O₂ | PubChem CID 977 3D conformer | O=O 1.232 Å | 1.2075 Å |
+| N₂ | PubChem CID 947 3D conformer | N≡N 1.112 Å | 1.0977 Å |
+| H₂O | PubChem CID 962 3D conformer | O–H 0.969 Å, 104.0° | O–H 0.958 Å, 104.48° |
+| H₂ | **No PubChem 3D conformer** (PUG REST `cid/783/SDF?record_type=3d` → 404) | H–H 0.7414 Å | 0.7414 Å |
+
+SDF files fetched 2026-10-06 from `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/SDF?record_type=3d` and stored in `bonds/sdf/`. PubChem conformers are computed (MMFF94s), so their lengths differ from experiment by up to 0.025 Å; the page text quotes the measured values and the sources line says the shapes come from PubChem. H₂ is a diatomic, so its only geometric parameter is its bond length; it is placed at ±0.3707 Å from the measured r_e. NaCl has no molecular conformer either; the cell is built from the crystal structure below.
+
+### Values and sources
+
+| Value | Source |
+|---|---|
+| H–H r_e 0.7414 Å | NIST CCCBDB experimental data, H₂ (Huber & Herzberg 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=1333740 |
+| N≡N r_e 1.0977 Å | NIST CCCBDB, N₂ (Huber & Herzberg 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=7727379 |
+| O=O r_e 1.2075 Å | NIST CCCBDB, O₂ (Huber & Herzberg 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=7782447 |
+| O–H 0.958 Å, ∠HOH 104.4776° | NIST CCCBDB, H₂O (Hoy & Bunker 1979) — https://cccbdb.nist.gov/exp2x.asp?casno=7732185 |
+| C–H 1.087 Å, ∠HCH 109.471° | NIST CCCBDB, CH₄ — https://cccbdb.nist.gov/exp2x.asp?casno=74828 |
+| NaCl rock salt, Fm-3m (No. 225), a = 5.640 Å (5.6402–5.6406), Z = 4, Na–Cl = a/2 = 2.820 Å | Handbook of Mineralogy, halite (a = 5.6404 Å); COD 9008678 (Wyckoff, *Crystal Structures*, a = 5.64056 Å) |
+| Na⁺ 1.02 Å, Cl⁻ 1.81 Å (CN 6) | Shannon, *Acta Cryst.* A32, 751 (1976) |
+| Pauling χ: H 2.20, C 2.55, N 3.04, O 3.44, Na 0.93, Cl 3.16 | CRC Handbook / WebElements values, as tabulated at https://en.wikipedia.org/wiki/Electronegativities_of_the_elements_(data_page) and LibreTexts A2 |
+| Differences: H–H 0.00, C–H 0.35, O–H 1.24, Na–Cl 2.23 | computed from the Pauling values |
+| 0.4 / 1.7 polarity cut-offs | a common textbook rule of thumb; the page calls it “a rough guide, not a hard line” |
+
+Physics on the page that is stated qualitatively (no numbers): removing Na’s electron costs more energy than Cl releases on gaining it, and the lattice energy makes NaCl stable; O₂ has two unpaired electrons (paramagnetic, liquid O₂ is attracted to a magnet); N≡N is very strong, which is why fixing nitrogen (Haber–Bosch) needs high heat and pressure.
+
+### In the real world (all true, plain sentences)
+
+Rock salt on winter roads (highway maintenance crews; freezing-point depression). Normal saline, 0.9% NaCl, as IV fluid (nurses). Sodium and potassium ions in sports drinks. Water’s polarity dissolves salts and minerals (water treatment operators). Natural gas is mostly methane and is odorless, so utilities add an odorant (HVAC technicians, gas utility workers). N₂’s triple bond, ammonia, nitrogen fertilizer (farmers). Supplemental oxygen from tanks and concentrators (respiratory therapists).
+
+### Craft
+
+Same void, fonts, and satin as the rest of the site: `MeshPhysicalMaterial` metalness 0.32, roughness 0.45, clearcoat 0.22, clearcoat roughness 0.38; anisotropy 0.55 on desktop WebGL2 only, off on mobile. Protons `#ff6b3d`, neutrons `#6c84a8`, electrons `#5fd6c6`. CPK: H `#ffffff`, C `#55555c` (dark grey), N `#3050f8`, O `#ff0d0d`, Na `#ab5cf2`, Cl `#1ff01f`. Oversized Bricolage headings, outlined chapter numbers, chapters alternate text-left / stage-left, and the real-world band is a full-bleed proton-orange block. DPR ≤ 1.5. One renderer per stage, drawn only while on screen. Drag to turn on desktop; on phones the page scrolls normally over the stage and the models turn on their own.
