@@ -467,15 +467,15 @@ function bondLine(geo) {
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(row.angstrom);
   }
-  const markFor = { 1: "–", 2: "=", 3: "≡", 4: "–", 5: "–" };
+  const markFor = { 1: "–", 1.5: "–", 2: "=", 3: "≡", 4: "–", 5: "–" };
   const bits = [];
   for (const [key, lengths] of groups) {
     const [pair, order] = key.split(":");
     const lo = Math.min(...lengths);
     const hi = Math.max(...lengths);
     const shown = Math.abs(hi - lo) < 0.008 ? lo.toFixed(3) : `${lo.toFixed(3)}–${hi.toFixed(3)}`;
-    const word = order === "4" ? " aromatic" : order === "5" ? " partial" : "";
-    bits.push(`${pair[0]}${markFor[order] || "–"}${pair.slice(1)} ${shown} Å${word}${lengths.length > 1 ? ` ×${lengths.length}` : ""}`);
+    const word = order === "4" || order === "1.5" ? "aromatic " : order === "5" ? "partial " : "";
+    bits.push(`${word}${pair[0]}${markFor[order] || "–"}${pair.slice(1)} ${shown} Å${lengths.length > 1 ? ` ×${lengths.length}` : ""}`);
   }
   return bits.join(" · ");
 }
@@ -503,7 +503,8 @@ function renderPick(index) {
   const bits = touch.map((b) => {
     const other = b.i === index ? b.elB : b.elA;
     const glyph = b.order === 2 ? "=" : b.order === 3 ? "≡" : "–";
-    return `${atom.el}${glyph}${other} ${b.angstrom.toFixed(3)} Å`;
+    const word = b.order === 1.5 || b.order === 4 ? "aromatic " : b.order === 5 ? "partial " : "";
+    return `${word}${atom.el}${glyph}${other} ${b.angstrom.toFixed(3)} Å`;
   });
   const ang = angleAt(geo, index);
   const angBit = ang == null ? "" : ` · angle ${ang.toFixed(1)}°`;

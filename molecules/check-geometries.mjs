@@ -4,14 +4,25 @@
 //
 //   node molecules/check-geometries.mjs
 //
-// Bond order 4 (aromatic) and 5 (a delocalized pair) skip the classical
-// bond-order sum. Degree is still checked. Hydrogens must be degree 1.
+// Bond order 1.5 is an aromatic bond and counts in the order sum.
+// An atom in an aromatic ring may sit above the classical valence:
+// a bridgehead carbon is 4.5, a ring carbonyl carbon is 5, pyrrole
+// nitrogen is 4, and a thiophene sulfur is 3. Bond order 4 (the
+// nanotube) and 5 (ozone) skip the classical sum. Degree is still
+// checked. Hydrogens must be degree 1.
 
 import { MOLECULES } from "./molecules-data.js";
 import { GEOMETRIES } from "./geometries.js";
 
 const DEGREE = { H: new Set([1]), C: new Set([2, 3, 4]), N: new Set([2, 3]), O: new Set([1, 2]), S: new Set([1, 2]) };
 const CLASSICAL = { H: 1, C: 4, N: 3, O: 2, S: 2 };
+const AROMATIC_SUM = {
+  H: new Set([1]),
+  C: new Set([4, 4.5, 5]),
+  N: new Set([3, 4]),
+  O: new Set([2, 3]),
+  S: new Set([2, 3]),
+};
 
 function parseFormula(formula) {
   const counts = {};
@@ -41,6 +52,7 @@ function problemsFor(geo) {
   const degree = new Array(atoms.length).fill(0);
   const orderSum = new Array(atoms.length).fill(0);
   const special = new Array(atoms.length).fill(false);
+  const aromatic = new Array(atoms.length).fill(false);
   const seen = new Set();
   const adj = atoms.map(() => []);
   for (const bond of geo.bonds) {
@@ -56,7 +68,7 @@ function problemsFor(geo) {
     const key = `${Math.min(a, b)}-${Math.max(a, b)}`;
     if (seen.has(key)) problems.push(`duplicate ${key}`);
     seen.add(key);
-    if (![1, 2, 3, 4, 5].includes(order)) {
+    if (![1, 1.5, 2, 3, 4, 5].includes(order)) {
       problems.push(`bad order ${order}`);
       continue;
     }
@@ -64,7 +76,12 @@ function problemsFor(geo) {
     degree[b] += 1;
     adj[a].push(b);
     adj[b].push(a);
-    if (order === 4 || order === 5) {
+    if (order === 1.5) {
+      aromatic[a] = true;
+      aromatic[b] = true;
+      orderSum[a] += order;
+      orderSum[b] += order;
+    } else if (order === 4 || order === 5) {
       special[a] = true;
       special[b] = true;
     } else {
@@ -80,7 +97,12 @@ function problemsFor(geo) {
     }
     if (!allowed.has(degree[i])) problems.push(`${atom.el}${i} degree ${degree[i]}`);
     if (atom.el === "H" && orderSum[i] !== 1) problems.push(`H${i} order ${orderSum[i]}`);
-    if (!special[i] && orderSum[i] !== CLASSICAL[atom.el]) {
+    if (aromatic[i]) {
+      const allowedSum = AROMATIC_SUM[atom.el];
+      if (!allowedSum || !allowedSum.has(orderSum[i])) {
+        problems.push(`${atom.el}${i} aromatic valence ${orderSum[i]}`);
+      }
+    } else if (!special[i] && orderSum[i] !== CLASSICAL[atom.el]) {
       problems.push(`${atom.el}${i} valence ${orderSum[i]}`);
     }
   });
