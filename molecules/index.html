@@ -182,6 +182,8 @@
     background: var(--void);
     overflow: hidden;
   }
+  .view.mode-model { grid-template-rows: minmax(220px, 1fr) minmax(0, 280px); }
+  .view.mode-model .readout { max-height: none; min-height: 0; }
   .stage-wrap {
     position: relative;
     min-height: 0;
@@ -279,6 +281,22 @@
     line-height: 1.45;
   }
   .teach { font-size: 1.12rem; }
+  .world { margin-top: 14px; max-width: 46ch; }
+  .view.mode-card .world { margin-top: 22px; max-width: 62ch; }
+  .world h3 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.88);
+  }
+  .world p {
+    margin: 8px 0 0;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
   .note, .bonds, .pick, .hold {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -315,6 +333,7 @@
     .list { border-right: 0; border-bottom: 1px solid var(--line); }
     .mast h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
     .view.mode-model { grid-template-rows: minmax(200px, 1fr) minmax(0, 42%); }
+    .view.mode-model .readout { min-height: 0; }
     .view.mode-model h2 { font-size: 1.55rem; }
     .view.mode-card h2 { font-size: clamp(2.2rem, 10vw, 3.2rem); }
     .view.mode-model .readout { max-height: none; }
@@ -412,6 +431,17 @@ function badge(m) {
 function footer(m) {
   if (m.restraint) return "Public facts only.";
   return "";
+}
+function worldBlock(m) {
+  if (!m.world) return null;
+  const wrap = document.createElement("section");
+  wrap.className = "world";
+  const heading = document.createElement("h3");
+  heading.textContent = "In the real world";
+  const p = document.createElement("p");
+  p.textContent = m.world;
+  wrap.append(heading, p);
+  return wrap;
 }
 
 CATEGORIES.forEach((cat, i) => {
@@ -591,6 +621,8 @@ function showModel(m) {
     note.textContent = m.note;
     readout.append(note);
   }
+  const world = worldBlock(m);
+  if (world) readout.append(world);
   readout.append(bonds);
   const pick = document.createElement("p");
   pick.className = "pick";
@@ -718,6 +750,8 @@ function showCard(m) {
     }
     readout.append(facts);
   }
+  const world = worldBlock(m);
+  if (world) readout.append(world);
   if (m.note) {
     const note = document.createElement("p");
     note.className = "note";
