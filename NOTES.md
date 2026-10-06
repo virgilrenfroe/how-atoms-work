@@ -218,3 +218,57 @@ Water’s bent shape → polarity → dissolving salts (water treatment operator
 ### Craft
 
 Same void, fonts, and satin as the rest of the site. CPK: H `#ffffff`, C `#55555c`, N `#3050f8`, O `#ff0d0d`, S `#ffff30`. Bonded-pair markers teal `#5fd6c6`; lone-pair markers gold `#f0c45c`. Anisotropy 0.55 on desktop WebGL2 only, off on mobile. DPR ≤ 1.5. One renderer for the shape stage, drawn only while on screen.
+
+## How Acids and Bases Work · `acids/`
+
+`acids/index.html` — Intro chem · Brønsted–Lowry acids and bases. Five 3D stages (proton transfer, hydroxide dissolve, neutralization, strong vs weak, pH idea), an **In the real world** band, and Check yourself questions. Linked from the hub header (`index.html`) as “How acids and bases work”.
+
+`node acids/check-acids.mjs` checks formulas, connectivity, bond orders, model distances/angles against measured values, and that the page copy has no developer text. `node acids/build-geometry.mjs` rebuilds `acids/geometry.js` from `acids/sdf/`.
+
+### Teaching goals
+
+1. Acids donate H⁺ (a proton); bases accept H⁺.
+2. In water, H⁺ joins H₂O to make hydronium H₃O⁺.
+3. Strong vs weak = complete vs partial transfer (HCl vs acetic acid / vinegar).
+4. Neutralization: H₃O⁺ + OH⁻ → 2 H₂O (acid + base → water + salt).
+5. pH as a scale of how many H₃O⁺ ions are in the water (concept, not a calculator).
+
+### Scenes
+
+| Scene | Model | Source |
+|---|---|---|
+| Proton transfer | HCl, H₂O → H₃O⁺ + Cl⁻ | PubChem CID 313, 962, 123332; Cl⁻ monoatomic |
+| Hydroxide | Na⁺ + OH⁻ dissolve | OH⁻ PubChem CID 961; Na⁺ Shannon radius (NaOH has no molecular 3D) |
+| Neutralization | H₃O⁺ + OH⁻ → 2 H₂O | CID 123332, 961, 962 |
+| Strong vs weak | HCl products vs intact CH₃COOH | CID 313/123332 vs CID 176 |
+| pH | Waters + H₃O⁺ clusters | CID 962, 123332 |
+
+### Geometry source
+
+| Model | Source | Model value | Measured (quoted on page) |
+|---|---|---|---|
+| HCl | PubChem CID 313 3D | H–Cl 1.306 Å | H–Cl r_e 1.2746 Å |
+| H₂O | PubChem CID 962 3D | O–H 0.969 Å, 104.0° | O–H 0.958 Å, 104.48° |
+| H₃O⁺ | PubChem CID 123332 3D | O–H 0.991 Å, 111.4° | O–H 0.976 Å, 111.30° |
+| OH⁻ | PubChem CID 961 3D | O–H 0.970 Å | O–H 0.964 Å |
+| CH₃COOH | PubChem CID 176 3D | carboxyl O–H 0.981 Å | ~0.97 Å (typical carboxyl) |
+
+SDF files fetched 2026-10-06 from `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/<CID>/SDF?record_type=3d`. **NaOH** (CID 14798) returns 404 for `record_type=3d` because it is an ionic lattice, not a covalent molecule; the lesson draws dissolved Na⁺ and OH⁻ instead.
+
+### Values and sources
+
+| Value | Source |
+|---|---|
+| HCl r_e 1.2746 Å | NIST CCCBDB / Huber & Herzberg |
+| H₂O O–H 0.958 Å, ∠HOH 104.48° | NIST CCCBDB (Hoy & Bunker 1979) |
+| H₃O⁺ O–H 0.976 Å, ∠HOH 111.30° | NIST CCCBDB experimental |
+| OH⁻ O–H 0.964 Å | NIST CCCBDB experimental |
+| Na⁺ 1.02 Å | Shannon (1976) ionic radii, CN 6 |
+
+### In the real world (all true, plain sentences)
+
+Stomach acid / antacids (nurses, pharmacists). Pool pH (pool technicians). Soil lime (farmers). Vinegar cleaning (janitorial workers). Battery acid (auto technicians). Baking soda in dough (bakers). Wastewater neutralization (water treatment operators).
+
+### Craft
+
+Same void, fonts, and satin as the rest of the site. CPK: H `#ffffff`, C `#55555c`, O `#ff0d0d`, Cl `#1ff01f`, Na `#ab5cf2`. Stage and lesson text in separate columns. Anisotropy off on mobile. DPR ≤ 1.5.
