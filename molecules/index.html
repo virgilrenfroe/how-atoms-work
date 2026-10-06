@@ -182,8 +182,27 @@
     background: var(--void);
     overflow: hidden;
   }
-  .view.mode-model { grid-template-rows: minmax(220px, 1fr) minmax(0, 280px); }
-  .view.mode-model .readout { max-height: none; min-height: 0; }
+  .view.mode-model { grid-template-rows: minmax(200px, 1fr) 45%; }
+  .lesson {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+  }
+  .view.mode-model .lesson,
+  .view.mode-card .lesson { height: 100%; }
+  .lesson::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 14px;
+    bottom: 0;
+    height: 42px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(20, 8, 24, 0), rgba(20, 8, 24, 0.94) 72%, #140818);
+    opacity: 0;
+  }
+  .lesson.is-more::after { opacity: 1; }
   .stage-wrap {
     position: relative;
     min-height: 0;
@@ -201,7 +220,9 @@
   .readout {
     border-top: 1px solid var(--line);
     padding: 12px 18px max(14px, var(--safe-b)) 20px;
-    max-height: min(40%, 300px);
+    max-height: none;
+    height: 100%;
+    min-height: 0;
     overflow: auto;
     background: var(--void);
   }
@@ -333,7 +354,6 @@
     .list { border-right: 0; border-bottom: 1px solid var(--line); }
     .mast h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
     .view.mode-model { grid-template-rows: minmax(200px, 1fr) minmax(0, 42%); }
-    .view.mode-model .readout { min-height: 0; }
     .view.mode-model h2 { font-size: 1.55rem; }
     .view.mode-card h2 { font-size: clamp(2.2rem, 10vw, 3.2rem); }
     .view.mode-model .readout { max-height: none; }
@@ -365,7 +385,9 @@
       <div class="stage-wrap">
         <div id="stage"></div>
       </div>
-      <article class="readout" id="readout"></article>
+      <div class="lesson">
+        <article class="readout" id="readout"></article>
+      </div>
     </section>
   </div>
 </div>
@@ -400,6 +422,15 @@ if (countEl) countEl.textContent = String(MOLECULES.length);
 const catalog = document.getElementById("catalog");
 const view = document.getElementById("view");
 const readout = document.getElementById("readout");
+function syncReadoutCue() {
+  const lesson = readout.closest(".lesson");
+  if (!lesson) return;
+  const extra = readout.scrollHeight - readout.clientHeight;
+  const room = readout.scrollHeight - readout.scrollTop - readout.clientHeight;
+  lesson.classList.toggle("is-more", extra > 8 && room > 8);
+}
+readout.addEventListener("scroll", syncReadoutCue, { passive: true });
+window.addEventListener("resize", syncReadoutCue);
 
 function formatFormula(raw) {
   if (!raw) return "";
@@ -576,11 +607,13 @@ function renderPick(index) {
 function showModel(m) {
   const geo = GEOMETRIES[m.id];
   view.className = "view mode-model";
+  readout.scrollTop = 0;
   readout.replaceChildren();
   if (!geo) {
     errEl.style.display = "block";
     errEl.textContent = "This model is not on the page yet.";
     readout.append(errEl);
+    requestAnimationFrame(syncReadoutCue);
     return;
   }
   const got = countLine(geo);
@@ -588,6 +621,7 @@ function showModel(m) {
     errEl.style.display = "block";
     errEl.textContent = "The atom count does not match the formula, so the model stays hidden.";
     readout.append(errEl);
+    requestAnimationFrame(syncReadoutCue);
     return;
   }
   errEl.style.display = "none";
@@ -646,6 +680,7 @@ function showModel(m) {
     readout.append(hold);
   }
   if (viewer) viewer.resize();
+  requestAnimationFrame(syncReadoutCue);
 }
 
 function svgEl(name, attrs) {
@@ -714,6 +749,7 @@ function patternSketch(kind) {
 function showCard(m) {
   view.className = "view mode-card";
   if (viewer) viewer.setVisible(false);
+  readout.scrollTop = 0;
   readout.replaceChildren();
   const h = document.createElement("h2");
   h.textContent = m.name;
@@ -765,6 +801,7 @@ function showCard(m) {
     hold.textContent = line;
     readout.append(hold);
   }
+  requestAnimationFrame(syncReadoutCue);
 }
 
 function openMolecule(id, scroll) {
