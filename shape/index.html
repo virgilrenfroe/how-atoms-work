@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="How molecules shape: VSEPR, electron pairs, and 3D shapes from linear to bent. An intro chemistry lesson for students and teachers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>How Molecules Shape · VSEPR · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --void-2: #1d0c23;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.66);
+    --line: rgba(239, 230, 242, 0.18);
+    --proton: #ff6b3d;
+    --electron: #5fd6c6;
+    --lone: #f0c45c;
+    --h: #ffffff;
+    --c: #6b6b72;
+    --n: #4f6bff;
+    --o: #ff2a2a;
+    --s: #ffe14a;
+    --pad: clamp(18px, 4.4vw, 72px);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--void); }
+  body {
+    margin: 0; background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans); font-size: 18px; line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: inherit; }
+  sub, sup { line-height: 0; }
+
+  .mast {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 18px var(--pad); border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mast .home { text-decoration: none; font-weight: 700; }
+  .mast nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .mast nav a { text-decoration: none; color: var(--mute); }
+  .mast nav a:hover, .mast nav a:focus-visible { color: var(--pearl); }
+
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(20px, 4vw, 60px); align-items: end;
+    padding: clamp(40px, 8vw, 120px) var(--pad) clamp(36px, 6vw, 90px);
+  }
+  .kicker {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--proton); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(56px, 11vw, 200px); line-height: 0.84; letter-spacing: -0.045em;
+    margin: 0;
+  }
+  h1 .hot { color: var(--proton); display: block; padding-left: 0.9em; }
+  .lede { font-size: clamp(19px, 1.6vw, 24px); line-height: 1.45; margin: 0 0 18px; max-width: 32ch; }
+  .toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .toc li { border-bottom: 1px solid var(--line); }
+  .toc a { display: flex; gap: 14px; padding: 10px 0; text-decoration: none; font-weight: 600; }
+  .toc a span { font-family: var(--font-mono); color: var(--mute); font-weight: 400; min-width: 2ch; }
+  .toc a:hover, .toc a:focus-visible { color: var(--electron); }
+
+  .why {
+    display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: clamp(20px, 4vw, 60px); padding: clamp(40px, 6vw, 90px) var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .why h2 { grid-column: 1 / span 2; }
+  .why .body { grid-column: 2 / span 1; }
+  .why .rules { grid-column: 3; align-self: start; }
+  h2 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.035em;
+    font-size: clamp(40px, 6.2vw, 104px); line-height: 0.9; margin: 0 0 24px;
+  }
+  .body p { margin: 0 0 16px; max-width: 58ch; }
+  .rules { font-family: var(--font-mono); font-size: 14px; }
+  .rules div { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .rules b { display: block; color: var(--electron); margin-bottom: 4px; }
+
+  .chapter {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(22px, 3.6vw, 60px); align-items: start;
+    padding: clamp(40px, 6vw, 96px) var(--pad); border-top: 1px solid var(--line);
+  }
+  .num {
+    font-family: var(--font-display); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em;
+    font-size: clamp(88px, 13vw, 220px); margin: 0 0 6px;
+    color: transparent; -webkit-text-stroke: 2px var(--proton);
+  }
+  .chapter h2 { font-size: clamp(38px, 4.6vw, 80px); }
+  .copy p { margin: 0 0 14px; max-width: 54ch; }
+  .copy .small { font-size: 15px; color: var(--mute); }
+  .steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 18px; }
+  .steps button {
+    font: 700 13px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--pearl); background: transparent; border: 1.5px solid var(--pearl);
+    padding: 12px 14px; border-radius: 999px; cursor: pointer; min-height: 44px;
+  }
+  .steps button[aria-pressed="true"] { background: var(--electron); border-color: var(--electron); color: var(--void); }
+  .steps button:focus-visible { outline: 3px solid var(--proton); outline-offset: 2px; }
+  .say { font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; min-height: 5.2em; }
+  .read {
+    width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; margin: 8px 0 18px;
+  }
+  .read th, .read td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .read th { font-weight: 400; color: var(--mute); }
+  .read td b { font-weight: 700; }
+  .chip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+  .stage-col { min-width: 0; position: sticky; top: 16px; }
+  .stage {
+    position: relative; height: clamp(440px, 76vh, 780px); min-width: 0;
+    background: var(--void-2); border: 1px solid var(--line); overflow: hidden;
+  }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage .lbl {
+    position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--pearl);
+    transform: translate(-50%, -50%); text-shadow: 0 1px 6px rgba(20, 8, 24, 0.9);
+  }
+  .stage .lbl.big { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); font-weight: 800; letter-spacing: -0.02em; }
+  .stage .lbl.angle {
+    font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 48px); font-weight: 800;
+    letter-spacing: -0.03em; color: var(--proton); text-shadow: 0 2px 12px rgba(20, 8, 24, 0.95);
+  }
+  .stage .lbl.atom { font-size: 13px; color: var(--void); background: rgba(239, 230, 242, 0.88); padding: 1px 6px; border-radius: 4px; text-shadow: none; }
+  .stage .lbl.dim { color: var(--mute); font-weight: 400; font-size: 12px; }
+  .stage .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--pearl); opacity: 0.6; pointer-events: none; }
+  .stage .tick.a { top: 10px; left: 10px; border-width: 1.5px 0 0 1.5px; }
+  .stage .tick.b { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+  .caption { font-family: var(--font-mono); font-size: 12px; color: var(--mute); margin: 10px 0 0; line-height: 1.5; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-mono); font-size: 12px; margin: 10px 0 0; }
+
+  .catalog {
+    padding: clamp(40px, 6vw, 96px) var(--pad); border-top: 1px solid var(--line);
+  }
+  .catalog h2 { margin-bottom: clamp(20px, 3vw, 40px); }
+  .shape-grid {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0; border-top: 1px solid var(--line);
+  }
+  .shape-card {
+    border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+    padding: 18px 16px 22px; min-width: 0;
+  }
+  .shape-card:nth-child(5n) { border-right: 0; }
+  .shape-card .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--electron); margin: 0 0 8px; }
+  .shape-card h3 { font-family: var(--font-display); font-size: clamp(22px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; line-height: 1.05; }
+  .shape-card p { margin: 0; font-size: 15px; color: var(--mute); line-height: 1.45; }
+  .shape-card .ang { font-family: var(--font-mono); color: var(--proton); font-weight: 700; display: block; margin-top: 10px; font-size: 13px; }
+
+  .real { background: var(--proton); color: var(--void); padding: clamp(48px, 7vw, 110px) var(--pad); }
+  .real .kicker { color: var(--void); }
+  .real h2 { font-size: clamp(52px, 9vw, 160px); margin-bottom: clamp(24px, 4vw, 56px); }
+  .uses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 5vw, 80px); }
+  .uses li { border-top: 2px solid var(--void); padding: 16px 0 22px; }
+  .uses .who { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .uses .what { font-family: var(--font-display); font-weight: 700; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.18; letter-spacing: -0.01em; }
+  .uses .bond { font-family: var(--font-mono); font-size: 12px; display: block; margin-top: 8px; }
+
+  .check { padding: clamp(40px, 6vw, 96px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 4vw, 60px); }
+  details { border-top: 1px solid var(--line); padding: 14px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; font-size: 19px; }
+  details p { margin: 10px 0 0; color: var(--mute); max-width: 60ch; }
+  .sources { padding: 28px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
+  .sources h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pearl); margin: 0 0 10px; }
+  .sources ul { margin: 0; padding-left: 18px; }
+  .sources li { margin: 4px 0; overflow-wrap: anywhere; }
+
+  @media (max-width: 1100px) {
+    .why { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+    .why h2 { grid-column: 1 / -1; }
+    .why .body { grid-column: 1; }
+    .why .rules { grid-column: 2; }
+    .shape-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .shape-card:nth-child(5n) { border-right: 1px solid var(--line); }
+    .shape-card:nth-child(3n) { border-right: 0; }
+  }
+  @media (max-width: 860px) {
+    body { font-size: 17px; }
+    .hero, .why, .chapter, .check { grid-template-columns: minmax(0, 1fr); }
+    .why h2, .why .body, .why .rules { grid-column: 1; }
+    .stage-col { position: static; }
+    .stage { height: clamp(360px, 62vh, 540px); }
+    .uses { grid-template-columns: minmax(0, 1fr); }
+    h1 .hot { padding-left: 0.5em; }
+    .say { min-height: 0; }
+    .shape-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .shape-card:nth-child(3n) { border-right: 1px solid var(--line); }
+    .shape-card:nth-child(2n) { border-right: 0; }
+  }
+  @media (max-width: 520px) {
+    .shape-grid { grid-template-columns: minmax(0, 1fr); }
+    .shape-card { border-right: 0 !important; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<header class="mast">
+  <a class="home" href="../">How Atoms Work</a>
+  <nav aria-label="Lessons">
+    <a href="../">Periodic table</a>
+    <a href="../molecules/index.html">Molecules</a>
+    <a href="../ethanol.html">Ethanol</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="kicker">Intro chemistry · Molecular geometry · VSEPR</p>
+    <h1>How molecules <span class="hot">shape</span></h1>
+  </div>
+  <div>
+    <p class="lede">Electron pairs around a central atom push apart. That push sets the three-dimensional shape of the molecule.</p>
+    <ol class="toc">
+      <li><a href="#why"><span>01</span>Why pairs push</a></li>
+      <li><a href="#shapes"><span>02</span>Five shapes to learn</a></li>
+      <li><a href="#catalog"><span>03</span>Shape at a glance</a></li>
+      <li><a href="#real-world"><span>04</span>In the real world</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="why" id="why" aria-labelledby="why-h">
+  <h2 id="why-h">Why pairs push</h2>
+  <div class="body">
+    <p>Chemists call this idea <strong>VSEPR</strong>: valence shell electron pair repulsion. The outer electrons around a central atom arrange themselves so that each pair of electrons is as far from the others as it can get.</p>
+    <p>A <strong>bonded pair</strong> is shared with another atom. A <strong>lone pair</strong> stays on the central atom alone. Lone pairs take a little more room than bonded pairs, so they squeeze the bond angles down.</p>
+    <p>Count the electron domains around the central atom — each bonded group plus each lone pair — and you can predict the shape before you look at the model.</p>
+  </div>
+  <div class="rules" aria-label="VSEPR counting rules">
+    <div><b>Count domains</b>Each lone pair counts as one. Each bonded atom counts as one, even if the bond is double or triple.</div>
+    <div><b>Lone pairs push harder</b>They sit closer to the central atom, so they bend bonded pairs away.</div>
+    <div><b>Shape is the atom frame</b>We name the shape by where the atoms sit, not by where the lone pairs sit.</div>
+  </div>
+</section>
+
+<section class="chapter" id="shapes" aria-labelledby="shapes-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">02</p>
+    <p class="kicker">Interactive models · PubChem 3D</p>
+    <h2 id="shapes-h">Five shapes to learn</h2>
+    <p>Pick a molecule. Teal markers show bonded electron pairs. Gold markers show lone pairs. The big number is the measured bond angle in the gas phase.</p>
+    <div class="steps" role="group" aria-label="Choose a molecular shape" data-steps="shape">
+      <button type="button" data-step="CO2" aria-pressed="true">CO₂ · linear</button>
+      <button type="button" data-step="SO3" aria-pressed="false">SO₃ · planar</button>
+      <button type="button" data-step="CH4" aria-pressed="false">CH₄ · tetrahedral</button>
+      <button type="button" data-step="NH3" aria-pressed="false">NH₃ · pyramidal</button>
+      <button type="button" data-step="H2O" aria-pressed="false">H₂O · bent</button>
+    </div>
+    <p class="say" id="shape-say" aria-live="polite"></p>
+    <table class="read" id="shape-read" aria-label="Shape facts"></table>
+    <p class="small">The 3D coordinates come from PubChem conformers. The angle printed on the stage is the measured experimental value, not the slightly different conformer angle.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="shape" role="img" aria-label="3D model of the chosen molecule with bonded pairs, lone pairs, and the measured bond angle."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--c)"></i>C</span>
+      <span><i class="chip" style="background:var(--n)"></i>N</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--s)"></i>S</span>
+      <span><i class="chip" style="background:var(--electron)"></i>bonded pair</span>
+      <span><i class="chip" style="background:var(--lone)"></i>lone pair</span>
+    </div>
+    <p class="caption" id="shape-cap">Drag to turn on a desktop. On a phone the model turns on its own.</p>
+  </div>
+</section>
+
+<section class="catalog" id="catalog" aria-labelledby="cat-h">
+  <p class="kicker">03 · Quick reference</p>
+  <h2 id="cat-h">Shape at a glance</h2>
+  <div class="shape-grid">
+    <article class="shape-card">
+      <p class="tag">2 domains · 0 lone</p>
+      <h3>Linear</h3>
+      <p>CO₂. Two double bonds on opposite sides of carbon. The molecule is a straight line.</p>
+      <span class="ang">∠ O–C–O = 180°</span>
+    </article>
+    <article class="shape-card">
+      <p class="tag">3 domains · 0 lone</p>
+      <h3>Trigonal planar</h3>
+      <p>SO₃. Three oxygens around sulfur in one flat plane, 120° apart.</p>
+      <span class="ang">∠ O–S–O = 120°</span>
+    </article>
+    <article class="shape-card">
+      <p class="tag">4 domains · 0 lone</p>
+      <h3>Tetrahedral</h3>
+      <p>CH₄. Four hydrogens at the corners of a tetrahedron. No lone pairs to squeeze the angle.</p>
+      <span class="ang">∠ H–C–H ≈ 109.5°</span>
+    </article>
+    <article class="shape-card">
+      <p class="tag">4 domains · 1 lone</p>
+      <h3>Trigonal pyramidal</h3>
+      <p>NH₃. Three hydrogens plus one lone pair. The lone pair pushes the hydrogens down into a pyramid.</p>
+      <span class="ang">∠ H–N–H ≈ 107°</span>
+    </article>
+    <article class="shape-card">
+      <p class="tag">4 domains · 2 lone</p>
+      <h3>Bent</h3>
+      <p>H₂O. Two hydrogens plus two lone pairs. The lone pairs bend the molecule like a boomerang.</p>
+      <span class="ang">∠ H–O–H ≈ 104.5°</span>
+    </article>
+  </div>
+</section>
+
+<section class="real" id="real-world" aria-labelledby="real-h">
+  <p class="kicker">04 · Where shape matters</p>
+  <h2 id="real-h">In the real world</h2>
+  <ul class="uses">
+    <li><span class="who">Water treatment operators</span><span class="what">Water’s bent shape makes the molecule polar, so it dissolves salts and many minerals. Water treatment operators test what is dissolved and treat the water to make it safe to drink.</span><span class="bond">Bent · H₂O</span></li>
+    <li><span class="who">HVAC technicians and gas utility workers</span><span class="what">Natural gas is mostly methane. Its tetrahedral shape has no positive side and negative side, so methane is nonpolar and mixes with other fuels. HVAC techs install gas furnaces, and utility workers keep the lines safe. Methane has no smell, so utilities add an odorant so people can notice a leak.</span><span class="bond">Tetrahedral · CH₄</span></li>
+    <li><span class="who">Beverage plant techs and firefighters</span><span class="what">Carbon dioxide is linear. Beverage plant technicians dissolve CO₂ into drinks for carbonation. Firefighters use CO₂ extinguishers because the gas smothers fire by pushing oxygen away, and dry ice is solid CO₂ used for cold shipping.</span><span class="bond">Linear · CO₂</span></li>
+    <li><span class="who">Farmers and janitorial chemists</span><span class="what">Ammonia’s pyramidal shape and lone pair make it a base that reacts with acids. Farmers spread ammonia-based fertilizer on fields. Janitorial chemists formulate ammonia cleaners that cut grease on hard surfaces.</span><span class="bond">Trigonal pyramidal · NH₃</span></li>
+    <li><span class="who">Pharmacists and medicinal chemists</span><span class="what">Drug molecules have a precise three-dimensional shape. Pharmacists dispense medicines whose shapes fit receptor sites in the body, and medicinal chemists design those shapes so a drug binds where it should and nowhere else.</span><span class="bond">Shape · receptors</span></li>
+    <li><span class="who">Sulfuric acid plant operators</span><span class="what">Sulfur trioxide is a flat molecule used to make sulfuric acid. Plant operators handle SO₃ carefully because it reacts with water to form the acid used in batteries, fertilizers, and refining.</span><span class="bond">Trigonal planar · SO₃</span></li>
+  </ul>
+</section>
+
+<section class="check" aria-labelledby="check-h">
+  <div>
+    <p class="kicker">For the classroom</p>
+    <h2 id="check-h">Check yourself</h2>
+  </div>
+  <div>
+    <details><summary>Why is CO₂ linear but H₂O bent?</summary><p>Carbon in CO₂ has two electron domains and no lone pairs, so the oxygens sit opposite each other at 180°. Oxygen in H₂O has four domains — two bonded pairs and two lone pairs — so the hydrogens are pushed into a bent shape near 104.5°.</p></details>
+    <details><summary>Methane and ammonia both have four electron domains. Why are their shapes different?</summary><p>Methane has four bonded pairs and no lone pairs, so the atoms form a tetrahedron. Ammonia has three bonded pairs and one lone pair. We name the shape by the atoms only, so ammonia is trigonal pyramidal, and the lone pair squeezes the H–N–H angle down to about 107°.</p></details>
+    <details><summary>Does a double bond count as one domain or two?</summary><p>One. In VSEPR counting, a double or triple bond to the same atom is still one electron domain. That is why CO₂ has two domains, not four.</p></details>
+    <details><summary>Which molecule has the smallest bond angle here, and why?</summary><p>Water, at about 104.5°. It has two lone pairs. Lone pairs take more room than bonded pairs, so two of them squeeze the H–O–H angle more than ammonia’s single lone pair squeezes H–N–H.</p></details>
+    <details><summary>SO₃ is trigonal planar. What would change if sulfur also kept a lone pair?</summary><p>Four domains with one lone pair would make a trigonal pyramidal atom frame, like ammonia. Sulfur in SO₃ has no lone pair in the VSEPR count used here, so the three oxygens stay flat at 120°.</p></details>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="src-h">
+  <h3 id="src-h">Where the numbers come from</h3>
+  <ul>
+    <li>3D shapes of CO₂, SO₃, CH₄, NH₃ and H₂O: PubChem 3D conformers (CID 280, 24682, 297, 222, 962). BF₃, PCl₅ and SF₆ have no PubChem 3D conformer, so they are not modelled here.</li>
+    <li>Measured bond lengths and angles: NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB), experimental data — CO₂ 180°, SO₃ 120°, CH₄ 109.471°, NH₃ 106.67°, H₂O 104.4776°.</li>
+    <li>VSEPR shapes follow the standard domain-counting rules taught in intro chemistry.</li>
+  </ul>
+</section>
+</main>
+
+<script type="module" src="./shape.js"></script>
+</body>
+</html>
