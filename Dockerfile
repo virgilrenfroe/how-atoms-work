@@ -4,5 +4,6 @@ COPY *.html *.js /srv/
 COPY NOTES.md README.md .nojekyll /srv/
 COPY molecules /srv/molecules
 COPY vendor /srv/vendor
+COPY bonds /srv/bonds
 EXPOSE 8080
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
