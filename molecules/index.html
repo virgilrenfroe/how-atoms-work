@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-<title>100 incredible molecules · How Atoms Work</title>
+<title>115 incredible molecules · How Atoms Work</title>
 <style>
   :root {
     --font-display: "Bricolage Grotesque", system-ui, sans-serif;
@@ -305,7 +305,7 @@
   <div class="workspace">
     <aside class="list" id="list" aria-label="Molecule groups">
       <div class="mast">
-        <h1><span class="num">100</span><span class="name">incredible molecules</span></h1>
+        <h1><span class="num">115</span><span class="name">incredible molecules</span></h1>
       </div>
       <div id="catalog"></div>
     </aside>
@@ -342,6 +342,8 @@ const SWATCH = {
 };
 
 const byId = Object.fromEntries(MOLECULES.map((m) => [m.id, m]));
+const countEl = document.querySelector(".mast .num");
+if (countEl) countEl.textContent = String(MOLECULES.length);
 const catalog = document.getElementById("catalog");
 const view = document.getElementById("view");
 const readout = document.getElementById("readout");

@@ -1,5 +1,4 @@
-// 100 Incredible Molecules — catalog for the gallery.
-// One teaching sentence each. No preparations.
+// Molecule catalog for the gallery. One teaching sentence each. No preparations.
 
 export const CATEGORIES = [
   {
@@ -56,10 +55,15 @@ export const CATEGORIES = [
 
 export const MOLECULES = [
   // History-changers & life-savers
+  { id: "urea", name: "Urea", formula: "CH4N2O", category: "history", structureMode: "ballstick", teach: "Urea is the nitrogen waste in urine. Making it from inorganic salts showed that an organic molecule did not need a living body." },
+  { id: "benzene", name: "Benzene", formula: "C6H6", category: "history", structureMode: "ballstick", teach: "Benzene is a ring of six carbons and six hydrogens. That ring shows up in dyes, fuels, and many medicines.", note: "All six carbon–carbon bonds in this model are 1.395 Å. The double lines are one Kekulé drawing of that equal ring." },
   { id: "penicillin-g", name: "Penicillin G", formula: "C16H18N2O4S", category: "history", structureMode: "ballstick", teach: "Penicillin G is an antibiotic. Its use opened the antibiotic age.", note: "This is the natural shape. Double lines in the ring are one Kekulé drawing." },
   { id: "aspirin", name: "Acetylsalicylic acid", formula: "C9H8O4", category: "history", structureMode: "ballstick", teach: "Aspirin is a pain reliever and a fever reducer. This drawing is acetylsalicylic acid.", note: "Double lines in the ring are one Kekulé drawing of an aromatic ring." },
+  { id: "paracetamol", name: "Paracetamol", formula: "C8H9NO2", category: "history", structureMode: "ballstick", teach: "Paracetamol, also called acetaminophen, is a common pain reliever and fever reducer.", note: "Double lines in the ring are one Kekulé drawing of an aromatic ring." },
+  { id: "ibuprofen", name: "Ibuprofen", formula: "C13H18O2", category: "history", structureMode: "ballstick", teach: "Ibuprofen is a pain reliever. This model is the S form, the mirror image that does the work. Many tablets contain both mirror images.", note: "Double lines in the ring are one Kekulé drawing of an aromatic ring." },
   { id: "dna", name: "DNA", formula: "", formulaLabel: "double helix", category: "history", structureMode: "card-only", teach: "DNA is the double helix that stores genetic instructions, a polymer of four bases, too long for one model here." },
   { id: "glucose", name: "Glucose", formula: "C6H12O6", category: "history", structureMode: "ballstick", teach: "Glucose is the sugar your cells use for fuel. This model is β-D-glucose in the chair shape." },
+  { id: "sucrose", name: "Sucrose", formula: "C12H22O11", category: "history", structureMode: "ballstick", teach: "Sucrose is table sugar. One half is glucose and the other half is fructose.", note: "The six-membered ring is the glucose half. The five-membered ring is the fructose half." },
   { id: "quinine", name: "Quinine", formula: "C20H24N2O2", category: "history", structureMode: "ballstick", teach: "Quinine is a malaria medicine first taken from cinchona bark.", note: "This is quinine, not quinidine. Double lines in the ring are one Kekulé drawing." },
   { id: "morphine", name: "Morphine", formula: "C17H19NO3", category: "history", structureMode: "card-only", teach: "Morphine is a powerful pain medicine from the opium poppy. It is tightly controlled." },
   { id: "insulin", name: "Insulin", formula: "", formulaLabel: "protein", category: "history", structureMode: "card-only", teach: "Insulin is a protein hormone. People with type 1 diabetes take a medical form of it." },
@@ -90,6 +94,11 @@ export const MOLECULES = [
   { id: "trimethylamine", name: "Trimethylamine", formula: "C3H9N", category: "sensory", structureMode: "ballstick", teach: "Trimethylamine smells like old fish. Bodies make a little of it, and bacteria make more.", note: "Nitrogen sits at the top of a shallow pyramid. Each carbon–nitrogen–carbon angle in this model is 110.5°." },
   { id: "cadaverine", name: "Cadaverine", formula: "C5H14N2", category: "sensory", structureMode: "ballstick", teach: "Cadaverine is one of the molecules in the smell of decay. It is a five-carbon diamine." },
   { id: "isoamyl-acetate", name: "Isoamyl acetate", formula: "C7H14O2", category: "sensory", structureMode: "ballstick", teach: "Isoamyl acetate smells like banana. It is the ester in some candies and in a ripe banana." },
+  { id: "acetic-acid", name: "Acetic acid", formula: "C2H4O2", category: "sensory", structureMode: "ballstick", teach: "Acetic acid is the sour molecule in vinegar." },
+  { id: "citric-acid", name: "Citric acid", formula: "C6H8O7", category: "sensory", structureMode: "ballstick", teach: "Citric acid is the sour molecule in lemons. Cells also use it while they break food down for energy." },
+  { id: "limonene", name: "(R)-Limonene", formula: "C10H16", category: "sensory", structureMode: "ballstick", teach: "This is (R)-limonene, the form in orange peel. Its mirror image smells more like pine or lemon." },
+  { id: "carvone-r", name: "(R)-Carvone", formula: "C10H14O", category: "sensory", structureMode: "ballstick", teach: "This is (R)-carvone. It smells like spearmint. Its mirror image, (S)-carvone, smells like caraway." },
+  { id: "carvone-s", name: "(S)-Carvone", formula: "C10H14O", category: "sensory", structureMode: "ballstick", teach: "This is (S)-carvone. It smells like caraway. It is the mirror image of the spearmint form." },
 
   // High energy & explosives — cards only
   { id: "tnt", name: "TNT", formula: "C7H5N3O6", category: "energy", structureMode: "card-only", restraint: true, teach: "TNT is a solid explosive that shows up in lessons about demolition and war." },
@@ -117,6 +126,9 @@ export const MOLECULES = [
 
   // Mind-alterers & neurotransmitters
   { id: "dopamine", name: "Dopamine", formula: "C8H11NO2", category: "mind", structureMode: "ballstick", teach: "Dopamine is a neurotransmitter tied to reward, movement, and attention.", note: "This model is the neutral molecule. In the body the nitrogen is usually charged. Double lines in the ring are one Kekulé drawing." },
+  { id: "adrenaline", name: "Adrenaline", formula: "C9H13NO3", category: "mind", structureMode: "ballstick", teach: "Adrenaline, also called epinephrine, is the hormone of a sudden scare. This is the R form the body makes.", note: "This model is the neutral molecule. In the body the nitrogen is usually charged. Double lines in the ring are one Kekulé drawing." },
+  { id: "l-dopa", name: "L-DOPA", formula: "C9H11NO4", category: "mind", structureMode: "ballstick", teach: "L-DOPA is the amino acid the body turns into dopamine. This is the L form used as a medicine.", note: "This model is the neutral acid. In water the nitrogen is usually charged. Double lines in the ring are one Kekulé drawing." },
+  { id: "histamine", name: "Histamine", formula: "C5H9N3", category: "mind", structureMode: "ballstick", teach: "Histamine is the signal behind a hive, a sneeze, and a lot of stomach acid.", note: "This model is the neutral molecule. In the body the side-chain nitrogen is usually charged. Double lines in the ring are one Kekulé drawing." },
   { id: "serotonin", name: "Serotonin", formula: "C10H12N2O", category: "mind", structureMode: "ballstick", teach: "Serotonin is a neurotransmitter that lessons connect with mood, sleep, and digestion.", note: "This model is the neutral molecule. In the body the side-chain nitrogen is usually charged. Double lines in the rings are one Kekulé drawing." },
   { id: "caffeine", name: "Caffeine", formula: "C8H10N4O2", category: "mind", structureMode: "ballstick", teach: "Caffeine is the molecule in coffee and tea that keeps you alert.", note: "Double lines in the rings are one Kekulé drawing. The rings are aromatic." },
   { id: "lsd", name: "LSD", formula: "C20H25N3O", category: "mind", structureMode: "card-only", restraint: true, teach: "LSD is a synthetic molecule that changes perception. Possessing it without authority is illegal." },
@@ -152,6 +164,8 @@ export const MOLECULES = [
   { id: "iron-oxide", name: "Iron(III) oxide", formula: "Fe2O3", category: "cosmos", structureMode: "card-only", teach: "Iron(III) oxide is the red of rust. Fe2O3 counts two irons for every three oxygens." },
 
   // Botanical & animal anomalies
+  { id: "glycine", name: "Glycine", formula: "C2H5NO2", category: "bio", structureMode: "ballstick", teach: "Glycine is the smallest amino acid. Its central carbon holds two hydrogens, so it has no mirror image.", note: "This model is the neutral acid. In water the nitrogen is usually charged and the acid has given up its hydrogen." },
+  { id: "thymine", name: "Thymine", formula: "C5H6N2O2", category: "bio", structureMode: "ballstick", teach: "Thymine is a DNA base. It pairs with adenine. RNA uses uracil in thymine's place.", note: "Double lines in the ring are one Kekulé drawing." },
   { id: "chlorophyll-a", name: "Chlorophyll a", formula: "C55H72MgN4O5", category: "bio", structureMode: "card-only", teach: "Chlorophyll a is the green pigment that catches light in plants. Magnesium sits in a large ring." },
   { id: "hemoglobin", name: "Hemoglobin", formula: "", formulaLabel: "protein", category: "bio", structureMode: "card-only", teach: "Hemoglobin is the protein in red blood cells that carries oxygen. Iron sits in each heme." },
   { id: "resveratrol", name: "Resveratrol", formula: "C14H12O3", category: "bio", structureMode: "ballstick", teach: "Resveratrol is a molecule in grape skins, studied for what it does in the body.", note: "The link between the rings is trans. Double lines in the rings are one Kekulé drawing." },

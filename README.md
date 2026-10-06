@@ -17,7 +17,7 @@ The molecule gallery is the same kind of split. Categories and names stay in one
 - [`index.html`](index.html) — homepage. Full H–Og periodic table and the WebGL drill-down.
 - [`periodic-table-atoms.html`](periodic-table-atoms.html) — the same lesson at the source filename.
 - [`ethanol.html`](ethanol.html) — Intro chem · molecular structure / bonding. Satin ethanol, C₂H₆O, anti conformer.
-- [`molecules/index.html`](molecules/index.html) — 100 incredible molecules. Category hub, teaching cards, and ball-and-stick models.
+- [`molecules/index.html`](molecules/index.html) — 115 incredible molecules. Category hub, teaching cards, and ball-and-stick models.
 - [`molecules/molecules-data.js`](molecules/molecules-data.js) — the hundred entries (id, name, formula, category, teaching sentence, structure mode).
 - [`molecules/geometries.js`](molecules/geometries.js) — coordinates for the ball-and-stick set.
 - [`molecules/check-geometries.mjs`](molecules/check-geometries.mjs) — checks each model’s formula against its atoms, and each atom’s valence.

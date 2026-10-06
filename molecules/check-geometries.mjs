@@ -1,5 +1,6 @@
-// Checks every ball-and-stick model: the atom list matches the stated
-// formula, and every atom has a valid valence.
+// Checks every ball-and-stick model in the catalog, including later
+// waves: the atom list matches the stated formula, and every atom has
+// a valid valence. A new element needs an entry in DEGREE and CLASSICAL.
 //
 //   node molecules/check-geometries.mjs
 //
