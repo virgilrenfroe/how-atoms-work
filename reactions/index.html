@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="How chemical reactions happen: atoms rearrange, mass is conserved, and equations balance. An intro chemistry lesson for students and teachers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>How Reactions Happen · Conservation and balancing · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --void-2: #1d0c23;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.66);
+    --line: rgba(239, 230, 242, 0.18);
+    --proton: #ff6b3d;
+    --electron: #5fd6c6;
+    --ok: #5fd6c6;
+    --bad: #ff6b3d;
+    --o: #ff2a2a;
+    --h: #ffffff;
+    --c: #6b6b72;
+    --pad: clamp(18px, 4.4vw, 72px);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--void); }
+  body {
+    margin: 0; background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans); font-size: 18px; line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: inherit; }
+  sub, sup { line-height: 0; }
+
+  .mast {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 18px var(--pad); border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mast .home { text-decoration: none; font-weight: 700; }
+  .mast nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .mast nav a { text-decoration: none; color: var(--mute); }
+  .mast nav a:hover, .mast nav a:focus-visible { color: var(--pearl); }
+
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(20px, 4vw, 60px); align-items: end;
+    padding: clamp(40px, 8vw, 120px) var(--pad) clamp(36px, 6vw, 90px);
+  }
+  .kicker {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--proton); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(52px, 10.8vw, 200px); line-height: 0.84; letter-spacing: -0.045em;
+    margin: 0;
+  }
+  h1 .hot { color: var(--proton); display: block; padding-left: 0.55em; }
+  .lede { font-size: clamp(19px, 1.6vw, 24px); line-height: 1.45; margin: 0 0 18px; max-width: 32ch; }
+  .toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .toc li { border-bottom: 1px solid var(--line); }
+  .toc a { display: flex; gap: 14px; padding: 10px 0; text-decoration: none; font-weight: 600; }
+  .toc a span { font-family: var(--font-mono); color: var(--mute); font-weight: 400; min-width: 2ch; }
+  .toc a:hover, .toc a:focus-visible { color: var(--electron); }
+
+  .why {
+    display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: clamp(20px, 4vw, 60px); padding: clamp(40px, 6vw, 90px) var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .why h2 { grid-column: 1 / span 2; }
+  .why .body { grid-column: 2 / span 1; }
+  .why .aside { grid-column: 3; align-self: start; }
+  h2 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.035em;
+    font-size: clamp(40px, 6.2vw, 104px); line-height: 0.9; margin: 0 0 24px;
+  }
+  .body p { margin: 0 0 16px; max-width: 58ch; }
+  .aside { font-family: var(--font-mono); font-size: 14px; }
+  .aside div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .aside .ok { color: var(--electron); }
+
+  .chapter {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(22px, 3.6vw, 60px); align-items: start;
+    padding: clamp(40px, 6vw, 96px) var(--pad); border-top: 1px solid var(--line);
+  }
+  .chapter.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .chapter.flip .copy { order: 2; }
+  .num {
+    font-family: var(--font-display); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em;
+    font-size: clamp(88px, 13vw, 220px); margin: 0 0 6px;
+    color: transparent; -webkit-text-stroke: 2px var(--proton);
+  }
+  .chapter h2 { font-size: clamp(36px, 4.4vw, 76px); }
+  .copy p { margin: 0 0 14px; max-width: 54ch; }
+  .copy .small { font-size: 15px; color: var(--mute); }
+  .eq {
+    font-family: var(--font-mono); font-size: clamp(16px, 1.5vw, 20px); font-weight: 700;
+    letter-spacing: 0.02em; margin: 8px 0 18px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 18px; }
+  .steps button {
+    font: 700 13px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--pearl); background: transparent; border: 1.5px solid var(--pearl);
+    padding: 12px 14px; border-radius: 999px; cursor: pointer; min-height: 44px;
+  }
+  .steps button[aria-pressed="true"] { background: var(--electron); border-color: var(--electron); color: var(--void); }
+  .steps button:focus-visible { outline: 3px solid var(--proton); outline-offset: 2px; }
+  .say { font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; min-height: 4.4em; }
+  .tally {
+    width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 14px; margin: 8px 0 18px;
+  }
+  .tally th, .tally td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .tally th { font-weight: 400; color: var(--mute); }
+  .tally td.bal { color: var(--ok); font-weight: 700; }
+  .tally td.unbal { color: var(--bad); font-weight: 700; }
+  .chip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+  .stage-col { min-width: 0; position: sticky; top: 16px; }
+  .stage {
+    position: relative; height: clamp(440px, 76vh, 780px); min-width: 0;
+    background: var(--void-2); border: 1px solid var(--line); overflow: hidden;
+  }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage .lbl {
+    position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--pearl);
+    transform: translate(-50%, -50%); text-shadow: 0 1px 6px rgba(20, 8, 24, 0.9);
+  }
+  .stage .lbl.big { font-family: var(--font-display); font-size: clamp(18px, 2vw, 28px); font-weight: 800; letter-spacing: -0.02em; }
+  .stage .lbl.atom { font-size: 12px; color: var(--void); background: rgba(239, 230, 242, 0.88); padding: 1px 5px; border-radius: 4px; text-shadow: none; }
+  .stage .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--pearl); opacity: 0.6; pointer-events: none; }
+  .stage .tick.a { top: 10px; left: 10px; border-width: 1.5px 0 0 1.5px; }
+  .stage .tick.b { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+  .caption { font-family: var(--font-mono); font-size: 12px; color: var(--mute); margin: 10px 0 0; line-height: 1.5; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-mono); font-size: 12px; margin: 10px 0 0; }
+
+  /* balance picker */
+  .balance-eq {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    font-family: var(--font-mono); font-size: clamp(18px, 2vw, 24px); font-weight: 700;
+    margin: 18px 0 12px;
+  }
+  .coef {
+    display: inline-flex; align-items: center; gap: 0; border: 1.5px solid var(--pearl); border-radius: 10px; overflow: hidden;
+  }
+  .coef button {
+    font: 700 16px/1 var(--font-mono); color: var(--pearl); background: transparent; border: 0;
+    width: 40px; height: 44px; cursor: pointer;
+  }
+  .coef button:hover, .coef button:focus-visible { background: rgba(239, 230, 242, 0.12); }
+  .coef button:focus-visible { outline: 3px solid var(--proton); outline-offset: -3px; }
+  .coef .val {
+    min-width: 2.2ch; text-align: center; font-weight: 700; padding: 0 4px;
+  }
+  .balance-eq .arrow { color: var(--mute); }
+  .verdict {
+    font-family: var(--font-mono); font-size: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    margin: 0 0 14px; min-height: 1.4em;
+  }
+  .verdict.ok { color: var(--ok); }
+  .verdict.no { color: var(--bad); }
+
+  .types {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0; border-top: 1px solid var(--line); padding: clamp(40px, 6vw, 90px) var(--pad);
+  }
+  .types article { padding: 18px 22px 18px 0; border-right: 1px solid var(--line); }
+  .types article:last-child { border-right: 0; padding-right: 0; }
+  .types .who { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--proton); display: block; margin-bottom: 8px; }
+  .types h3 { font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 2.6vw, 40px); letter-spacing: -0.02em; margin: 0 0 10px; line-height: 1.05; }
+  .types p { margin: 0; max-width: 36ch; color: var(--mute); }
+
+  .real { background: var(--proton); color: var(--void); padding: clamp(48px, 7vw, 110px) var(--pad); }
+  .real .kicker { color: var(--void); }
+  .real h2 { font-size: clamp(52px, 9vw, 160px); margin-bottom: clamp(24px, 4vw, 56px); }
+  .uses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 5vw, 80px); }
+  .uses li { border-top: 2px solid var(--void); padding: 16px 0 22px; }
+  .uses .who { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .uses .what { font-family: var(--font-display); font-weight: 700; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.18; letter-spacing: -0.01em; }
+  .uses .bond { font-family: var(--font-mono); font-size: 12px; display: block; margin-top: 8px; }
+
+  .check { padding: clamp(40px, 6vw, 96px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 4vw, 60px); }
+  details { border-top: 1px solid var(--line); padding: 14px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; font-size: 19px; }
+  details p { margin: 10px 0 0; color: var(--mute); max-width: 60ch; }
+  .sources { padding: 28px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
+  .sources h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pearl); margin: 0 0 10px; }
+  .sources ul { margin: 0; padding-left: 18px; }
+  .sources li { margin: 4px 0; overflow-wrap: anywhere; }
+
+  @media (max-width: 1100px) {
+    .why { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+    .why h2 { grid-column: 1 / -1; }
+    .why .body { grid-column: 1; }
+    .why .aside { grid-column: 2; }
+    .types { grid-template-columns: minmax(0, 1fr); }
+    .types article { border-right: 0; border-bottom: 1px solid var(--line); padding: 18px 0; }
+  }
+  @media (max-width: 860px) {
+    body { font-size: 17px; }
+    .hero, .why, .chapter, .chapter.flip, .check { grid-template-columns: minmax(0, 1fr); }
+    .why h2, .why .body, .why .aside { grid-column: 1; }
+    .chapter.flip .copy { order: 0; }
+    .stage-col { position: static; }
+    .stage { height: clamp(360px, 62vh, 540px); }
+    .uses { grid-template-columns: minmax(0, 1fr); }
+    h1 .hot { padding-left: 0.35em; }
+    .say { min-height: 0; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<header class="mast">
+  <a class="home" href="../">How Atoms Work</a>
+  <nav aria-label="Lessons">
+    <a href="../">Periodic table</a>
+    <a href="../molecules/index.html">Molecules</a>
+    <a href="../bonds/">Bonds</a>
+    <a href="../shape/">Shape</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="kicker">Intro chemistry · Chemical reactions</p>
+    <h1>How reactions <span class="hot">happen</span></h1>
+  </div>
+  <div>
+    <p class="lede">A reaction rearranges atoms. It does not create them or destroy them. The connections change; the atom count stays the same.</p>
+    <ol class="toc">
+      <li><a href="#conserve"><span>01</span>Conservation: 2 H₂ + O₂ → 2 H₂O</a></li>
+      <li><a href="#combust"><span>02</span>Combustion: CH₄ + 2 O₂ → CO₂ + 2 H₂O</a></li>
+      <li><a href="#decompose"><span>03</span>Decomposition: 2 H₂O₂ → 2 H₂O + O₂</a></li>
+      <li><a href="#balance"><span>04</span>Check the balance</a></li>
+      <li><a href="#real-world"><span>05</span>In the real world</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="why" aria-labelledby="why-h">
+  <h2 id="why-h">Atoms in, atoms out</h2>
+  <div class="body">
+    <p>In a chemical reaction, bonds break and new bonds form. The atoms themselves stay the same atoms. That idea is called <strong>conservation of atoms</strong> (and of mass, when you weigh everything).</p>
+    <p>A chemical equation is atom bookkeeping. The left side lists the reactants. The right side lists the products. The same kinds of atoms must appear on both sides, in the same numbers.</p>
+    <p><strong>Subscripts</strong> are part of a formula. They tell you how many atoms are already joined in one molecule. You cannot change a subscript to balance an equation, because that would invent a different substance. <strong>Coefficients</strong> sit in front of a formula. They tell you how many of that molecule you need. Coefficients are the dials you turn to balance.</p>
+  </div>
+  <div class="aside" aria-label="Subscripts versus coefficients">
+    <div><b>H₂O</b><span>1 molecule</span></div>
+    <div><b>2 H₂O</b><span>2 molecules</span></div>
+    <div><b>H₂O₂</b><span>peroxide, not water</span></div>
+    <div class="ok"><b>Balance?</b><span>change coefficients</span></div>
+  </div>
+</section>
+
+<section class="chapter" id="conserve" aria-labelledby="conserve-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">01</p>
+    <p class="kicker">Combination · water from H₂ and O₂</p>
+    <h2 id="conserve-h">Same atoms, new connections</h2>
+    <p class="eq">2 H₂ + O₂ → 2 H₂O</p>
+    <p>Two hydrogen molecules and one oxygen molecule rearrange into two water molecules. Count the atoms: four H and two O on both sides.</p>
+    <div class="steps" role="group" aria-label="Conservation steps" data-steps="conserve">
+      <button type="button" data-step="0" aria-pressed="true">1 · Reactants</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Rearrange</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Products</button>
+    </div>
+    <p class="say" id="conserve-say" aria-live="polite"></p>
+    <table class="tally" id="conserve-tally" aria-label="Atom tally for making water"></table>
+    <p class="small">This is a combination (synthesis) reaction: smaller molecules join into a larger product. No atom is invented or thrown away.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="conserve" role="img" aria-label="3D model of hydrogen and oxygen rearranging into water, with equal atom counts before and after."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+    </div>
+    <p class="caption">Bond lengths on the stage come from PubChem 3D shapes. Measured H–H is 0.7414 Å; O=O is 1.2075 Å; O–H is 0.958 Å (NIST CCCBDB).</p>
+  </div>
+</section>
+
+<section class="chapter flip" id="combust" aria-labelledby="combust-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">02</p>
+    <p class="kicker">Combustion · methane</p>
+    <h2 id="combust-h">Burning is a reaction</h2>
+    <p class="eq">CH₄ + 2 O₂ → CO₂ + 2 H₂O</p>
+    <p>Methane burns in oxygen to make carbon dioxide and water. One carbon, four hydrogens, and four oxygens sit on each side of the arrow.</p>
+    <div class="steps" role="group" aria-label="Combustion steps" data-steps="combust">
+      <button type="button" data-step="0" aria-pressed="true">1 · Reactants</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Rearrange</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Products</button>
+    </div>
+    <p class="say" id="combust-say" aria-live="polite"></p>
+    <table class="tally" id="combust-tally" aria-label="Atom tally for methane combustion"></table>
+    <p class="small">Combustion joins a fuel with oxygen and releases energy as heat and light. The atoms still balance.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="combust" role="img" aria-label="3D model of methane and oxygen rearranging into carbon dioxide and water."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--c)"></i>C</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+    </div>
+    <p class="caption">Measured C–H 1.087 Å, C=O 1.162 Å, O=O 1.2075 Å, O–H 0.958 Å (NIST CCCBDB). Shapes from PubChem 3D.</p>
+  </div>
+</section>
+
+<section class="chapter" id="decompose" aria-labelledby="decompose-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">03</p>
+    <p class="kicker">Decomposition · hydrogen peroxide</p>
+    <h2 id="decompose-h">One substance splits</h2>
+    <p class="eq">2 H₂O₂ → 2 H₂O + O₂</p>
+    <p>Hydrogen peroxide breaks into water and oxygen gas. Four hydrogens and four oxygens appear on both sides.</p>
+    <div class="steps" role="group" aria-label="Decomposition steps" data-steps="decompose">
+      <button type="button" data-step="0" aria-pressed="true">1 · Reactants</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Rearrange</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Products</button>
+    </div>
+    <p class="say" id="decompose-say" aria-live="polite"></p>
+    <table class="tally" id="decompose-tally" aria-label="Atom tally for peroxide decomposition"></table>
+    <p class="small">A decomposition reaction starts with one kind of compound and ends with simpler substances. The O–O bond in peroxide is the weak link that breaks first in many real pathways; the stage only shows the balanced start and finish, not every intermediate.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="decompose" role="img" aria-label="3D model of hydrogen peroxide rearranging into water and oxygen."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+    </div>
+    <p class="caption">Measured H₂O₂: O–H 0.950 Å, O–O 1.475 Å, ∠HOO 94.8° (NIST CCCBDB). PubChem 3D shape on stage.</p>
+  </div>
+</section>
+
+<section class="types" aria-label="Reaction types">
+  <article>
+    <span class="who">Type · combination</span>
+    <h3>A + B → AB</h3>
+    <p>Two or more substances join into one product. Making water from H₂ and O₂ is the classroom example above.</p>
+  </article>
+  <article>
+    <span class="who">Type · decomposition</span>
+    <h3>AB → A + B</h3>
+    <p>One compound splits into simpler pieces. Peroxide → water + oxygen is the example above.</p>
+  </article>
+  <article>
+    <span class="who">Type · combustion</span>
+    <h3>Fuel + O₂ → CO₂ + H₂O</h3>
+    <p>A fuel reacts with oxygen. Complete combustion of a hydrocarbon makes carbon dioxide and water, as with methane.</p>
+  </article>
+</section>
+
+<section class="chapter flip" id="balance" aria-labelledby="balance-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">04</p>
+    <p class="kicker">Interactive · coefficients</p>
+    <h2 id="balance-h">Check the balance</h2>
+    <p>Pick coefficients for making water. Watch the atom tally. When every element matches on both sides, the equation is balanced.</p>
+    <div class="balance-eq" aria-label="Balance the equation">
+      <span class="coef" data-coef="h2">
+        <button type="button" data-dir="-1" aria-label="Decrease H2 coefficient">−</button>
+        <span class="val" id="coef-h2">1</span>
+        <button type="button" data-dir="1" aria-label="Increase H2 coefficient">+</button>
+      </span>
+      <span>H₂</span>
+      <span>+</span>
+      <span class="coef" data-coef="o2">
+        <button type="button" data-dir="-1" aria-label="Decrease O2 coefficient">−</button>
+        <span class="val" id="coef-o2">1</span>
+        <button type="button" data-dir="1" aria-label="Increase O2 coefficient">+</button>
+      </span>
+      <span>O₂</span>
+      <span class="arrow">→</span>
+      <span class="coef" data-coef="h2o">
+        <button type="button" data-dir="-1" aria-label="Decrease H2O coefficient">−</button>
+        <span class="val" id="coef-h2o">1</span>
+        <button type="button" data-dir="1" aria-label="Increase H2O coefficient">+</button>
+      </span>
+      <span>H₂O</span>
+    </div>
+    <p class="verdict no" id="balance-verdict" aria-live="polite">Not balanced yet</p>
+    <table class="tally" id="balance-tally" aria-label="Live atom tally for your coefficients"></table>
+    <p class="say" id="balance-say" aria-live="polite"></p>
+    <p class="small">The smallest whole-number solution is 2 H₂ + 1 O₂ → 2 H₂O. You cannot change the ₂ in H₂O; that would turn water into something else.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="balance" role="img" aria-label="3D molecules matching the coefficients you chose, with a live atom tally."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+    </div>
+    <p class="caption">Left of the arrow: your reactant molecules. Right: your product molecules. Counts update as you change coefficients.</p>
+  </div>
+</section>
+
+<section class="real" id="real-world" aria-labelledby="real-h">
+  <p class="kicker">05 · Where these reactions show up</p>
+  <h2 id="real-h">In the real world</h2>
+  <ul class="uses">
+    <li><span class="who">HVAC technicians</span><span class="what">Natural gas furnaces burn methane with oxygen from air. HVAC technicians install and service those burners so combustion stays complete and safe.</span><span class="bond">Combustion · CH₄ + O₂</span></li>
+    <li><span class="who">Auto technicians</span><span class="what">Gasoline engines burn hydrocarbon fuel with oxygen. Auto technicians diagnose incomplete combustion when exhaust sensors and catalytic converters show trouble.</span><span class="bond">Combustion · fuel + O₂</span></li>
+    <li><span class="who">Firefighters</span><span class="what">Fire needs fuel, oxygen, and heat. Firefighters remove one side of that triangle with water, foam, or smothering agents, and they teach that combustion is a chemical reaction, not just “flame.”</span><span class="bond">Combustion triangle</span></li>
+    <li><span class="who">Wastewater operators</span><span class="what">Hydrogen peroxide is used in some treatment steps to oxidize contaminants. Operators dose and monitor peroxide carefully because it decomposes to water and oxygen.</span><span class="bond">Decomposition · H₂O₂</span></li>
+    <li><span class="who">Janitorial workers</span><span class="what">Many disinfectant cleaners use dilute hydrogen peroxide. As it works and then breaks down, it leaves water and oxygen rather than a harsh salt residue.</span><span class="bond">H₂O₂ cleaning</span></li>
+    <li><span class="who">Bakers</span><span class="what">Baking soda reactions release carbon dioxide gas that lifts dough. Bakers rely on that gas-forming chemistry for rise, just as balanced equations predict product gases.</span><span class="bond">Gas-forming reaction · CO₂</span></li>
+    <li><span class="who">Biology teachers (respiration framing)</span><span class="what">Cells rearrange food molecules with oxygen to release usable energy, ending with carbon dioxide and water. That is the same atom-conservation idea as classroom combustion, at a different pace and place.</span><span class="bond">Metabolism · food + O₂</span></li>
+  </ul>
+</section>
+
+<section class="check" aria-labelledby="check-h">
+  <div>
+    <p class="kicker">For the classroom</p>
+    <h2 id="check-h">Check yourself</h2>
+  </div>
+  <div>
+    <details><summary>Does a chemical reaction create new atoms?</summary><p>No. It rearranges the atoms that are already there. The same atoms appear on both sides of a balanced equation.</p></details>
+    <details><summary>What is the difference between a subscript and a coefficient?</summary><p>A subscript is part of the formula (the ₂ in H₂O). Changing it makes a different substance. A coefficient sits in front (the 2 in 2 H₂O) and tells how many molecules you need. You balance by changing coefficients only.</p></details>
+    <details><summary>Is CH₄ + O₂ → CO₂ + H₂O balanced?</summary><p>No. The left side has four H and two O; the right has two H and three O. The balanced equation is CH₄ + 2 O₂ → CO₂ + 2 H₂O.</p></details>
+    <details><summary>Name the reaction type for 2 H₂O₂ → 2 H₂O + O₂.</summary><p>Decomposition. One compound (hydrogen peroxide) splits into simpler products (water and oxygen).</p></details>
+    <details><summary>Why is 2 H₂ + O₂ → 2 H₂O preferred over H₂ + ½ O₂ → H₂O?</summary><p>Both conserve atoms, but classroom equations usually use the smallest whole-number coefficients, so you do not need a half molecule of O₂.</p></details>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="src-h">
+  <h3 id="src-h">Where the numbers come from</h3>
+  <ul>
+    <li>3D shapes of O₂, H₂O, CH₄, CO₂, and H₂O₂: PubChem 3D conformers (CID 977, 962, 297, 280, 784). H₂ has no PubChem 3D conformer, so it is drawn at its measured H–H length.</li>
+    <li>Measured bond lengths and angles: NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB), experimental data.</li>
+    <li>Balanced equations follow atom conservation for the stated stoichiometric reactions; coefficients are the smallest whole numbers.</li>
+  </ul>
+</section>
+</main>
+
+<script type="module" src="./reactions.js"></script>
+</body>
+</html>

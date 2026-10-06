@@ -19,6 +19,9 @@ The molecule gallery is the same kind of split. Categories and names stay in one
 - [`ethanol.html`](ethanol.html) — Intro chem · molecular structure / bonding. Satin ethanol, C₂H₆O, anti conformer.
 - [`bonds/index.html`](bonds/index.html) — How Atoms Bond. Ionic (Na + Cl → Na⁺ Cl⁻, rock-salt cell), covalent (H₂, CH₄, O₂, N₂), and polar covalent (H₂O) in 3D, with an In the real world section.
 - [`bonds/check-bonds.mjs`](bonds/check-bonds.mjs) — checks the bond lesson’s formulas, bond orders, distances, and salt cell against cited values.
+- [`shape/index.html`](shape/index.html) — How Molecules Shape. VSEPR shapes in 3D (CO₂, SO₃, CH₄, NH₃, H₂O).
+- [`reactions/index.html`](reactions/index.html) — How Reactions Happen. Conservation, combustion, decomposition, and a coefficient balancer in 3D.
+- [`reactions/check-reactions.mjs`](reactions/check-reactions.mjs) — checks atom tallies, connectivity, and that page copy has no developer text.
 - [`molecules/index.html`](molecules/index.html) — 115 incredible molecules. Category hub, teaching cards, and ball-and-stick models.
 - [`molecules/molecules-data.js`](molecules/molecules-data.js) — the hundred entries (id, name, formula, category, teaching sentence, structure mode).
 - [`molecules/geometries.js`](molecules/geometries.js) — coordinates for the ball-and-stick set.
