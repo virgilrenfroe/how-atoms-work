@@ -182,6 +182,27 @@
     background: var(--void);
     overflow: hidden;
   }
+  .view.mode-model { grid-template-rows: minmax(200px, 1fr) 45%; }
+  .lesson {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+  }
+  .view.mode-model .lesson,
+  .view.mode-card .lesson { height: 100%; }
+  .lesson::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 14px;
+    bottom: 0;
+    height: 42px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(20, 8, 24, 0), rgba(20, 8, 24, 0.94) 72%, #140818);
+    opacity: 0;
+  }
+  .lesson.is-more::after { opacity: 1; }
   .stage-wrap {
     position: relative;
     min-height: 0;
@@ -199,7 +220,9 @@
   .readout {
     border-top: 1px solid var(--line);
     padding: 12px 18px max(14px, var(--safe-b)) 20px;
-    max-height: min(40%, 300px);
+    max-height: none;
+    height: 100%;
+    min-height: 0;
     overflow: auto;
     background: var(--void);
   }
@@ -208,7 +231,8 @@
   .view.mode-card .readout {
     max-height: none;
     border-top: 0;
-    padding: 7vh 8vw max(24px, var(--safe-b)) 6vw;
+    overflow: auto;
+    padding: 6vh 7vw max(24px, var(--safe-b)) 6vw;
   }
   .view h2 {
     margin: 0;
@@ -225,7 +249,38 @@
     gap: 16px 28px;
   }
   .view.mode-model .head .formula { margin: 0; text-align: right; }
-  .view.mode-card h2 { font-size: clamp(3rem, 6vw, 5.6rem); max-width: 12ch; }
+  .view.mode-card h2 { font-size: clamp(2.5rem, 4.6vw, 4.2rem); max-width: 16ch; }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 22px;
+    margin-top: 26px;
+    max-width: 82ch;
+  }
+  .fact .k {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.88);
+  }
+  .fact .v {
+    margin: 6px 0 0;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+  .sketch {
+    margin: 18px 0 0;
+    max-width: 440px;
+  }
+  .sketch svg { width: 100%; height: auto; display: block; }
+  .sketch figcaption {
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mute);
+  }
   .formula {
     margin: 8px 0 0;
     font-family: var(--font-mono);
@@ -247,6 +302,22 @@
     line-height: 1.45;
   }
   .teach { font-size: 1.12rem; }
+  .world { margin-top: 14px; max-width: 46ch; }
+  .view.mode-card .world { margin-top: 22px; max-width: 62ch; }
+  .world h3 {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.88);
+  }
+  .world p {
+    margin: 8px 0 0;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
   .note, .bonds, .pick, .hold {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -284,9 +355,10 @@
     .mast h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
     .view.mode-model { grid-template-rows: minmax(200px, 1fr) minmax(0, 42%); }
     .view.mode-model h2 { font-size: 1.55rem; }
-    .view.mode-card h2 { font-size: clamp(2.4rem, 12vw, 3.4rem); }
+    .view.mode-card h2 { font-size: clamp(2.2rem, 10vw, 3.2rem); }
     .view.mode-model .readout { max-height: none; }
-    .view.mode-card .readout { max-height: none; padding-top: 18px; }
+    .view.mode-card .readout { max-height: none; padding-top: 18px; overflow: auto; }
+    .facts { grid-template-columns: 1fr; gap: 14px; margin-top: 16px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .mol, .door { transition: none; }
@@ -313,7 +385,9 @@
       <div class="stage-wrap">
         <div id="stage"></div>
       </div>
-      <article class="readout" id="readout"></article>
+      <div class="lesson">
+        <article class="readout" id="readout"></article>
+      </div>
     </section>
   </div>
 </div>
@@ -334,11 +408,12 @@ import { createViewer, bondRecords, angleAt } from "./viewer.js";
 const NAMES = {
   H: "hydrogen", C: "carbon", N: "nitrogen", O: "oxygen",
   F: "fluorine", P: "phosphorus", S: "sulfur", Cl: "chlorine",
-  Mg: "magnesium", Fe: "iron", Na: "sodium",
+  Mg: "magnesium", Si: "silicon", Fe: "iron", Na: "sodium",
 };
 const SWATCH = {
   H: "#ffffff", C: "#909090", N: "#3050F8", O: "#FF0D0D",
   F: "#90E050", P: "#FF8000", S: "#FFFF30", Cl: "#1FF01F",
+  Si: "#F0C8A0", Mg: "#8AFF00",
 };
 
 const byId = Object.fromEntries(MOLECULES.map((m) => [m.id, m]));
@@ -347,6 +422,15 @@ if (countEl) countEl.textContent = String(MOLECULES.length);
 const catalog = document.getElementById("catalog");
 const view = document.getElementById("view");
 const readout = document.getElementById("readout");
+function syncReadoutCue() {
+  const lesson = readout.closest(".lesson");
+  if (!lesson) return;
+  const extra = readout.scrollHeight - readout.clientHeight;
+  const room = readout.scrollHeight - readout.scrollTop - readout.clientHeight;
+  lesson.classList.toggle("is-more", extra > 8 && room > 8);
+}
+readout.addEventListener("scroll", syncReadoutCue, { passive: true });
+window.addEventListener("resize", syncReadoutCue);
 
 function formatFormula(raw) {
   if (!raw) return "";
@@ -372,14 +456,23 @@ function sameCounts(a, b) {
 }
 function badge(m) {
   if (m.structureMode === "ballstick") return "Ball and stick";
-  if (m.structureMode === "schematic") return "Sketch";
-  return "Card";
+  if (m.structureMode === "schematic") return "Predicted pattern";
+  return "";
 }
 function footer(m) {
-  if (m.restraint) return "This card does not describe how to make it.";
-  if (m.structureMode === "schematic") return "Sketch. Bonds are not drawn.";
-  if (m.structureMode === "card-only") return "A ball-and-stick model of this one comes later.";
+  if (m.restraint) return "Public facts only.";
   return "";
+}
+function worldBlock(m) {
+  if (!m.world) return null;
+  const wrap = document.createElement("section");
+  wrap.className = "world";
+  const heading = document.createElement("h3");
+  heading.textContent = "In the real world";
+  const p = document.createElement("p");
+  p.textContent = m.world;
+  wrap.append(heading, p);
+  return wrap;
 }
 
 CATEGORIES.forEach((cat, i) => {
@@ -412,7 +505,7 @@ CATEGORIES.forEach((cat, i) => {
       meta.prepend(tag);
     } else if (m.structureMode === "schematic") {
       const tag = document.createElement("b");
-      tag.textContent = "sketch";
+      tag.textContent = "pattern";
       meta.prepend(tag);
     }
     btn.append(who, meta);
@@ -514,11 +607,13 @@ function renderPick(index) {
 function showModel(m) {
   const geo = GEOMETRIES[m.id];
   view.className = "view mode-model";
+  readout.scrollTop = 0;
   readout.replaceChildren();
   if (!geo) {
     errEl.style.display = "block";
     errEl.textContent = "This model is not on the page yet.";
     readout.append(errEl);
+    requestAnimationFrame(syncReadoutCue);
     return;
   }
   const got = countLine(geo);
@@ -526,6 +621,7 @@ function showModel(m) {
     errEl.style.display = "block";
     errEl.textContent = "The atom count does not match the formula, so the model stays hidden.";
     readout.append(errEl);
+    requestAnimationFrame(syncReadoutCue);
     return;
   }
   errEl.style.display = "none";
@@ -559,6 +655,8 @@ function showModel(m) {
     note.textContent = m.note;
     readout.append(note);
   }
+  const world = worldBlock(m);
+  if (world) readout.append(world);
   readout.append(bonds);
   const pick = document.createElement("p");
   pick.className = "pick";
@@ -574,25 +672,122 @@ function showModel(m) {
     sw.append(span);
   }
   readout.append(sw);
+  const line = footer(m);
+  if (line) {
+    const hold = document.createElement("p");
+    hold.className = "hold";
+    hold.textContent = line;
+    readout.append(hold);
+  }
   if (viewer) viewer.resize();
+  requestAnimationFrame(syncReadoutCue);
+}
+
+function svgEl(name, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", name);
+  for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+  return el;
+}
+
+function patternSketch(kind) {
+  const fig = document.createElement("figure");
+  fig.className = "sketch";
+  const svg = svgEl("svg", { viewBox: "0 0 420 150", role: "img" });
+  const ink = "rgba(239,230,242,0.88)";
+  const accent = "#ffb36b";
+  if (kind === "graphyne") {
+    const title = svgEl("title", {});
+    title.textContent = "Predicted graphyne pattern: hexagons joined by a triple-bond link";
+    svg.append(title);
+    const hex = (cx, cy, r) => {
+      const pts = [];
+      for (let i = 0; i < 6; i++) {
+        const a = (i * Math.PI) / 3;
+        pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
+      }
+      return pts.map((p) => p.map((n) => n.toFixed(1)).join(",")).join(" ");
+    };
+    svg.append(svgEl("polygon", { points: hex(78, 78, 42), fill: "none", stroke: ink, "stroke-width": "2.2" }));
+    svg.append(svgEl("polygon", { points: hex(342, 78, 42), fill: "none", stroke: ink, "stroke-width": "2.2" }));
+    svg.append(svgEl("line", { x1: "120", y1: "78", x2: "168", y2: "78", stroke: ink, "stroke-width": "2.2" }));
+    svg.append(svgEl("line", { x1: "184", y1: "78", x2: "258", y2: "78", stroke: accent, "stroke-width": "2.4" }));
+    svg.append(svgEl("line", { x1: "184", y1: "72", x2: "258", y2: "72", stroke: accent, "stroke-width": "1.4" }));
+    svg.append(svgEl("line", { x1: "184", y1: "84", x2: "258", y2: "84", stroke: accent, "stroke-width": "1.4" }));
+    svg.append(svgEl("line", { x1: "274", y1: "78", x2: "300", y2: "78", stroke: ink, "stroke-width": "2.2" }));
+    const cap = svgEl("text", { x: "221", y: "56", fill: accent, "font-family": "Space Mono, ui-monospace, monospace", "font-size": "13", "text-anchor": "middle" });
+    cap.textContent = "triple bond";
+    svg.append(cap);
+  } else if (kind === "carbyne") {
+    svg.append(svgEl("title", {}));
+    svg.querySelector("title").textContent = "Predicted carbyne pattern: single and triple bonds alternating";
+    const marks = [
+      [36, 70, 78, 70, ink, "2.4"],
+      [96, 64, 150, 64, accent, "1.5"],
+      [96, 70, 150, 70, accent, "2.4"],
+      [96, 76, 150, 76, accent, "1.5"],
+      [168, 70, 210, 70, ink, "2.4"],
+      [228, 64, 282, 64, accent, "1.5"],
+      [228, 70, 282, 70, accent, "2.4"],
+      [228, 76, 282, 76, accent, "1.5"],
+      [300, 70, 342, 70, ink, "2.4"],
+    ];
+    for (const [x1, y1, x2, y2, stroke, w] of marks) {
+      svg.append(svgEl("line", { x1, y1, x2, y2, stroke, "stroke-width": w }));
+    }
+    "C C C C C".split(" ").forEach((label, i) => {
+      const t = svgEl("text", { x: String(48 + i * 72), y: "108", fill: ink, "font-family": "Space Mono, ui-monospace, monospace", "font-size": "16", "text-anchor": "middle" });
+      t.textContent = label;
+      svg.append(t);
+    });
+  }
+  const cap = document.createElement("figcaption");
+  cap.textContent = "Predicted pattern.";
+  fig.append(svg, cap);
+  return fig;
 }
 
 function showCard(m) {
   view.className = "view mode-card";
   if (viewer) viewer.setVisible(false);
+  readout.scrollTop = 0;
   readout.replaceChildren();
   const h = document.createElement("h2");
   h.textContent = m.name;
   const formula = document.createElement("p");
   formula.className = "formula";
   formula.innerHTML = displayFormula(m);
-  const b = document.createElement("p");
-  b.className = "badge";
-  b.textContent = badge(m);
   const teach = document.createElement("p");
   teach.className = "teach";
   teach.textContent = m.teach;
-  readout.append(h, formula, b, teach);
+  readout.append(h, formula);
+  const label = badge(m);
+  if (label) {
+    const b = document.createElement("p");
+    b.className = "badge";
+    b.textContent = label;
+    readout.append(b);
+  }
+  readout.append(teach);
+  if (m.sketch) readout.append(patternSketch(m.sketch));
+  if (m.facts && m.facts.length) {
+    const facts = document.createElement("div");
+    facts.className = "facts";
+    for (const [k, v] of m.facts) {
+      const item = document.createElement("div");
+      item.className = "fact";
+      const key = document.createElement("p");
+      key.className = "k";
+      key.textContent = k;
+      const val = document.createElement("p");
+      val.className = "v";
+      val.textContent = v;
+      item.append(key, val);
+      facts.append(item);
+    }
+    readout.append(facts);
+  }
+  const world = worldBlock(m);
+  if (world) readout.append(world);
   if (m.note) {
     const note = document.createElement("p");
     note.className = "note";
@@ -606,6 +801,7 @@ function showCard(m) {
     hold.textContent = line;
     readout.append(hold);
   }
+  requestAnimationFrame(syncReadoutCue);
 }
 
 function openMolecule(id, scroll) {
