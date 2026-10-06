@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="How acids and bases work: proton transfer, hydronium, strong vs weak, neutralization, and pH. An intro chemistry lesson for students and teachers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<title>How Acids and Bases Work · How Atoms Work</title>
+<style>
+  :root {
+    --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+    --font-sans: "Instrument Sans", system-ui, sans-serif;
+    --font-mono: "Space Mono", ui-monospace, monospace;
+    --void: #140818;
+    --void-2: #1d0c23;
+    --pearl: #efe6f2;
+    --mute: rgba(239, 230, 242, 0.66);
+    --line: rgba(239, 230, 242, 0.18);
+    --proton: #ff6b3d;
+    --electron: #5fd6c6;
+    --na: #ab5cf2;
+    --cl: #1ff01f;
+    --o: #ff2a2a;
+    --h: #ffffff;
+    --c: #6b6b72;
+    --pad: clamp(18px, 4.4vw, 72px);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--void); }
+  body {
+    margin: 0; background: var(--void); color: var(--pearl);
+    font-family: var(--font-sans); font-size: 18px; line-height: 1.55;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: inherit; }
+  sub, sup { line-height: 0; }
+
+  .mast {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 18px var(--pad); border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .mast .home { text-decoration: none; font-weight: 700; }
+  .mast nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .mast nav a { text-decoration: none; color: var(--mute); }
+  .mast nav a:hover, .mast nav a:focus-visible { color: var(--pearl); }
+
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(20px, 4vw, 60px); align-items: end;
+    padding: clamp(40px, 8vw, 120px) var(--pad) clamp(36px, 6vw, 90px);
+  }
+  .kicker {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--proton); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(52px, 10.5vw, 180px); line-height: 0.84; letter-spacing: -0.045em;
+    margin: 0;
+  }
+  h1 .hot { color: var(--proton); display: block; padding-left: 0.9em; }
+  .lede { font-size: clamp(19px, 1.6vw, 24px); line-height: 1.45; margin: 0 0 18px; max-width: 32ch; }
+  .toc { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .toc li { border-bottom: 1px solid var(--line); }
+  .toc a { display: flex; gap: 14px; padding: 10px 0; text-decoration: none; font-weight: 600; }
+  .toc a span { font-family: var(--font-mono); color: var(--mute); font-weight: 400; min-width: 2ch; }
+  .toc a:hover, .toc a:focus-visible { color: var(--electron); }
+
+  .why {
+    display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr);
+    gap: clamp(20px, 4vw, 60px); padding: clamp(40px, 6vw, 90px) var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  .why h2 { grid-column: 1 / span 2; }
+  .why .body { grid-column: 2 / span 1; }
+  .why .defs { grid-column: 3; align-self: start; }
+  h2 {
+    font-family: var(--font-display); font-weight: 800; letter-spacing: -0.035em;
+    font-size: clamp(40px, 6.2vw, 104px); line-height: 0.9; margin: 0 0 24px;
+  }
+  .body p { margin: 0 0 16px; max-width: 58ch; }
+  .defs { font-family: var(--font-mono); font-size: 14px; }
+  .defs div { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .defs b { display: block; color: var(--electron); margin-bottom: 4px; }
+
+  .chapter {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(22px, 3.6vw, 60px); align-items: start;
+    padding: clamp(40px, 6vw, 96px) var(--pad); border-top: 1px solid var(--line);
+  }
+  .chapter.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .chapter.flip .copy { order: 2; }
+  .num {
+    font-family: var(--font-display); font-weight: 800; line-height: 0.8; letter-spacing: -0.06em;
+    font-size: clamp(88px, 13vw, 220px); margin: 0 0 6px;
+    color: transparent; -webkit-text-stroke: 2px var(--proton);
+  }
+  .chapter h2 { font-size: clamp(38px, 4.6vw, 80px); }
+  .copy p { margin: 0 0 14px; max-width: 54ch; }
+  .copy .small { font-size: 15px; color: var(--mute); }
+  .steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 18px; }
+  .steps button {
+    font: 700 13px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--pearl); background: transparent; border: 1.5px solid var(--pearl);
+    padding: 12px 14px; border-radius: 999px; cursor: pointer; min-height: 44px;
+  }
+  .steps button[aria-pressed="true"] { background: var(--electron); border-color: var(--electron); color: var(--void); }
+  .steps button:focus-visible { outline: 3px solid var(--proton); outline-offset: 2px; }
+  .say { font-size: clamp(19px, 1.5vw, 22px); line-height: 1.45; min-height: 4.8em; }
+  .read {
+    width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 13px; margin: 8px 0 18px;
+  }
+  .read th, .read td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .read th { font-weight: 400; color: var(--mute); }
+  .read td b { font-weight: 700; }
+  .chip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+  .stage-col { min-width: 0; position: sticky; top: 16px; }
+  .stage {
+    position: relative; height: clamp(440px, 76vh, 780px); min-width: 0;
+    background: var(--void-2); border: 1px solid var(--line); overflow: hidden;
+  }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage .lbl {
+    position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--pearl);
+    transform: translate(-50%, -50%); text-shadow: 0 1px 6px rgba(20, 8, 24, 0.9);
+  }
+  .stage .lbl.big { font-family: var(--font-display); font-size: clamp(20px, 2.2vw, 30px); font-weight: 800; letter-spacing: -0.02em; }
+  .stage .lbl.pos { color: #ffd2c2; }
+  .stage .lbl.neg { color: #bff6ef; }
+  .stage .lbl.atom { font-size: 13px; color: var(--void); background: rgba(239, 230, 242, 0.88); padding: 1px 6px; border-radius: 4px; text-shadow: none; }
+  .stage .lbl.dim { color: var(--mute); font-weight: 400; font-size: 12px; }
+  .stage .tick { position: absolute; width: 18px; height: 18px; border: 0 solid var(--pearl); opacity: 0.6; pointer-events: none; }
+  .stage .tick.a { top: 10px; left: 10px; border-width: 1.5px 0 0 1.5px; }
+  .stage .tick.b { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+  .caption { font-family: var(--font-mono); font-size: 12px; color: var(--mute); margin: 10px 0 0; line-height: 1.5; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-mono); font-size: 12px; margin: 10px 0 0; }
+
+  .ph-scale {
+    margin: 18px 0 8px; border-top: 1px solid var(--line); padding-top: 14px;
+  }
+  .ph-bar {
+    display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: 3px; margin: 10px 0 8px;
+  }
+  .ph-bar span {
+    font-family: var(--font-mono); font-size: 11px; text-align: center; padding: 8px 2px;
+    color: var(--void); font-weight: 700;
+  }
+  .ph-bar .acid { background: #ff6b3d; }
+  .ph-bar .mid { background: #f0c45c; }
+  .ph-bar .base { background: #5fd6c6; }
+  .ph-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; color: var(--mute); }
+
+  .real { background: var(--proton); color: var(--void); padding: clamp(48px, 7vw, 110px) var(--pad); }
+  .real .kicker { color: var(--void); }
+  .real h2 { font-size: clamp(52px, 9vw, 160px); margin-bottom: clamp(24px, 4vw, 56px); }
+  .uses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(24px, 5vw, 80px); }
+  .uses li { border-top: 2px solid var(--void); padding: 16px 0 22px; }
+  .uses .who { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .uses .what { font-family: var(--font-display); font-weight: 700; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.18; letter-spacing: -0.01em; }
+  .uses .bond { font-family: var(--font-mono); font-size: 12px; display: block; margin-top: 8px; }
+
+  .check { padding: clamp(40px, 6vw, 96px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(20px, 4vw, 60px); }
+  details { border-top: 1px solid var(--line); padding: 14px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; font-size: 19px; }
+  details p { margin: 10px 0 0; color: var(--mute); max-width: 60ch; }
+  .sources { padding: 28px var(--pad) 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
+  .sources h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pearl); margin: 0 0 10px; }
+  .sources ul { margin: 0; padding-left: 18px; }
+  .sources li { margin: 4px 0; overflow-wrap: anywhere; }
+
+  @media (max-width: 1100px) {
+    .why { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+    .why h2 { grid-column: 1 / -1; }
+    .why .body { grid-column: 1; }
+    .why .defs { grid-column: 2; }
+  }
+  @media (max-width: 860px) {
+    body { font-size: 17px; }
+    .hero, .why, .chapter, .chapter.flip, .check { grid-template-columns: minmax(0, 1fr); }
+    .why h2, .why .body, .why .defs { grid-column: 1; }
+    .chapter.flip .copy { order: 0; }
+    .stage-col { position: static; }
+    .stage { height: clamp(360px, 62vh, 540px); }
+    .uses { grid-template-columns: minmax(0, 1fr); }
+    h1 .hot { padding-left: 0.5em; }
+    .say { min-height: 0; }
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<header class="mast">
+  <a class="home" href="../">How Atoms Work</a>
+  <nav aria-label="Lessons">
+    <a href="../">Periodic table</a>
+    <a href="../molecules/index.html">Molecules</a>
+    <a href="../bonds/">Bonds</a>
+    <a href="../shape/">Shape</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="kicker">Intro chemistry · Acids and bases</p>
+    <h1>How acids <span class="hot">and bases</span> work</h1>
+  </div>
+  <div>
+    <p class="lede">An acid donates a proton. A base accepts one. In water, that dance decides how sour, soapy, or neutral a solution feels.</p>
+    <ol class="toc">
+      <li><a href="#proton"><span>01</span>Proton transfer and hydronium</a></li>
+      <li><a href="#hydroxide"><span>02</span>Bases and hydroxide</a></li>
+      <li><a href="#neutralize"><span>03</span>Neutralization</a></li>
+      <li><a href="#strong-weak"><span>04</span>Strong vs weak</a></li>
+      <li><a href="#ph"><span>05</span>What pH means</a></li>
+      <li><a href="#real-world"><span>06</span>In the real world</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="why" aria-labelledby="why-h">
+  <h2 id="why-h">Two short definitions</h2>
+  <div class="body">
+    <p>In this lesson we use the Brønsted–Lowry idea, which is the one most intro classes teach first.</p>
+    <p>An <strong>acid</strong> is a molecule or ion that can donate H⁺, a bare proton. A <strong>base</strong> is a molecule or ion that can accept that proton.</p>
+    <p>In water the free proton does not float alone for long. It joins a water molecule and becomes hydronium, H₃O⁺. When people say “H⁺ in water,” they almost always mean H₃O⁺.</p>
+  </div>
+  <div class="defs" aria-label="Key ions">
+    <div><b>H⁺</b>a proton — hydrogen’s nucleus alone</div>
+    <div><b>H₃O⁺</b>hydronium — H⁺ stuck to H₂O</div>
+    <div><b>OH⁻</b>hydroxide — water missing one H⁺</div>
+    <div><b>Neutral</b>acid and base cancel to water and a salt</div>
+  </div>
+</section>
+
+<section class="chapter" id="proton" aria-labelledby="proton-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">01</p>
+    <p class="kicker">Acid in water · HCl</p>
+    <h2 id="proton-h">The proton handoff</h2>
+    <p>Hydrogen chloride, HCl, is a strong acid. In water it gives its proton away completely. Chloride, Cl⁻, is left behind, and the water molecule that takes the proton becomes hydronium, H₃O⁺.</p>
+    <div class="steps" role="group" aria-label="Proton transfer steps" data-steps="proton">
+      <button type="button" data-step="0" aria-pressed="true">1 · HCl + H₂O</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Transfer</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · H₃O⁺ + Cl⁻</button>
+    </div>
+    <p class="say" id="proton-say" aria-live="polite"></p>
+    <table class="read" id="proton-read" aria-label="Proton transfer facts"></table>
+    <p class="small">The free H⁺ stage is drawn briefly so you can see the handoff. In real water the proton moves along hydrogen-bond networks in femtoseconds; chemists still write H⁺ as shorthand for that motion.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="proton" role="img" aria-label="3D model: hydrogen chloride transfers its proton to water, forming hydronium and chloride."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--cl)"></i>Cl</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+    </div>
+    <p class="caption" id="proton-cap">H–Cl 1.275 Å (measured). Hydronium O–H 0.976 Å, H–O–H 111.3° (NIST CCCBDB).</p>
+  </div>
+</section>
+
+<section class="chapter flip" id="hydroxide" aria-labelledby="oh-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">02</p>
+    <p class="kicker">Base in water · NaOH</p>
+    <h2 id="oh-h">Bases free hydroxide</h2>
+    <p>Sodium hydroxide is an ionic solid made of Na⁺ and OH⁻. In water the ions separate. The hydroxide ion, OH⁻, is a strong base: it accepts a proton readily.</p>
+    <div class="steps" role="group" aria-label="Hydroxide dissolve steps" data-steps="hydroxide">
+      <button type="button" data-step="0" aria-pressed="true">1 · Pair</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Dissolve</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Free ions</button>
+    </div>
+    <p class="say" id="oh-say" aria-live="polite"></p>
+    <table class="read" id="oh-read" aria-label="Hydroxide facts"></table>
+    <p class="small">NaOH has no PubChem molecular 3D conformer because it is an ionic lattice, not a covalent molecule. The model shows the dissolved ions that matter in solution chemistry.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="hydroxide" role="img" aria-label="3D model: sodium and hydroxide ions separating in water."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--na)"></i>Na⁺</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+    </div>
+    <p class="caption">OH⁻ O–H 0.964 Å (measured). Na⁺ drawn at Shannon ionic radius 1.02 Å.</p>
+  </div>
+</section>
+
+<section class="chapter" id="neutralize" aria-labelledby="neut-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">03</p>
+    <p class="kicker">Acid + base</p>
+    <h2 id="neut-h">They cancel to water</h2>
+    <p>When hydronium meets hydroxide, one proton moves from H₃O⁺ to OH⁻. Two water molecules form. That is neutralization at the ion level:</p>
+    <p><strong>H₃O⁺ + OH⁻ → 2 H₂O</strong></p>
+    <div class="steps" role="group" aria-label="Neutralization steps" data-steps="neutralize">
+      <button type="button" data-step="0" aria-pressed="true">1 · Meet</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Transfer</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · Two waters</button>
+    </div>
+    <p class="say" id="neut-say" aria-live="polite"></p>
+    <table class="read" id="neut-read" aria-label="Neutralization facts"></table>
+    <p class="small">The leftover ions from the acid and base (for example Na⁺ and Cl⁻) stay dissolved as a salt. The water they make is neutral.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="neutralize" role="img" aria-label="3D model: hydronium and hydroxide transfer a proton to form two water molecules."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+    </div>
+    <p class="caption">H₃O⁺ meets OH⁻. After the handoff, both products are H₂O.</p>
+  </div>
+</section>
+
+<section class="chapter flip" id="strong-weak" aria-labelledby="sw-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">04</p>
+    <p class="kicker">Complete vs partial transfer</p>
+    <h2 id="sw-h">Strong vs weak</h2>
+    <p>A <strong>strong</strong> acid transfers its proton essentially completely in water. A <strong>weak</strong> acid transfers only a fraction of its molecules at any moment; most stay intact.</p>
+    <div class="steps" role="group" aria-label="Choose an acid" data-steps="contrast">
+      <button type="button" data-step="HCl" aria-pressed="true">HCl · strong</button>
+      <button type="button" data-step="CH3COOH" aria-pressed="false">Vinegar · weak</button>
+    </div>
+    <p class="say" id="sw-say" aria-live="polite"></p>
+    <table class="read" id="sw-read" aria-label="Strong vs weak facts"></table>
+    <p class="small">Vinegar is dilute acetic acid, CH₃COOH. About one molecule in a hundred is dissociated in a typical kitchen bottle — enough to taste sour, not enough for every molecule to have given away its proton.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="contrast" role="img" aria-label="3D model comparing complete proton transfer for hydrochloric acid with partial transfer for acetic acid."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--cl)"></i>Cl</span>
+      <span><i class="chip" style="background:var(--c)"></i>C</span>
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+    </div>
+    <p class="caption" id="sw-cap">Strong: essentially all HCl molecules have transferred. Weak: most acetic acid molecules stay whole.</p>
+  </div>
+</section>
+
+<section class="chapter" id="ph" aria-labelledby="ph-h">
+  <div class="copy">
+    <p class="num" aria-hidden="true">05</p>
+    <p class="kicker">A count, not a calculator</p>
+    <h2 id="ph-h">What pH tells you</h2>
+    <p><strong>pH</strong> is a scale for how many hydronium ions are in the water. Lower pH means more H₃O⁺. Higher pH means fewer H₃O⁺ (and usually more OH⁻).</p>
+    <p>Pure water at about 25 °C sits near pH 7 — not because nothing is ionised, but because H₃O⁺ and OH⁻ are present in equal, tiny amounts. Lemon juice is acidic (more H₃O⁺). Soap solution is basic (more OH⁻).</p>
+    <div class="ph-scale" aria-label="pH scale from 0 to 14">
+      <div class="ph-bar">
+        <span class="acid">0</span><span class="acid">1</span><span class="acid">2</span><span class="acid">3</span><span class="acid">4</span><span class="acid">5</span><span class="acid">6</span>
+        <span class="mid">7</span>
+        <span class="base">8</span><span class="base">9</span><span class="base">10</span><span class="base">11</span><span class="base">12</span><span class="base">13</span><span class="base">14</span>
+      </div>
+      <div class="ph-labels"><span>more H₃O⁺ · acidic</span><span>neutral</span><span>basic · more OH⁻</span></div>
+    </div>
+    <p class="small">Each step of 1 on the pH scale means a tenfold change in hydronium concentration. pH 3 has about ten times as many H₃O⁺ ions as pH 4.</p>
+  </div>
+  <div class="stage-col">
+    <div class="stage" data-scene="ph" role="img" aria-label="3D model of hydronium ions in water, illustrating that pH counts how many are present."><span class="tick a"></span><span class="tick b"></span></div>
+    <div class="key" aria-hidden="true">
+      <span><i class="chip" style="background:var(--o)"></i>O</span>
+      <span><i class="chip" style="background:var(--h)"></i>H</span>
+    </div>
+    <p class="caption">Each teal-labelled cluster is one H₃O⁺. pH is about how many of these sit among the water molecules.</p>
+  </div>
+</section>
+
+<section class="real" id="real-world" aria-labelledby="real-h">
+  <p class="kicker">06 · Where you meet acids and bases</p>
+  <h2 id="real-h">In the real world</h2>
+  <ul class="uses">
+    <li><span class="who">Nurses and pharmacists</span><span class="what">Stomach acid is mostly hydrochloric acid. Antacid tablets and liquids contain bases such as calcium carbonate or magnesium hydroxide that neutralize excess acid and ease heartburn.</span><span class="bond">Acid + base → salt + water</span></li>
+    <li><span class="who">Pool technicians</span><span class="what">Swimming-pool water is kept near pH 7.2 to 7.8 so chlorine sanitizer works and swimmers’ eyes stay comfortable. Technicians add acid or base to nudge the reading.</span><span class="bond">pH control</span></li>
+    <li><span class="who">Farmers</span><span class="what">Acidic soil can lock up nutrients. Farmers spread agricultural lime (mostly calcium carbonate) to raise soil pH so crops can take up minerals.</span><span class="bond">Liming · neutralizing soil acid</span></li>
+    <li><span class="who">Janitorial workers</span><span class="what">Vinegar is dilute acetic acid. Janitorial workers use it to dissolve mineral scale and clean glass because the weak acid attacks alkaline deposits without harsh fumes.</span><span class="bond">Weak acid · CH₃COOH</span></li>
+    <li><span class="who">Auto technicians</span><span class="what">Lead-acid car batteries hold sulfuric acid. Auto technicians wear eye and skin protection when they service batteries because concentrated acid damages tissue on contact.</span><span class="bond">Strong acid · battery electrolyte</span></li>
+    <li><span class="who">Bakers</span><span class="what">Baking soda is sodium bicarbonate, a mild base. In dough it reacts with acidic ingredients and releases carbon dioxide gas that helps bread and cakes rise.</span><span class="bond">Base in the kitchen</span></li>
+    <li><span class="who">Water treatment operators</span><span class="what">Wastewater and industrial effluent are often neutralized before discharge. Operators dose acid or base so the outflow sits near a permitted pH range that protects rivers and pipes.</span><span class="bond">Neutralization at plant scale</span></li>
+  </ul>
+</section>
+
+<section class="check" aria-labelledby="check-h">
+  <div>
+    <p class="kicker">For the classroom</p>
+    <h2 id="check-h">Check yourself</h2>
+  </div>
+  <div>
+    <details><summary>What does an acid donate, in the Brønsted–Lowry sense?</summary><p>A proton, H⁺. The acid loses that proton; a base gains it.</p></details>
+    <details><summary>Why do chemists write H₃O⁺ instead of a lone H⁺ in water?</summary><p>A bare proton does not float freely in water. It binds to H₂O and forms hydronium. H⁺ is still useful shorthand for that transferred proton.</p></details>
+    <details><summary>Write the ion-level neutralization equation.</summary><p>H₃O⁺ + OH⁻ → 2 H₂O. The acid’s leftover anion and the base’s leftover cation remain as a dissolved salt.</p></details>
+    <details><summary>Is vinegar a strong acid or a weak acid? How can you tell from the model?</summary><p>Weak. Most acetic acid molecules stay intact; only a small fraction have transferred their proton at any moment. HCl, by contrast, has essentially all transferred.</p></details>
+    <details><summary>Does a lower pH mean more or fewer hydronium ions?</summary><p>More. Each drop of one pH unit means about ten times as many H₃O⁺ ions in the water.</p></details>
+  </div>
+</section>
+
+<section class="sources" aria-labelledby="src-h">
+  <h3 id="src-h">Where the numbers come from</h3>
+  <ul>
+    <li>3D shapes of HCl, H₂O, H₃O⁺, OH⁻, and acetic acid: PubChem 3D conformers (CID 313, 962, 123332, 961, 176).</li>
+    <li>Measured bond lengths and angles: NIST Computational Chemistry Comparison and Benchmark Database (CCCBDB) — HCl r<sub>e</sub> 1.2746 Å; H₂O O–H 0.958 Å, ∠HOH 104.48°; H₃O⁺ O–H 0.976 Å, ∠HOH 111.30°; OH⁻ O–H 0.964 Å.</li>
+    <li>Na⁺ size: Shannon (1976) ionic radius 1.02 Å (coordination 6). NaOH has no PubChem molecular 3D conformer (ionic lattice).</li>
+    <li>Acetic acid partial dissociation in dilute vinegar is a standard weak-acid fact (K<sub>a</sub> ≈ 1.8 × 10⁻⁵); the scene shows the qualitative contrast, not a counted mole fraction.</li>
+  </ul>
+</section>
+</main>
+
+<script type="module" src="./acids.js"></script>
+</body>
+</html>

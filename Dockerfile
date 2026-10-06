@@ -6,5 +6,6 @@ COPY molecules /srv/molecules
 COPY vendor /srv/vendor
 COPY bonds /srv/bonds
 COPY shape /srv/shape
+COPY acids /srv/acids
 EXPOSE 8080
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
