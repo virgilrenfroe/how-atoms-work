@@ -138,14 +138,30 @@
     font-size: 0.98rem;
     line-height: 1.35;
   }
-  .lede, .howto {
+  .lede {
     margin: 12px 0 0;
     max-width: 42ch;
     font-size: 1.02rem;
     line-height: 1.45;
     color: var(--pearl);
   }
-  .howto { margin-top: 8px; color: var(--mute); font-size: 0.98rem; }
+  .mast details {
+    margin: 10px 0 4px;
+    max-width: 42ch;
+  }
+  .mast summary {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+  .mast details p {
+    margin: 8px 0 0;
+    color: var(--mute);
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
   .primer {
     margin: 22px 0 28px;
     padding-top: 8px;
@@ -437,7 +453,10 @@
       <div class="mast">
         <h1><span class="num">115</span><span class="name">incredible molecules</span></h1>
         <p class="lede">A molecule is two or more atoms held together by chemical bonds. This gallery teaches what each molecule is, where people meet it, and why that formula matters.</p>
-        <p class="howto">Pick a name. A model is a ball-and-stick picture. A pattern is a predicted diagram. A card is the public facts when the picture stays off the page. A formula marked as a piece is a short length of a longer chain, not the whole plastic or fiber.</p>
+        <details>
+          <summary>How to read a card</summary>
+          <p>Pick a name. A model is a ball-and-stick picture. A pattern is a predicted diagram. A card is the public facts when the picture stays off the page. A formula marked as a piece is a short length of a longer chain, not the whole plastic or fiber.</p>
+        </details>
       </div>
       <div id="catalog"></div>
       <section class="primer" id="real-world" aria-label="How to read the gallery">
