@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <title>115 incredible molecules · How Atoms Work</title>
+<link rel="canonical" href="https://virgilrenfroe.github.io/how-atoms-work/molecules/" />
+<meta name="description" content="A molecule is two or more atoms held together by chemical bonds. A gallery of 115 molecules for intro chemistry: what each one is, and the jobs where people meet it." />
+<meta property="og:title" content="115 incredible molecules · How Atoms Work" />
+<meta property="og:description" content="A molecule is two or more atoms held together by chemical bonds. What each one is, and the jobs where people meet it." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://virgilrenfroe.github.io/how-atoms-work/molecules/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="115 incredible molecules · How Atoms Work" />
+<meta name="twitter:description" content="A molecule is two or more atoms held together by chemical bonds. What each one is, and the jobs where people meet it." />
 <style>
   :root {
     --font-display: "Bricolage Grotesque", system-ui, sans-serif;
@@ -129,6 +138,53 @@
     font-size: 0.98rem;
     line-height: 1.35;
   }
+  .lede, .howto {
+    margin: 12px 0 0;
+    max-width: 42ch;
+    font-size: 1.02rem;
+    line-height: 1.45;
+    color: var(--pearl);
+  }
+  .howto { margin-top: 8px; color: var(--mute); font-size: 0.98rem; }
+  .primer {
+    margin: 22px 0 28px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    max-width: 46ch;
+  }
+  .primer h2 {
+    position: static;
+    margin: 22px 0 8px;
+    padding: 0;
+    background: transparent;
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: clamp(1.45rem, 2vw, 1.85rem);
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+  }
+  .primer h2:first-child { margin-top: 8px; }
+  .primer p { margin: 0 0 10px; font-size: 0.98rem; line-height: 1.45; }
+  .primer .uses { list-style: none; margin: 0; padding: 0; }
+  .primer .uses li { border-top: 1px solid var(--line); padding: 10px 0 12px; }
+  .primer .who {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.9);
+  }
+  .primer .groups { margin: 0; padding: 0; list-style: none; }
+  .primer .groups li { margin: 0 0 8px; color: var(--mute); font-size: 0.95rem; line-height: 1.4; }
+  .primer .groups b { color: var(--pearl); font-weight: 600; }
+  .primer details { border-top: 1px solid var(--line); padding: 10px 0; }
+  .primer details:last-of-type { border-bottom: 1px solid var(--line); }
+  .primer summary { cursor: pointer; font-weight: 600; }
+  .primer details p { margin: 8px 0 0; color: var(--mute); }
+  .primer .more { margin-top: 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
+  .primer a { color: var(--accent); }
   .mol, .door {
     display: flex;
     align-items: baseline;
@@ -371,6 +427,8 @@
     <p class="tag">Intro chemistry</p>
     <nav class="nav">
       <a href="../index.html">← Atom room</a>
+      <a href="../bonds/">How atoms bond</a>
+      <a href="../shape/">How molecules shape</a>
       <a href="../ethanol.html">Ethanol · C₂H₆O</a>
     </nav>
   </header>
@@ -378,8 +436,63 @@
     <aside class="list" id="list" aria-label="Molecule groups">
       <div class="mast">
         <h1><span class="num">115</span><span class="name">incredible molecules</span></h1>
+        <p class="lede">A molecule is two or more atoms held together by chemical bonds. This gallery teaches what each molecule is, where people meet it, and why that formula matters.</p>
+        <p class="howto">Pick a name. A model is a ball-and-stick picture. A pattern is a predicted diagram. A card is the public facts when the picture stays off the page. A formula marked as a piece is a short length of a longer chain, not the whole plastic or fiber.</p>
       </div>
       <div id="catalog"></div>
+      <section class="primer" id="real-world" aria-label="How to read the gallery">
+        <h2>In the real world</h2>
+        <p>Each molecule you open adds its own note. These four are written here, with the job attached.</p>
+        <ul class="uses">
+          <li>
+            <span class="who">Water · H₂O · physicians, nurses, water-treatment engineers</span>
+            <span class="what">Water is the solvent in blood, and an intravenous fluid is built around it. A water-treatment engineer moves it from a river or a well to a tap and tests what is dissolved in it. In the model the molecule is bent, not straight.</span>
+          </li>
+          <li>
+            <span class="who">Oxygen · O₂ · respiratory therapists</span>
+            <span class="what">Oxygen gas is two oxygen atoms. Respiratory therapists give patients extra oxygen from tanks and concentrators. That molecule is on <a href="../bonds/">How atoms bond</a>. In this gallery, ozone is three oxygen atoms: an atmospheric chemist tracks it high up, where it blocks ultraviolet light, and near the ground, where it irritates lungs.</span>
+          </li>
+          <li>
+            <span class="who">Methane · CH₄ · gas engineers and farmers</span>
+            <span class="what">Methane is the main part of natural gas, a fuel for heat and for power plants. A farmer and a climate scientist also meet it as a gas from livestock and from wetlands. Carbon sits in the middle of four hydrogens.</span>
+          </li>
+          <li>
+            <span class="who">Ethanol · C₂H₆O · brewers, pharmacists, and chemical engineers</span>
+            <span class="what">Ethanol is the alcohol in beer, wine, and spirits, made when yeast ferments sugars. Pharmacists meet it in some antiseptics and as a solvent in liquid medicines. Chemical engineers blend it into gasoline. The model is on its <a href="../ethanol.html">own page</a>.</span>
+          </li>
+        </ul>
+        <h2>The ten groups</h2>
+        <ul class="groups">
+          <li><b>History-changers and life-savers.</b> Molecules that changed medicine, materials, or what a cell can do.</li>
+          <li><b>Molecular wonders and strange shapes.</b> A ball, a cube, a prism, a house, a tube. The shape is the lesson.</li>
+          <li><b>Sensory explosions.</b> A few atoms in the right pattern, and a nose or a tongue notices.</li>
+          <li><b>High energy and explosives.</b> Famous because they release energy fast. Names and public facts only.</li>
+          <li><b>Chemical extremes.</b> Molecules at the edge of what a body or a container can stand.</li>
+          <li><b>Mind-alterers and neurotransmitters.</b> Signals between nerve cells, and molecules that change those signals.</li>
+          <li><b>Materials and technological marvels.</b> The piece that a fiber, a plastic, or a crystal repeats.</li>
+          <li><b>Cosmos and atmosphere.</b> Small molecules in air, clouds, rocks, and the space between stars.</li>
+          <li><b>Botanical and animal anomalies.</b> Made by a plant or an animal, and strange enough to study on purpose.</li>
+          <li><b>Future and exotic.</b> Predicted, glimpsed, or still a sketch. Labeled that way.</li>
+        </ul>
+        <h2 id="check-h">Check yourself</h2>
+        <details>
+          <summary>What is a molecule, if an atom is one nucleus with its electrons?</summary>
+          <p>A molecule is two or more atoms held by chemical bonds. On the periodic table, oxygen is one kind of atom. The oxygen you breathe is the molecule O₂, two of those atoms bonded together. Water is three atoms: two hydrogens and one oxygen.</p>
+        </details>
+        <details>
+          <summary>What does "piece" mean on a formula?</summary>
+          <p>The model is a short length of a repeating chain. A polyethylene bag is that pattern repeated thousands of times. The note on the card says the drawing is a piece, not the whole material.</p>
+        </details>
+        <details>
+          <summary>Why do some names open words and no model?</summary>
+          <p>The page still gives the name, the formula, and what the molecule does. A model is drawn when there is an exact structure to show. Some entries stay as public facts on purpose.</p>
+        </details>
+        <details>
+          <summary>Where is ethanol?</summary>
+          <p>Ethanol, C₂H₆O, is its own page, linked from the history group and from the header. It is not drawn a second time in this list.</p>
+        </details>
+        <p class="more">Related lessons: <a href="../index.html">Periodic table</a> · <a href="../bonds/">How atoms bond</a> · <a href="../shape/">How molecules shape</a> · <a href="../ethanol.html">Ethanol</a></p>
+      </section>
     </aside>
     <section class="view mode-model" id="view" aria-live="polite">
       <div class="stage-wrap">
@@ -391,7 +504,9 @@
     </section>
   </div>
 </div>
-<noscript>This gallery needs scripts to list the molecules and draw the models.</noscript>
+<noscript>
+  <p>Scripts list the molecules and draw the models. The definition under the title, the four jobs, the ten groups, and Check yourself are on the page without a script.</p>
+</noscript>
 <script type="importmap">
 {
   "imports": {

@@ -2,9 +2,11 @@
 
 Intro chemistry · atom structure → nucleus → quarks → Standard Model atlas — by Virgil Renfroe.
 
-**Live preview:** https://how-atoms-work-production.up.railway.app/
+**Live:** https://virgilrenfroe.github.io/how-atoms-work/
 
 Repo: https://github.com/virgilrenfroe/how-atoms-work
+
+Railway is a deploy preview only, not the public share link: https://how-atoms-work-production.up.railway.app/
 
 Static three.js lab. Open any element from hydrogen through oganesson and walk one ladder: Atom → Nucleus → Quark, then a door into a separate Standard Model atlas room. Shells and orbitals stay on the Atom readout. They are not extra zoom stages.
 
@@ -45,4 +47,5 @@ Open http://localhost:8877/
 - three.js r170, local import map (`vendor/three`)
 - Google Fonts: Bricolage Grotesque, Instrument Sans, Space Mono
 - No backend
-- Hosted on Railway (Caddy static) with GitHub Pages as the matching virgilrenfroe pattern when available
+- Public site: GitHub Pages at https://virgilrenfroe.github.io/how-atoms-work/
+- Railway (Caddy static) is a deploy preview, not the featured link
