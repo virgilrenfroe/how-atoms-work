@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <title>Ethanol · C₂H₆O · How Atoms Work</title>
+<link rel="canonical" href="https://virgilrenfroe.github.io/how-atoms-work/ethanol.html" />
+<meta name="description" content="Ethanol is C2H6O, the alcohol in beer, wine, and spirits: two carbons, six hydrogens, and one oxygen, joined by single bonds." />
+<meta property="og:title" content="Ethanol · C₂H₆O · How Atoms Work" />
+<meta property="og:description" content="Ethanol is C2H6O, the alcohol in beer, wine, and spirits: two carbons, six hydrogens, and one oxygen, joined by single bonds." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://virgilrenfroe.github.io/how-atoms-work/ethanol.html" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Ethanol · C₂H₆O · How Atoms Work" />
+<meta name="twitter:description" content="Ethanol is C2H6O, the alcohol in beer, wine, and spirits: two carbons, six hydrogens, and one oxygen, joined by single bonds." />
 <style>
   :root {
     --font-display: "Bricolage Grotesque", system-ui, sans-serif;
@@ -25,11 +34,17 @@
   }
   * { box-sizing: border-box; }
   html, body {
-    margin: 0; height: 100%;
+    margin: 0; min-height: 100%;
     background: var(--void); color: var(--pearl);
     font-family: var(--font-sans);
   }
-  body { overflow: hidden; }
+  body { overflow-x: hidden; overflow-y: auto; }
+  .screen {
+    position: relative;
+    height: 100dvh;
+    min-height: 560px;
+    overflow: hidden;
+  }
   .stage { position: absolute; inset: 0; }
   #stage { position: absolute; inset: 0; }
   #stage canvas {
@@ -87,6 +102,68 @@
     letter-spacing: -0.04em; padding-bottom: 0.7rem; max-width: 8ch;
   }
   .back + .back { margin-left: 16px; }
+  .def {
+    margin: 14px 0 0;
+    max-width: 36ch;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    color: var(--pearl);
+  }
+  .lesson {
+    padding: 36px max(18px, var(--safe-r)) 64px max(18px, var(--safe-l));
+    border-top: 1px solid rgba(239, 230, 242, 0.14);
+    background: #140818;
+  }
+  .lesson h2 {
+    margin: 28px 0 12px;
+    font-family: var(--font-display);
+    font-weight: 520;
+    letter-spacing: -0.05em;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 0.92;
+  }
+  .lesson h2:first-of-type { margin-top: 0; }
+  .lesson .kicker {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.82);
+  }
+  .lesson p { margin: 0 0 14px; max-width: 68ch; font-size: 1.05rem; line-height: 1.55; }
+  .lesson .uses {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 36px;
+    max-width: 1100px;
+  }
+  .lesson .uses li { border-top: 1px solid rgba(239, 230, 242, 0.18); padding: 12px 0 16px; }
+  .lesson .who {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.9);
+  }
+  .lesson .what {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+  .lesson details { border-top: 1px solid rgba(239, 230, 242, 0.18); padding: 12px 0; max-width: 72ch; }
+  .lesson details:last-of-type { border-bottom: 1px solid rgba(239, 230, 242, 0.18); }
+  .lesson summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
+  .lesson details p { color: rgba(239, 230, 242, 0.72); margin: 8px 0 0; }
+  .lesson .more { margin: 22px 0 0; font-family: var(--font-mono); font-size: 12px; line-height: 1.7; }
+  .lesson a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(255, 179, 107, 0.55); }
   .back {
     pointer-events: auto;
     display: inline-block;
@@ -150,6 +227,7 @@
     h1 .display { font-size: clamp(3.2rem, 18vw, 4.6rem); }
     .floor-lab b { font-size: 22vw; }
     .hud { max-height: 34vh; overflow: auto; }
+    .lesson .uses { grid-template-columns: minmax(0, 1fr); }
   }
   @media (prefers-reduced-motion: reduce) {
     .top, .hud, .floor-lab, .horizon { transform: none !important; }
@@ -157,6 +235,7 @@
 </style>
 </head>
 <body>
+<div class="screen">
 <div class="stage" id="stage">
   <div class="horizon" aria-hidden="true"></div>
   <div class="corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -165,7 +244,10 @@
   <p class="tag">Intro chem · molecular structure / bonding</p>
   <h1><span class="display">C₂H₆O</span><em>ethanol</em></h1>
   <a class="back" href="index.html">← Atom room</a>
+  <a class="back" href="bonds/">How atoms bond</a>
+  <a class="back" href="shape/">How molecules shape</a>
   <a class="back" href="molecules/index.html">115 molecules</a>
+  <p class="def">Ethanol is the alcohol in beer, wine, and spirits: two carbon atoms, six hydrogens, and one oxygen, joined by single bonds.</p>
 </header>
 <div class="floor-lab" aria-hidden="true"><span>molecule floor</span><b>C₂H₆O</b></div>
 <div class="hud">
@@ -179,6 +261,47 @@
   </div>
 </div>
 <div id="err" role="status"></div>
+</div>
+<main class="lesson">
+  <p class="kicker">The model on this page</p>
+  <h2>What you are looking at</h2>
+  <p>The drawing is the anti conformer, staggered. There are eight single bonds: one C–C, one C–O, five C–H, and one O–H. C–C is 1.512 Å, C–O is 1.431 Å, C–H is 1.096 Å, and O–H is 0.971 Å. The angle at each carbon is tetrahedral. The angle C–O–H is 108.5°. The H–O–C–C dihedral is 180°, so the hydrogen on oxygen points opposite the far carbon.</p>
+  <p>Oxygen's two lone pairs are not drawn. The spheres are not van der Waals radii. They are sized so the sticks stay visible.</p>
+  <p class="kicker">In the real world</p>
+  <h2>Where ethanol shows up</h2>
+  <ul class="uses">
+    <li>
+      <span class="who">Brewers and distillers</span>
+      <span class="what">Yeast fermenting sugars makes ethanol. It is the alcohol in beer, wine, and spirits.</span>
+    </li>
+    <li>
+      <span class="who">Pharmacists</span>
+      <span class="what">Pharmacists meet ethanol in some antiseptics and as a solvent in liquid medicines.</span>
+    </li>
+    <li>
+      <span class="who">Chemical engineers</span>
+      <span class="what">Chemical engineers blend ethanol into gasoline, and they use it as an industrial solvent.</span>
+    </li>
+  </ul>
+  <h2 id="check-h">Check yourself</h2>
+  <details>
+    <summary>Is this methanol?</summary>
+    <p>No. Methanol is CH₄O, one carbon. Ethanol is C₂H₆O, two carbons. They are different molecules. Methanol is much more poisonous. This page is ethanol.</p>
+  </details>
+  <details>
+    <summary>What does "anti" mean here?</summary>
+    <p>It is the shape, not a warning. In the anti conformer the hydrogen on oxygen points opposite the far carbon. Staggered means the bonds on the two carbons are not lined up when you look down the C–C bond.</p>
+  </details>
+  <details>
+    <summary>Why are there no dots on the oxygen?</summary>
+    <p>Oxygen keeps two lone pairs. This model does not draw them. The caption on the model says so.</p>
+  </details>
+  <details>
+    <summary>Is ethanol an element?</summary>
+    <p>No. An element is one kind of atom. Ethanol is a molecule of carbon, hydrogen, and oxygen. Carbon, hydrogen, and oxygen are the elements, on the periodic table.</p>
+  </details>
+  <p class="more">Related lessons: <a href="index.html">Periodic table</a> · <a href="bonds/">How atoms bond</a> · <a href="shape/">How molecules shape</a> · <a href="molecules/index.html">115 molecules</a></p>
+</main>
 <script type="importmap">
 {
   "imports": {

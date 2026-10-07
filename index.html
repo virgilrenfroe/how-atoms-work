@@ -7,9 +7,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <title>How Atoms Work · H–Og</title>
-<meta name="description" content="Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
+<link rel="canonical" href="https://virgilrenfroe.github.io/how-atoms-work/" />
+<meta name="description" content="An atom is the smallest piece of an element that still has that element's chemistry. Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
 <meta property="og:title" content="How Atoms Work" />
-<meta property="og:description" content="Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
+<meta property="og:description" content="An atom is the smallest piece of an element that still has that element's chemistry. Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://virgilrenfroe.github.io/how-atoms-work/" />
 <meta property="og:image" content="https://virgilrenfroe.github.io/how-atoms-work/og.png" />
@@ -18,7 +19,7 @@
 <meta property="og:image:alt" content="How Atoms Work. The periodic table, for intro chemistry." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="How Atoms Work" />
-<meta name="twitter:description" content="Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
+<meta name="twitter:description" content="An atom is the smallest piece of an element that still has that element's chemistry. Tap any element, hydrogen through oganesson, and walk from the atom to the nucleus, the quarks, and the Standard Model." />
 <meta name="twitter:image" content="https://virgilrenfroe.github.io/how-atoms-work/og.png" />
 <meta name="twitter:image:alt" content="How Atoms Work. The periodic table, for intro chemistry." />
 <style>
@@ -79,16 +80,33 @@
     margin: 0;
     width: auto;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 10px;
     padding:
       max(12px, var(--safe-t))
       max(18px, var(--safe-r))
-      8px
+      10px
       max(16px, var(--safe-l));
     background: var(--void);
     pointer-events: none;
+  }
+  .mast-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+  .atom-def {
+    margin: 0;
+    max-width: 68ch;
+    font-family: var(--font-sans);
+    font-size: clamp(1.02rem, 1.35vw, 1.15rem);
+    line-height: 1.45;
+    color: var(--pearl);
+    pointer-events: auto;
   }
   .top .tag {
     margin: 0 0 2px;
@@ -677,7 +695,7 @@
   }
 
   html.embed, body.embed { background: transparent !important; }
-  body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-nav, body.embed .lesson-door, body.embed .field, body.embed .legend { display: none !important; }
+  body.embed .top, body.embed .vig, body.embed .horizon, body.embed .corners, body.embed .lesson-nav, body.embed .lesson-door, body.embed .field, body.embed .legend, body.embed .guide { display: none !important; }
   html.embed, body.embed { height: 100%; overflow: hidden; }
   body.embed .app { padding: 0; height: 100%; overflow: hidden; }
   body.embed .workspace { position: absolute; inset: 0; height: 100%; }
@@ -693,7 +711,7 @@
   body.embed .atom-bottom { position: absolute; }
 
   @media (max-width: 900px) {
-    .top { flex-wrap: wrap; }
+    .mast-row { flex-wrap: wrap; }
     .lesson-nav { width: 100%; justify-content: flex-start; padding-bottom: 0; }
     .field h1 .display { font-size: clamp(2.4rem, 14vw, 3.4rem); }
     .field .empty-stage { font-size: 1.2rem; }
@@ -723,6 +741,7 @@
     .stage-wrap { min-height: 440px; height: 64vh; }
     .detail-bar { padding: 8px 10px; gap: 8px; }
     .real-world { padding: 18px 14px 28px; }
+    .guide .uses { grid-template-columns: minmax(0, 1fr); }
   }
 
   /* Right-hand room column. One flow, so type, ladder, and captions cannot occupy the same pixels. */
@@ -893,6 +912,81 @@
     color: var(--pearl);
   }
 
+  .guide {
+    border-top: 1px solid rgba(239, 230, 242, 0.14);
+    padding: 36px max(22px, var(--safe-r)) 64px max(20px, var(--safe-l));
+    background: #140818;
+  }
+  .guide h2 {
+    margin: 28px 0 12px;
+    font-family: var(--font-display);
+    font-weight: 520;
+    letter-spacing: -0.05em;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 0.92;
+  }
+  .guide h2:first-child { margin-top: 0; }
+  .guide .kicker {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.82);
+  }
+  .guide p {
+    margin: 0 0 14px;
+    max-width: 68ch;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+  .guide .uses {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 36px;
+    max-width: 1100px;
+  }
+  .guide .uses li {
+    border-top: 1px solid rgba(239, 230, 242, 0.18);
+    padding: 12px 0 16px;
+  }
+  .guide .uses .who {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 179, 107, 0.9);
+  }
+  .guide .uses .what {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+  }
+  .guide details {
+    border-top: 1px solid rgba(239, 230, 242, 0.18);
+    padding: 12px 0;
+    max-width: 72ch;
+  }
+  .guide details:last-of-type { border-bottom: 1px solid rgba(239, 230, 242, 0.18); }
+  .guide summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
+  .guide details p { color: rgba(239, 230, 242, 0.72); margin: 8px 0 0; }
+  .guide .more {
+    margin: 22px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    line-height: 1.7;
+  }
+  .guide .more a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(255, 179, 107, 0.55); }
+  .guide .more a:hover, .guide .more a:focus-visible { color: var(--pearl); }
+
   @media (prefers-reduced-motion: reduce) {
     .el, .chip, .top h1 .display { transition: none; }
     .atom-panel, .horizon { transition: none; }
@@ -953,16 +1047,19 @@
 
 <div class="app">
   <header class="top">
-    <div class="mast-copy">
-      <p class="tag">Intro chemistry</p>
-      <p class="teach">Atom structure → nucleus → quarks → Standard Model atlas</p>
+    <div class="mast-row">
+      <div class="mast-copy">
+        <p class="tag">Intro chemistry</p>
+        <p class="teach">Atom structure → nucleus → quarks → Standard Model atlas</p>
+      </div>
+      <nav class="lesson-nav">
+        <a class="lesson-door" href="molecules/index.html">115 molecules</a>
+        <a class="lesson-door" href="ethanol.html">Ethanol · C₂H₆O</a>
+        <a class="lesson-door" href="bonds/">How atoms bond</a>
+        <a class="lesson-door" href="shape/">How molecules shape</a>
+      </nav>
     </div>
-    <nav class="lesson-nav">
-      <a class="lesson-door" href="molecules/index.html">115 molecules</a>
-      <a class="lesson-door" href="ethanol.html">Ethanol · C₂H₆O</a>
-      <a class="lesson-door" href="bonds/">How atoms bond</a>
-      <a class="lesson-door" href="shape/">How molecules shape</a>
-    </nav>
+    <p class="atom-def" id="what-is-an-atom">An atom is the smallest piece of an element that still has that element's chemistry: a nucleus that holds the protons naming the element, with electrons around it. Tap any tile below, hydrogen through oganesson, to open that atom and step in toward the nucleus.</p>
   </header>
 
   <div class="workspace">
@@ -1051,6 +1148,67 @@
       </section>
     </section>
   </div>
+
+  <section class="guide" id="why-elements" aria-label="What an atom is, and why elements matter">
+    <p class="kicker">In the real world</p>
+    <h2>Why elements matter</h2>
+    <p>An element is one kind of atom, named by how many protons are in the nucleus. The same element turns up in very different jobs. Choosing an element adds that element's own note under the model.</p>
+    <ul class="uses">
+      <li>
+        <span class="who">Hydrogen · H · chemical engineers</span>
+        <span class="what">Chemical engineers combine hydrogen with nitrogen to make ammonia fertilizer. Battery and energy engineers build fuel cells that turn hydrogen into electricity. It is also the H in water, and the fuel the Sun burns.</span>
+      </li>
+      <li>
+        <span class="who">Carbon · C · steelmakers and materials engineers</span>
+        <span class="what">Carbon is the backbone of the molecules in every living thing. Steelmakers add it, as coke, to iron in a blast furnace. Materials engineers use carbon fiber when a part must be strong and light.</span>
+      </li>
+      <li>
+        <span class="who">Oxygen · O · respiratory therapists and steelworkers</span>
+        <span class="what">Respiratory therapists give medical oxygen when a patient cannot get enough from the air. Steelworkers blow oxygen through molten iron to burn out extra carbon and make steel.</span>
+      </li>
+      <li>
+        <span class="who">Iron · Fe · structural engineers</span>
+        <span class="what">Structural engineers design with steel, which is mostly iron. Iron is also the atom in hemoglobin that carries oxygen in blood. Blast-furnace crews smelt the ore that becomes beams and reinforcing bar.</span>
+      </li>
+      <li>
+        <span class="who">Gold · Au · jewelers and electronics engineers</span>
+        <span class="what">Jewelers and mints shape gold. Electronics engineers plate it onto connectors because it does not corrode and it conducts well. Dentists use gold alloys in some crowns.</span>
+      </li>
+      <li>
+        <span class="who">Uranium · U · nuclear engineers</span>
+        <span class="what">Nuclear engineers use uranium as fuel in power reactors that make electricity. Some of those reactors also help produce isotopes that doctors use. Researchers study it in laboratories. For class, the roles are power, medicine, and research.</span>
+      </li>
+    </ul>
+    <h2 id="check-h">Check yourself</h2>
+    <details>
+      <summary>Are the electrons really sitting on neat rings?</summary>
+      <p>No. The rings are a Bohr-style drawing so you can count the electrons. A real atom is not a tiny solar system. The badge on the model says the picture is Bohr-ish and not to scale.</p>
+    </details>
+    <details>
+      <summary>Why does the nucleus look almost as big as the electron cloud?</summary>
+      <p>The drawing enlarges it. In a real atom the nucleus is tiny compared with the space the electrons occupy. If the picture were to scale, the nucleus would be too small to see.</p>
+    </details>
+    <details>
+      <summary>Sodium loses an electron and becomes Na⁺. Is that a new element?</summary>
+      <p>No. An element is named by its protons. Na⁺ still has 11 protons, so it is still sodium. It has 10 electrons, so the charge is +1. That is an ion, not a different element.</p>
+    </details>
+    <details>
+      <summary>Does every atom have neutrons?</summary>
+      <p>No. The common form of hydrogen is one proton and one electron. This page draws hydrogen with no neutron. Heavier elements are drawn with neutrons: round the atomic mass, then subtract the protons.</p>
+    </details>
+    <details>
+      <summary>Do all carbon atoms have 6 neutrons?</summary>
+      <p>This page draws one teaching count: round the atomic mass, then subtract the protons. For carbon that count is 6. Atoms of the same element can have different numbers of neutrons. Those are isotopes. The proton count is what stays the same.</p>
+    </details>
+    <details>
+      <summary>Chromium's electron string here does not match some textbooks. Why?</summary>
+      <p>A few atoms, including chromium and copper, fill differently from the simple Aufbau order. This page keeps one fill so the written string and the shell count match each other.</p>
+    </details>
+    <p class="more">Related lessons: <a href="bonds/">How atoms bond</a> · <a href="shape/">How molecules shape</a> · <a href="molecules/index.html">115 molecules</a> · <a href="ethanol.html">Ethanol, C₂H₆O</a></p>
+    <noscript>
+      <p>Scripts draw the periodic table and the atom, and they fill the note under the model after you tap an element. The definition at the top, and the six jobs above, are on the page without a script.</p>
+    </noscript>
+  </section>
 </div>
 
 <script type="importmap">
